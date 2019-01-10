@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +7,12 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.styl']
 })
 export class AppComponent {
-  title = 'ClientApp23' + 203;
+  title = 'ClientApp';
+  resultado = false;
+
+  // constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
+  //   http.get<boolean>(baseUrl + 'api/Post/Add').subscribe(result => {
+  //     this.resultado = result;
+  //   }, error => console.error(error));
+  // }
 }

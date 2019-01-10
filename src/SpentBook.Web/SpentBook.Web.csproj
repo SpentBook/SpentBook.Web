@@ -11,11 +11,13 @@
     <!-- Set this to true if you enable server-side prerendering -->
     <BuildServerSideRenderer>false</BuildServerSideRenderer>
     <UserSecretsId>84f3c2ba-a408-4df0-af7f-ad2157879c20</UserSecretsId>
+    <PreBuildEvent />
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -52,4 +54,11 @@
     </ItemGroup>
   </Target>
 
+  <!-- <Target Name="GenerateSomeFiles" BeforeTargets="BeforeBuild">
+    <PropertyGroup>
+      <CurrentDate>$([System.DateTime]::Now.ToString(yyyyMMdd-mmss))</CurrentDate>
+    </PropertyGroup>
+    <Exec Command="ECHO ON" />
+    <Exec Command="dotnet ef migrations add MIGRATE_$(CurrentDate)" />
+  </Target> -->
 </Project>

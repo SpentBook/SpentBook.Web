@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
 
 namespace SpentBook.Web
 {
@@ -27,10 +28,13 @@ namespace SpentBook.Web
             {
                 configuration.RootPath = "ClientApp/dist/ClientApp";
             });
+
+            var connection = Configuration.GetConnectionString("SpentBookContext");
+            services.AddDbContext<SpentBookContext>(options => options.UseSqlServer(connection));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, SpentBookContext context)
         {
             if (env.IsDevelopment())
             {
@@ -66,6 +70,8 @@ namespace SpentBook.Web
                     spa.UseAngularCliServer(npmScript: "start");
                 }
             });
+
+            context.Database.Migrate();
         }
     }
 }
