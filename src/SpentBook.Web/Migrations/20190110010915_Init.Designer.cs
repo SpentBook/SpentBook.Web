@@ -8,7 +8,7 @@ using SpentBook.Web;
 
 namespace SpentBook.Web.Migrations
 {
-    [DbContext(typeof(SpentBookContext))]
+    [DbContext(typeof(ApplicationDbContext))]
     [Migration("20190110010915_Init")]
     partial class Init
     {

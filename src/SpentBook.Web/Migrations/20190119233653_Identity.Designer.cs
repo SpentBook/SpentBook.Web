@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SpentBook.Web;
 
 namespace SpentBook.Web.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class SpentBookContextModelSnapshot : ModelSnapshot
+    [Migration("20190119233653_Identity")]
+    partial class Identity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -85,9 +87,11 @@ namespace SpentBook.Web.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.Property<string>("LoginProvider");
+                    b.Property<string>("LoginProvider")
+                        .HasMaxLength(128);
 
-                    b.Property<string>("ProviderKey");
+                    b.Property<string>("ProviderKey")
+                        .HasMaxLength(128);
 
                     b.Property<string>("ProviderDisplayName");
 
@@ -118,9 +122,11 @@ namespace SpentBook.Web.Migrations
                 {
                     b.Property<string>("UserId");
 
-                    b.Property<string>("LoginProvider");
+                    b.Property<string>("LoginProvider")
+                        .HasMaxLength(128);
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .HasMaxLength(128);
 
                     b.Property<string>("Value");
 
@@ -143,10 +149,6 @@ namespace SpentBook.Web.Migrations
                         .HasMaxLength(256);
 
                     b.Property<bool>("EmailConfirmed");
-
-                    b.Property<string>("FirstName");
-
-                    b.Property<string>("LastName");
 
                     b.Property<bool>("LockoutEnabled");
 

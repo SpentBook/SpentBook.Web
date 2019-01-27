@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,14 +11,15 @@ namespace SpentBook.Web.Controllers
     [Route("api/[controller]")]
     public class PostController : Controller
     {
-        SpentBookContext context;
+        ApplicationDbContext context;
 
-        public PostController(SpentBookContext context)
+        public PostController(ApplicationDbContext context)
         {
             this.context = context;
         }
 
         [HttpGet("[action]")]
+        [Authorize("")]
         public bool Add()
         {
             // context.Database.EnsureDeleted();
