@@ -41,5 +41,20 @@ namespace SpentBook.Web.Email
                             .Replace("{url}", url);
             await _emailSender.SendEmailAsync(email, subject, content);
         }
+
+        public async void ResetPassword(string urlCallbackConfirmation, ApplicationUser user)
+        {
+            var code = await _signInManager.UserManager.GeneratePasswordResetTokenAsync(user);
+            var url = urlCallbackConfirmation
+                        .Replace("{user-id}", user.Id)
+                        .Replace("{code}", System.Net.WebUtility.UrlEncode(code));
+
+            var email = user.Email;
+            var subject = _appConfig.Email.ResetPassword.Subject;
+            var content = _appConfig.Email.ResetPassword.Content
+                            .Replace("{user-name}", user.FirstName)
+                            .Replace("{url}", url);
+            await _emailSender.SendEmailAsync(email, subject, content);
+        }
     }
 }

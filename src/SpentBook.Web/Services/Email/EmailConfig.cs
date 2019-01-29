@@ -9,5 +9,6 @@ namespace SpentBook.Web.Email
         public string Name { get; set; }
 
         public EmailTemplate ConfirmEmail { get;set; }
+        public EmailTemplate ResetPassword { get;set; }
     }
 }

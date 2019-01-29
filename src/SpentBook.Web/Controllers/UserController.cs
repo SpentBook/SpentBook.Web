@@ -17,7 +17,6 @@ using SpentBook.Web.ViewsModels;
 
 namespace SpentBook.Web.Controllers
 {
-    // [Authorize]
     [Route("api/[controller]")]
     public class UserController : Controller
     {
@@ -26,8 +25,6 @@ namespace SpentBook.Web.Controllers
         private readonly AppConfig _appConfig;
         private readonly EmailService _emailService;
 
-        // private readonly IEmailSender _emailSender;
-        // private readonly ISmsSender _smsSender;
         private readonly ILogger _logger;
 
         private readonly ApplicationDbContext _appDbContext;
@@ -43,20 +40,20 @@ namespace SpentBook.Web.Controllers
         )
         {
             _userManager = userManager;
-            _mapper = mapper;            
+            _mapper = mapper;
             _logger = loggerFactory.CreateLogger<UserController>();
             _signInManager = signInManager;
             _appConfig = appConfig;
             _emailService = emailService;
         }
 
-        // POST api/user/add
-        [HttpPost("add")]
+        // POST api/user
+        [HttpPost]
         public async Task<IActionResult> Post([FromBody]RegistrationViewModel model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            
+
             var user = new ApplicationUser();
             user.UserName = model.Email;
             user.Email = model.Email;
@@ -66,7 +63,7 @@ namespace SpentBook.Web.Controllers
             var result = await _signInManager.UserManager.CreateAsync(user, model.Password);
 
             if (!result.Succeeded)
-                return new BadRequestObjectResult(Errors.AddErrorsToModelState(result, ModelState));
+                return new BadRequestObjectResult(result);
 
             // Register as locked if enabled
             // if (_appConfig.NewUserAsLocked)
@@ -76,11 +73,68 @@ namespace SpentBook.Web.Controllers
                 // var lockoutEndDate = new DateTime(2999,01,01);
                 // await _userManager.SetLockoutEnabledAsync(userIdentity, true);
                 // await  _userManager.SetLockoutEndDateAsync(userIdentity, lockoutEndDate);
-                
+
                 _emailService.ConfirmRegister(model.UrlCallbackConfirmation, user);
             }
 
-            return new OkObjectResult("Account created");
+            return new OkObjectResult(result);
+        }
+
+        // PUT api/user
+        [HttpPut]
+        [Authorize]
+        public async Task<IActionResult> Put([FromBody]RegistrationViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var user = await _userManager.FindByIdAsync(model.UserId);
+            if (user == null)
+                return BadRequest(Errors.AddErrorToModelState("login_failure", "User not found.", ModelState));
+            
+            user.Email = model.Email;
+            user.FirstName = model.FirstName;
+            user.LastName = model.LastName;
+
+            var result = await _signInManager.UserManager.UpdateAsync(user);
+
+            if (!result.Succeeded)
+                return new BadRequestObjectResult(result);
+
+            return new OkObjectResult(result);
+        }
+
+        // GET api/user
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> Get(string userId)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var user = await _signInManager.UserManager.FindByIdAsync(userId);
+
+            if (user == null)
+                return BadRequest(Errors.AddErrorToModelState("login_failure", "User not found.", ModelState));
+
+            return new OkObjectResult(user);
+        }
+
+        // DELETE api/user
+        [HttpDelete]
+        [Authorize]
+        public async Task<IActionResult> Delete(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+                return BadRequest(Errors.AddErrorToModelState("login_failure", "User not found.", ModelState));
+
+            var result = await _signInManager.UserManager.DeleteAsync(user);
+
+            if (!result.Succeeded)
+                return new BadRequestObjectResult(result);
+
+            return new OkObjectResult(result);
         }
     }
 }

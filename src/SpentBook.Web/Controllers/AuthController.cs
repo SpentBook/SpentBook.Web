@@ -117,5 +117,36 @@ namespace SpentBook.Web
 
             return BadRequest(result);
         }
+
+        [HttpPost("ResetPassword")]
+        public async Task<ActionResult> ResetPassword([FromBody]ConfirmEmailResendViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+                
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+                return BadRequest(Errors.AddErrorToModelState("login_failure", "Email not found.", ModelState));
+
+            _emailService.ResetPassword(model.UrlCallbackConfirmation, user);
+            return new OkObjectResult(true);
+        }
+
+        [HttpPost("ChangePassword")]
+        public async Task<ActionResult> ChangePassword([FromBody]ChangePasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (model.Password != model.ConfirmPassword)
+                return BadRequest(Errors.AddErrorToModelState("login_failure", "Password confirmation does not match with an informed password", ModelState));
+            
+            var user = await _userManager.FindByIdAsync(model.UserId);
+            if (user == null)
+                return BadRequest(Errors.AddErrorToModelState("login_failure", "User not found.", ModelState));
+            
+            var result = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
+            return new OkObjectResult(result);
+        }
     }
 }
