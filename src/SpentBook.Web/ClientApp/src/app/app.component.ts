@@ -11,6 +11,7 @@ export class AppComponent {
   resultado = false;
 
   constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
+    
     http.get<boolean>(baseUrl + 'api/Post/Add').subscribe(result => {
       this.resultado = result;
     }, error => console.error(error));

@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <title>ClientApp</title>
@@ -7,8 +8,50 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
-</head>
+
+  <style>
+    body,
+    html {
+      height: 100%;
+      margin: 0px;
+      padding: 0px;
+    }
+
+    #splash {
+      position: absolute;
+      height: 100%;
+      width: 100%;
+      top: 0;
+      left: 0;
+      background-color: #FFF;
+      
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #splash .logo {
+      width: 190px;
+      height: 200px;
+      background: url(assets/logo.png) center center no-repeat;
+    }
+
+    .loaded {
+      display: none;
+      opacity: 0;
+      transition: visibility 0s 1s, opacity 1s linear;
+    }
+  </style>
+
 <body>
-  <app-root></app-root>
+  <app-root>
+  </app-root>
+
+  <div id="splash">
+    <div class="logo"></div>
+  </div>
+
 </body>
+
 </html>
