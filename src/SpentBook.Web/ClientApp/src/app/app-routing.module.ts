@@ -1,13 +1,15 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { PageLoginComponent }  from './account/pages/page-login/page-login.component';
+import { AuthGuardService }  from './account/services/auth-guard.service';
+import { PageHomeComponent } from './dashboard/page-home/page-home.component';
 
 const appRoutes: Routes = [
-  { path: '', component: PageLoginComponent }
+  { path: '', component: PageHomeComponent, canActivate: [AuthGuardService] }
 ];
 
 @NgModule({
+  providers: [AuthGuardService],
   imports: [RouterModule.forRoot(appRoutes)],
   exports: [RouterModule]
 })

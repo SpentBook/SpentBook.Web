@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using SpentBook.Web.Config;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using SpentBook.Web.Email;
+using SpentBook.Web.Middleware;
 
 namespace SpentBook.Web
 {
@@ -170,16 +171,18 @@ namespace SpentBook.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ApplicationDbContext context)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
+            app.UseMiddleware(typeof(ErrorHandlingMiddleware));
+            
+            // if (env.IsDevelopment())
+            // {
+            //     app.UseDeveloperExceptionPage();
+            // }
+            // else
+            // {
+            //     app.UseExceptionHandler("/Error");
+            //     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+            //     app.UseHsts();
+            // }
 
             // Expose the members of the 'Microsoft.AspNetCore.Http' namespace 
             // at the top of the file:

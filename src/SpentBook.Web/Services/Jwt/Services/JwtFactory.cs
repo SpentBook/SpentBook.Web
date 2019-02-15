@@ -1,10 +1,13 @@
 ﻿using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using SpentBook.Web.Config;
+using SpentBook.Web.ViewsModels;
 
 namespace SpentBook.Web.Jwt
 {
@@ -16,6 +19,24 @@ namespace SpentBook.Web.Jwt
         {
             _jwtOptions = appConfig.Jwt;
             ThrowIfInvalidOptions(_jwtOptions);
+        }
+        
+        public ClaimsIdentity GenerateClaimsIdentity(string userName, string id)
+        {
+            return new ClaimsIdentity(new GenericIdentity(userName, "Token"), new[]
+                {
+                    new Claim(Constants.Id, id),
+                    new Claim(Constants.Rol, Constants.ApiAccess)
+                });
+        }
+        
+        public async Task<(string UserId, string Token, int SecondsToExpires)> GenerateJwt(ClaimsIdentity identity, IJwtFactory jwtFactory, string userName, JwtIssuerOptions jwtOptions, JsonSerializerSettings serializerSettings)
+        {
+            var userId = identity.Claims.Single(c => c.Type == "id").Value;
+            var token = await jwtFactory.GenerateEncodedToken(userName, identity);
+            var secondsToExpires = (int)jwtOptions.ValidFor.TotalSeconds;
+
+            return (userId, token, secondsToExpires);
         }
 
         public async Task<string> GenerateEncodedToken(string userName, ClaimsIdentity identity)
@@ -43,15 +64,6 @@ namespace SpentBook.Web.Jwt
             return encodedJwt;
         }
 
-        public ClaimsIdentity GenerateClaimsIdentity(string userName, string id)
-        {
-            return new ClaimsIdentity(new GenericIdentity(userName, "Token"), new[]
-                {
-                    new Claim(Constants.Id, id),
-                    new Claim(Constants.Rol, Constants.ApiAccess)
-                });
-        }
-
         /// <returns>Date converted to seconds since Unix epoch (Jan 1, 1970, midnight UTC).</returns>
         private static long ToUnixEpochDate(DateTime date)
           => (long)Math.Round((date.ToUniversalTime() -
@@ -76,6 +88,6 @@ namespace SpentBook.Web.Jwt
             {
                 throw new ArgumentNullException(nameof(JwtIssuerOptions.JtiGenerator));
             }
-        }
+        }        
     }
 }

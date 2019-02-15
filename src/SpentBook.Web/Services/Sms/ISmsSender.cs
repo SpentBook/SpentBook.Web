@@ -1,4 +1,4 @@
-namespace SpentBook.Web.Controllers
+namespace SpentBook.Web.Sms
 {
     public interface ISmsSender
     {

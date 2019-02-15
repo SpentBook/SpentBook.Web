@@ -8,6 +8,7 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using SpentBook.Web.Config;
 using SpentBook.Web.Email;
+using SpentBook.Web.Extensions;
 using SpentBook.Web.Jwt;
 using SpentBook.Web.ViewsModels;
 
@@ -42,111 +43,110 @@ namespace SpentBook.Web
 
         // POST api/auth/login
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody]LoginViewModel credentials)
+        public async Task<IActionResult> Login([FromBody]LoginViewModel loginModel)
         {
             if (!ModelState.IsValid)
+                return BadRequest(new ErrorViewModel(this));
+
+            // This doesn't count login failures towards account lockout
+            // To enable password failures to trigger account lockout, set lockoutOnFailure: true
+            var result = await _signInManager.PasswordSignInAsync(loginModel.UserName, loginModel.Password, false, lockoutOnFailure: true);
+
+            // if (result.RequiresTwoFactor)
+            // {
+            //     return Ok();
+            // }
+
+            if (!result.Succeeded)
             {
-                return BadRequest(ModelState);
-            }
-            else
-            {
-                // This doesn't count login failures towards account lockout
-                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(credentials.UserName, credentials.Password, false, lockoutOnFailure: true);
-
-                if (result.Succeeded)
-                {
-                    _logger.LogInformation("User logged in.");
-
-                    var user = await _userManager.FindByNameAsync(credentials.UserName);
-                    var identity = _jwtFactory.GenerateClaimsIdentity(credentials.UserName, user.Id);
-
-                    if (identity == null)
-                        return BadRequest(Errors.AddErrorToModelState("login_failure", "Error on JWT creation ", ModelState));
-
-                    var jwt = await Tokens.GenerateJwt(identity, _jwtFactory, credentials.UserName, _appConfig.Jwt, new JsonSerializerSettings { Formatting = Formatting.Indented });
-                    return new OkObjectResult(jwt);
-                }
-
-                if (result.RequiresTwoFactor)
-                {
-                    return Ok();
-                    //return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
-                }
-
                 if (result.IsLockedOut)
-                {
-                    _logger.LogWarning("User account locked out.");
-                    return BadRequest(Errors.AddErrorToModelState("login_failure", "User account locked out.", ModelState));
-                }
+                    return BadRequest(new ErrorViewModel(this, ErrorType.IsLockedOut));
 
                 if (result.IsNotAllowed)
-                {
-                    _logger.LogWarning("User account is not allowed.");
-                    return BadRequest(Errors.AddErrorToModelState("login_failure", "User account is not allowed, confirm your email!", ModelState));
-                }
+                    return BadRequest(new ErrorViewModel(this, ErrorType.IsNotAllowed));
+                //return BadRequest(new ErrorViewModel(this, "User account is not allowed, confirm your email!"));
 
-                return BadRequest(Errors.AddErrorToModelState("login_failure", "Invalid login attempt.", ModelState));
+                return BadRequest(new ErrorViewModel(this, ErrorType.UserNotFound));
             }
+
+            var user = await _userManager.FindByNameAsync(loginModel.UserName);
+            var token = await TokenViewModel.GenerateAsync(_jwtFactory, _appConfig, user.Id, loginModel.UserName);
+
+            if (token == null)
+                return BadRequest(new ErrorViewModel(this, ErrorType.JwtError));
+
+            return new OkObjectResult(token);
         }
 
         // POST: /Auth/ConfirmEmailResend
         [HttpPost("ConfirmEmailResend")]
-        public async Task<ActionResult> ConfirmEmailResend([FromBody]ConfirmEmailResendViewModel model)
+        public async Task<IActionResult> ConfirmEmailResend([FromBody]ConfirmEmailResendViewModel model)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(new ErrorViewModel(this));
+
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null)
-                return BadRequest(Errors.AddErrorToModelState("login_failure", "Email not found.", ModelState));
+                return BadRequest(new ErrorViewModel(this, ErrorType.UserNotFound));
 
             _emailService.ConfirmRegister(model.UrlCallbackConfirmation, user);
-            return new OkObjectResult(true);
+            return new EmptyResult();
         }
-        
+
         // GET: /Auth/ConfirmEmail
         [HttpGet("ConfirmEmail")]
-        public async Task<ActionResult> ConfirmEmail(string userId, string code)
+        public async Task<IActionResult> ConfirmEmail(string userId, string code)
         {
-            if (userId == null || code == null)
-                return BadRequest(Errors.AddErrorToModelState("error", "Invalid parameters", ModelState));
+            if (!ModelState.IsValid || userId == null || code == null)
+                return BadRequest(new ErrorViewModel(this));
 
             var user = await _userManager.FindByIdAsync(userId);
-            var result = await _userManager.ConfirmEmailAsync(user, code);
+            if (user == null)
+                return BadRequest(new ErrorViewModel(this, ErrorType.UserNotFound));
 
-            if (result.Succeeded)
-                return new OkObjectResult(true);
+            var identityResult = await _userManager.ConfirmEmailAsync(user, code);
 
-            return BadRequest(result);
+            if (!identityResult.Succeeded)
+                return BadRequest(new ErrorViewModel(this, identityResult, ErrorType.ConfirmEmailError));
+
+            return new EmptyResult();
         }
 
         [HttpPost("ResetPassword")]
-        public async Task<ActionResult> ResetPassword([FromBody]ConfirmEmailResendViewModel model)
+        public async Task<IActionResult> ResetPassword([FromBody]ConfirmEmailResendViewModel model)
         {
             if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-                
+                return BadRequest(new ErrorViewModel(this));
+
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null)
-                return BadRequest(Errors.AddErrorToModelState("login_failure", "Email not found.", ModelState));
+                return BadRequest(new ErrorViewModel(this, ErrorType.UserNotFound));
 
             _emailService.ResetPassword(model.UrlCallbackConfirmation, user);
-            return new OkObjectResult(true);
+            return new EmptyResult();
         }
 
         [HttpPost("ChangePassword")]
-        public async Task<ActionResult> ChangePassword([FromBody]ChangePasswordViewModel model)
+        public async Task<IActionResult> ChangePassword([FromBody]ChangePasswordViewModel model)
         {
+            /// TODO: CRIAR FILTRO
             if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+                return BadRequest();
 
+            /// TODO: MOVER PARA VALIDATION
             if (model.Password != model.ConfirmPassword)
-                return BadRequest(Errors.AddErrorToModelState("login_failure", "Password confirmation does not match with an informed password", ModelState));
-            
+                return BadRequest(new ErrorViewModel(this, ErrorType.PasswordNotMatch));
+
+            /// TODO: VER FORMA DE FAZER VIA FILTRO NO PARAMETRO
             var user = await _userManager.FindByIdAsync(model.UserId);
             if (user == null)
-                return BadRequest(Errors.AddErrorToModelState("login_failure", "User not found.", ModelState));
-            
-            var result = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
-            return new OkObjectResult(result);
+                return BadRequest(new ErrorViewModel(this, ErrorType.UserNotFound));
+
+            var identityResult = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
+            if (!identityResult.Succeeded)
+                return BadRequest(new ErrorViewModel(this, identityResult, ErrorType.ChangePasswordError));
+
+            return new EmptyResult();
         }
     }
 }

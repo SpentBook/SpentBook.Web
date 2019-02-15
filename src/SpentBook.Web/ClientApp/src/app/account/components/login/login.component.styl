@@ -1,0 +1,42 @@
+$loginWidth = 300px;
+$inputPadding = 8px;
+
+:host
+    width: $loginWidth
+
+fieldset {
+    border none
+    text-align: center
+
+    input {
+        width $loginWidth - ($inputPadding * 2)
+        padding $inputPadding
+    }   
+
+    button {
+        width $loginWidth
+    }
+
+    .btn-login {
+        margin-top 20px
+    }
+
+    .profile-image {
+        width 100px
+        height 100px
+        display inline-block
+        overflow hidden
+        border-radius: 50%
+        background-color #4A6C88
+    }
+
+    .profile-welcome {
+        display block
+        width $loginWidth
+        height 40px;
+        color #ffffff
+        margin-top 10px
+        font-size 30px
+        word-wrap: break-word;
+    }
+}

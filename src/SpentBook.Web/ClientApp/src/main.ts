@@ -18,10 +18,12 @@ const providers = [
 
 platformBrowserDynamic(providers).bootstrapModule(AppModule)
 .then(() => {
-    let splashScreen = document.getElementById('splash');
-    splashScreen.remove();
+    // let splashScreen = document.getElementById('splash');
+    // splashScreen.remove();
 
     // splashScreen.setAttribute('class', 'loaded');
     // setTimeout(function(){ splashScreen.remove(); }, 1000);
 })
-.catch(err => console.error(err));
+.catch(err => {
+  console.error(err)
+});

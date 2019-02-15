@@ -1,21 +1,22 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace SpentBook.Web.Jwt
+namespace SpentBook.Web.Extensions
 {
-    public static class Errors
+    public static class ModelStateExtensions
     {
-        public static ModelStateDictionary AddErrorsToModelState(IdentityResult identityResult, ModelStateDictionary modelState)
+        public static ModelStateDictionary AddIdentityErrors(this ModelStateDictionary modelState, IdentityResult identityResult)
         {
             foreach (var e in identityResult.Errors)
             {
                 modelState.TryAddModelError(e.Code, e.Description);
             }
 
+            
             return modelState;
         }
 
-        public static ModelStateDictionary AddErrorToModelState(string code, string description, ModelStateDictionary modelState)
+        public static ModelStateDictionary AddError(this ModelStateDictionary modelState, string code, string description)
         {
             modelState.TryAddModelError(code, description);
             return modelState;

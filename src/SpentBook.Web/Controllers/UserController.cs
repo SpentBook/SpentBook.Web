@@ -23,6 +23,7 @@ namespace SpentBook.Web.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly AppConfig _appConfig;
+        private readonly IJwtFactory _jwtFactory;
         private readonly EmailService _emailService;
 
         private readonly ILogger _logger;
@@ -36,6 +37,7 @@ namespace SpentBook.Web.Controllers
             ILoggerFactory loggerFactory,
             SignInManager<ApplicationUser> signInManager,
             AppConfig appConfig,
+            IJwtFactory jwtFactory,
             EmailService emailService
         )
         {
@@ -44,6 +46,7 @@ namespace SpentBook.Web.Controllers
             _logger = loggerFactory.CreateLogger<UserController>();
             _signInManager = signInManager;
             _appConfig = appConfig;
+            _jwtFactory = jwtFactory;
             _emailService = emailService;
         }
 
@@ -52,7 +55,11 @@ namespace SpentBook.Web.Controllers
         public async Task<IActionResult> Post([FromBody]RegistrationViewModel model)
         {
             if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+                return BadRequest(new ErrorViewModel(this));
+
+            /// TODO: MOVER PARA VALIDATION
+            if (model.Password != model.ConfirmPassword)
+                return BadRequest(new ErrorViewModel(this, ErrorType.PasswordNotMatch));
 
             var user = new ApplicationUser();
             user.UserName = model.Email;
@@ -60,10 +67,10 @@ namespace SpentBook.Web.Controllers
             user.FirstName = model.FirstName;
             user.LastName = model.LastName;
 
-            var result = await _signInManager.UserManager.CreateAsync(user, model.Password);
+            var identityResult = await _signInManager.UserManager.CreateAsync(user, model.Password);
 
-            if (!result.Succeeded)
-                return new BadRequestObjectResult(result);
+            if (!identityResult.Succeeded)
+               return BadRequest(new ErrorViewModel(this, identityResult, ErrorType.AddUserError));
 
             // Register as locked if enabled
             // if (_appConfig.NewUserAsLocked)
@@ -76,8 +83,12 @@ namespace SpentBook.Web.Controllers
 
                 _emailService.ConfirmRegister(model.UrlCallbackConfirmation, user);
             }
-
-            return new OkObjectResult(result);
+            
+            // Return token to auto login
+            var token = await TokenViewModel.GenerateAsync(_jwtFactory, _appConfig, user.Id, user.UserName);
+            if (token == null)
+                return BadRequest(new ErrorViewModel(this, ErrorType.JwtError));
+            return new OkObjectResult(token);
         }
 
         // PUT api/user
@@ -86,22 +97,22 @@ namespace SpentBook.Web.Controllers
         public async Task<IActionResult> Put([FromBody]RegistrationViewModel model)
         {
             if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+                return BadRequest(new ErrorViewModel(this));
 
             var user = await _userManager.FindByIdAsync(model.UserId);
             if (user == null)
-                return BadRequest(Errors.AddErrorToModelState("login_failure", "User not found.", ModelState));
+                return BadRequest(new ErrorViewModel(this, ErrorType.UserNotFound));
             
             user.Email = model.Email;
             user.FirstName = model.FirstName;
             user.LastName = model.LastName;
 
-            var result = await _signInManager.UserManager.UpdateAsync(user);
+            var identityResult = await _signInManager.UserManager.UpdateAsync(user);
 
-            if (!result.Succeeded)
-                return new BadRequestObjectResult(result);
+            if (!identityResult.Succeeded)
+                return BadRequest(new ErrorViewModel(this, identityResult, ErrorType.UserUpdateError));
 
-            return new OkObjectResult(result);
+            return new EmptyResult();
         }
 
         // GET api/user
@@ -109,13 +120,12 @@ namespace SpentBook.Web.Controllers
         [Authorize]
         public async Task<IActionResult> Get(string userId)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            if (!ModelState.IsValid || string.IsNullOrWhiteSpace(userId))
+                return BadRequest(new ErrorViewModel(this));
 
             var user = await _signInManager.UserManager.FindByIdAsync(userId);
-
             if (user == null)
-                return BadRequest(Errors.AddErrorToModelState("login_failure", "User not found.", ModelState));
+                return BadRequest(new ErrorViewModel(this, ErrorType.UserNotFound));
 
             return new OkObjectResult(user);
         }
@@ -125,16 +135,19 @@ namespace SpentBook.Web.Controllers
         [Authorize]
         public async Task<IActionResult> Delete(string userId)
         {
+            if (!ModelState.IsValid || string.IsNullOrWhiteSpace(userId))
+                return BadRequest(new ErrorViewModel(this));
+
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
-                return BadRequest(Errors.AddErrorToModelState("login_failure", "User not found.", ModelState));
+                return BadRequest(new ErrorViewModel(this, ErrorType.UserNotFound));
 
-            var result = await _signInManager.UserManager.DeleteAsync(user);
+            var identityResult = await _signInManager.UserManager.DeleteAsync(user);
 
-            if (!result.Succeeded)
-                return new BadRequestObjectResult(result);
+            if (!identityResult.Succeeded)
+                return BadRequest(new ErrorViewModel(this, identityResult, ErrorType.UserDeleteError));
 
-            return new OkObjectResult(result);
+            return new EmptyResult();
         }
     }
 }
