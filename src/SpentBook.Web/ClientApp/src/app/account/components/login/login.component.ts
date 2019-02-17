@@ -8,7 +8,7 @@ import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms'
   styleUrls: ['./login.component.styl']
 })
 export class LoginComponent implements OnInit {
-  authForm: FormGroup;  
+  authForm: FormGroup;
   isSubmitting = false;
 
   get email(): any { return this.authForm.get('email'); }
@@ -17,7 +17,7 @@ export class LoginComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private fb: FormBuilder
-  ) { 
+  ) {
     // use FormBuilder to create a form group
     this.authForm = this.fb.group({
       'email': ['', Validators.required],
@@ -29,6 +29,12 @@ export class LoginComponent implements OnInit {
   }
 
   submitForm() {
-    this.authService.login(this.email.value, this.password.value);
+    this.authService.login(this.email.value, this.password.value)
+      .subscribe(
+        data => alert(3),
+        err => {
+          alert(4)
+        }
+      );
   }
 }

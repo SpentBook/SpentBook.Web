@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { LoginResponse } from './models/login-response.model';
+import { Token } from './models/token.model';
 import { LoginRequest } from './models/login-request.model';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/internal/Observable';
@@ -17,12 +17,12 @@ export class ApiService {
     private http: HttpClient
   ) {}
 
-  login(request: LoginRequest): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${environment.apiUrl}/Auth/login`, request);
+  login(request: LoginRequest): Observable<Token> {
+    return this.http.post<Token>(`${environment.apiUrl}/Auth/login`, request);
   }
 
-  confirmEmail(request: ConfirmEmail): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${environment.apiUrl}/Auth/ConfirmEmail`, { request });
+  confirmEmail(request: ConfirmEmail): Observable<Token> {
+    return this.http.post<Token>(`${environment.apiUrl}/Auth/ConfirmEmail`, { request });
   }
 
   confirmEmailResend(request: ConfirmEmailResend): Observable<ApiResult> {
