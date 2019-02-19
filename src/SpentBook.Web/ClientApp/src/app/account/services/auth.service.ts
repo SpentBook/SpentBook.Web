@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import { ApiService } from 'src/app/core/api.service';
 import { LoginRequest } from 'src/app/core/models/login-request.model';
 import { Observable } from 'rxjs';
+import { share, tap } from 'rxjs/operators';
 import { Token } from 'src/app/core/models/token.model';
+import { getToken } from '@angular/router/src/utils/preactivation';
 
 
 @Injectable()
@@ -11,29 +13,32 @@ export class AuthService {
     private apiService: ApiService
   ) {}
 
-  login(login: string, password: string) : Observable<Token> {
+  public login(login: string, password: string) : Observable<Token> {
     var request = new LoginRequest();
     request.userName = login;
     request.password = password;
     
-    var observable = this.apiService.login(request);
-    observable.subscribe(
-      data => alert(1),
-      error => alert(2222)
+    return this.apiService.login(request).pipe(
+      tap(
+        token => this.saveToken(token),
+        error => {}
+      )
     );
-    observable.subscribe(
-      data => alert(11),
-      error => alert(12)
-    );
-    return observable;
   }
 
-  private getToken(): String {
-    return window.localStorage['token'];
+  public isLogged() : boolean {
+    return window.localStorage['token'] != null;
   }
 
-  private saveToken(token: String) {
-    window.localStorage['token'] = token;
+  private getToken(): Token {
+    var token = window.localStorage['token'];
+    if (token != null)
+      return <Token>JSON.parse(token);
+    return null;
+  }
+
+  private saveToken(token: Token) {
+    window.localStorage['token'] = JSON.stringify(token);
   }
 
   private destroyToken() {

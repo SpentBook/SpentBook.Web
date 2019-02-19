@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -10,11 +11,14 @@ import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms'
 export class LoginComponent implements OnInit {
   authForm: FormGroup;
   isSubmitting = false;
+  returnUrl: string;
 
   get email(): any { return this.authForm.get('email'); }
   get password(): any { return this.authForm.get('password'); }
 
   constructor(
+    private route: ActivatedRoute,
+    private router: Router,
     private authService: AuthService,
     private fb: FormBuilder
   ) {
@@ -23,6 +27,9 @@ export class LoginComponent implements OnInit {
       'email': ['', Validators.required],
       'password': ['', Validators.required]
     });
+
+    // get return url from route parameters or default to '/'
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
   }
 
   ngOnInit() {
@@ -31,7 +38,7 @@ export class LoginComponent implements OnInit {
   submitForm() {
     this.authService.login(this.email.value, this.password.value)
       .subscribe(
-        data => alert(3),
+        data => this.router.navigateByUrl(this.returnUrl),
         err => {
           alert(4)
         }
