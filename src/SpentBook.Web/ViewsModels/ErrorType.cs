@@ -13,6 +13,6 @@ namespace SpentBook.Web.ViewsModels
         AddUserError,
         UserUpdateError,
         UserDeleteError,
-        Unkown
+        Unknown
     }
 }

@@ -12,7 +12,7 @@
     padding 8px
     color #ffffff
     border: 0px solid #606C75
-    background-color #4D5860
+    background-color #011A2C
     border-radius 5px;
 
 .form-input input::placeholder
@@ -24,17 +24,19 @@
     border: none;
     color #ffffff
     margin-top 5px
+    min-height 15px
     outline:none;
 
 .form-button button:hover
     opacity 0.8
+    cursor pointer
 
 .form-button button:active
     opacity 0.70
 
 .form-button.btn-bg button
-    background-color: #1E5D8C;
-    border-radius: 10px;
+    background-color #336890
+    // border-radius: 10px;
     padding 10px
 
 // i {
@@ -63,3 +65,14 @@
 //   transform: rotate(45deg);
 //   -webkit-transform: rotate(45deg);
 // }
+
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+}

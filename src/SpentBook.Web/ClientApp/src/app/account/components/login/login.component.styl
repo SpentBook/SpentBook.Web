@@ -2,19 +2,28 @@ $loginWidth = 300px;
 $inputPadding = 8px;
 
 :host
-    width: $loginWidth
+    color #ffffff
 
 fieldset {
     border none
     text-align: center
-
+    
     input {
         width $loginWidth - ($inputPadding * 2)
         padding $inputPadding
     }   
 
     button {
-        width $loginWidth
+        min-width 80px
+        border-radius 19px
+    }
+    
+    .line-middle {
+        height 200px;
+    }
+
+    .box-error {
+        font-size 13px
     }
 
     .btn-login {
@@ -26,17 +35,183 @@ fieldset {
         height 100px
         display inline-block
         overflow hidden
-        border-radius: 50%
-        background-color #4A6C88
+        border-radius 50%
+        background-color #4D7B9D
     }
 
     .profile-welcome {
-        display block
+        display inline-block
         width $loginWidth
-        height 40px;
-        color #ffffff
+        height 20px;
         margin-top 10px
-        font-size 30px
-        word-wrap: break-word;
+        margin-bottom 20px
+        font-size 20px
+        word-wrap break-word
+        vertical-align top
     }
+
+    .box-facebook {
+        &:hover {
+            opacity 0.8
+            cursor pointer
+        }
+
+        &:active {
+            opacity 0.7
+        }
+
+        display inline-block
+        width 250px
+        height 30px
+        background-color #38538A
+
+        .img {
+            float left
+            height 100%
+            width 30px
+        }
+
+        .text {
+            padding-left 10px
+            padding-top 3px
+            float left
+            height 100%
+        }       
+    }
+
+    .box-division {
+        margin-top: 30px;
+        width $loginWidth
+        display: inline-block;
+
+        .hr-sect {
+            display: flex;
+            flex-basis: 100%;
+            align-items: center;
+            color: #ffffff
+            font-size: 12px;
+            margin: 8px 0px;
+        }
+        .hr-sect::before,
+        .hr-sect::after {
+            content: "";
+            flex-grow: 1;
+            background: #ffffff
+            height: 1px;
+            font-size: 0px;
+            line-height: 0px;
+            margin: 0px 16px;
+        }
+    }
+
+    .box-others {
+        margin-top 40px
+        .form-button {
+            margin-bottom 7px
+        }
+    }
+}
+
+.lds-roller {
+  display: inline-block;
+  position: relative;
+  width: 64px;
+  height: 64px;
+}
+
+.lds-roller div {
+  animation: lds-roller 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  transform-origin: 32px 32px;
+}
+
+.lds-roller div:after {
+  content: " ";
+  display: block;
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #fff;
+  margin: -3px 0 0 -3px;
+}
+
+.lds-roller div:nth-child(1) {
+  animation-delay: -0.036s;
+}
+
+.lds-roller div:nth-child(1):after {
+  top: 50px;
+  left: 50px;
+}
+
+.lds-roller div:nth-child(2) {
+  animation-delay: -0.072s;  
+}
+
+.lds-roller div:nth-child(2):after {
+  top: 54px;
+  left: 45px;
+}
+
+.lds-roller div:nth-child(3) {
+  animation-delay: -0.108s;
+}
+
+.lds-roller div:nth-child(3):after {
+  top: 57px;
+  left: 39px;
+}
+
+.lds-roller div:nth-child(4) {
+  animation-delay: -0.144s;
+}
+
+.lds-roller div:nth-child(4):after {
+  top: 58px;
+  left: 32px;
+}
+
+.lds-roller div:nth-child(5) {
+  animation-delay: -0.18s;
+}
+
+.lds-roller div:nth-child(5):after {
+  top: 57px;
+  left: 25px;
+}
+
+.lds-roller div:nth-child(6) {
+  animation-delay: -0.216s;
+}
+
+.lds-roller div:nth-child(6):after {
+  top: 54px;
+  left: 19px;
+}
+
+.lds-roller div:nth-child(7) {
+  animation-delay: -0.252s;
+}
+
+.lds-roller div:nth-child(7):after {
+  top: 50px;
+  left: 14px;
+}
+
+.lds-roller div:nth-child(8) {
+  animation-delay: -0.288s;
+}
+.lds-roller div:nth-child(8):after {
+  top: 45px;
+  left: 10px;
+}
+@keyframes lds-roller {
+  0% {
+    transform: rotate(0deg);
+    opacity 0
+  }
+  100% {
+    transform: rotate(360deg);
+    opacity 0.3
+  }
 }
