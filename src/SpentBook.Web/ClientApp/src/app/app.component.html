@@ -1,1 +1,3 @@
-<router-outlet></router-outlet>
+<div [@fadeAnimation]="prepareRoute(o)">
+  <router-outlet #o="outlet"></router-outlet>
+</div>

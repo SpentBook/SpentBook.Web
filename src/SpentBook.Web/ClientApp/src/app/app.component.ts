@@ -1,10 +1,15 @@
 import { Component, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { RouterOutlet } from '@angular/router';
+import { fadeAnimation } from './animations/animations';
 
 @Component({
   selector: 'body',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.styl']
+  styleUrls: ['./app.component.styl'],
+  animations: [
+    fadeAnimation
+  ]
 })
 export class AppComponent {
   title = 'ClientApp';
@@ -15,5 +20,9 @@ export class AppComponent {
     http.get<boolean>(baseUrl + 'api/Post/Add').subscribe(result => {
       this.resultado = result;
     }, error => console.error(error));
+  }
+
+  prepareRoute(outlet: RouterOutlet) {
+    return outlet.isActivated ? outlet.activatedRoute : '';
   }
 }

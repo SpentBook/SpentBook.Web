@@ -1,5 +1,5 @@
 <form [formGroup]="authForm" (ngSubmit)="submitForm()">
-    <fieldset [disabled]="isSubmitting">
+    <fieldset [disabled]="loading">
         <div class="profile-image">
             <img src="assets/icon-login.png" width="100%" alt="Profile image">
         </div>
@@ -13,7 +13,7 @@
 
             <div class="box-login" *ngIf="!showError && !loading">
                 <div class="form-input">
-                    <input formControlName="email" placeholder="Nome do usuário" type="text" />
+                    <input formControlName="email" placeholder="E-mail" type="text" />
                 </div>
 
                 <div class="form-input">
@@ -48,7 +48,7 @@
             </div>
         </div>
 
-        <div class="box-division">
+        <div class="box-division noselect">
             <div class="hr-sect">OU</div>
         </div>
 
@@ -62,14 +62,14 @@
                 <span>Continuar com facebook</span>
             </div>
         </div>
-
+        
         <div class="box-others">
             <div class="form-button">
-                <button type="submit">Cadastrar uma nova conta</button>
+                <button type="button" [routerLink]="['/register']">Cadastrar uma nova conta</button>
             </div>
 
             <div class="form-button">
-                <button type="submit">Esqueci minha senha</button>
+                <button type="button" [routerLink]="['/forgot-password']">Esqueci minha senha</button>
             </div>
         </div>
     </fieldset>

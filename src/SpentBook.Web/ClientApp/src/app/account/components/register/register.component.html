@@ -1,0 +1,59 @@
+<form [formGroup]="authForm" (ngSubmit)="submitForm()">
+  <fieldset [disabled]="loading">
+    <div class="box-login" *ngIf="!showError && !loading">
+      <div class="form-input">
+        <input formControlName="name" placeholder="Nome" type="text" />
+      </div>
+
+      <div class="form-input">
+        <input formControlName="lastName" placeholder="Sobrenome" type="text" />
+      </div>
+
+      <div class="form-input">
+        <input formControlName="email" placeholder="E-mail" type="text" />
+      </div>
+
+      <div class="form-input">
+        <input formControlName="celphone" placeholder="Celular" type="text" />
+      </div>
+
+      <div class="form-input">
+        <input formControlName="password" placeholder="Senha" type="password" />
+      </div>
+      
+      <div class="form-input">
+        <input formControlName="password-confirm" placeholder="Confirmar senha" type="password" />
+      </div>
+
+      <div class="form-input">
+        <input type="radio" name="sex" formControlName="sex" placeholder="Sexo" value="0" /> Masculino
+        <input type="radio" name="sex" formControlName="sex" placeholder="Sexo" value="1" /> Feminino
+      </div>
+
+      <div class="form-button btn-bg btn-login">
+        <button type="submit">Cadastrar</button>
+      </div>
+    </div>
+
+    <div class="box-loading" *ngIf="loading">
+      <div class="lds-roller">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </div>
+
+    <div class="box-error" *ngIf="showError">
+      <span>{{errorMessage}}</span>
+
+      <div class="form-button btn-bg btn-login">
+        <button type="button" (click)="backLogin()">Ok</button>
+      </div>
+    </div>
+  </fieldset>
+</form>

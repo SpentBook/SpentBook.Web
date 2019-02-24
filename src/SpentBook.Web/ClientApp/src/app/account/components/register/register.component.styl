@@ -1,0 +1,21 @@
+$loginWidth = 300px;
+$inputPadding = 8px;
+
+:host
+    color #ffffff
+
+fieldset {
+    border none
+    text-align: center
+    
+    input {
+        width $loginWidth - ($inputPadding * 2)
+        padding $inputPadding
+    }   
+
+    button {
+        min-width 80px
+        border-radius 19px
+    }
+
+}

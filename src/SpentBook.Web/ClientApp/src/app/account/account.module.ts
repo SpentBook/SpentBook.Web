@@ -8,6 +8,7 @@ import { PageRegisterComponent } from './pages/page-register/page-register.compo
 import { ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from '../app-routing.module';
 import { CoreModule } from '../core/core.module';
+import { RegisterComponent } from './components/register/register.component';
 
 
 @NgModule({
@@ -15,7 +16,8 @@ import { CoreModule } from '../core/core.module';
     PageLoginComponent,
     LoginComponent,
     PageLogoutComponent,
-    PageRegisterComponent
+    PageRegisterComponent,
+    RegisterComponent
   ],
   imports: [
     CommonModule,

@@ -1,12 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
-import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ApiErrorType } from 'src/app/core/models/api-error-type.enum';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ApiError, ApiValidationState } from 'src/app/core/models/api-error.model';
-import { delay, timeout, tap } from 'rxjs/operators';
-import { Observable, of, timer, concat, combineLatest } from 'rxjs';
-import { Token } from '@angular/compiler';
+import { ApiError } from 'src/app/core/models/api-error.model';
+import { timer } from 'rxjs';
 
 /*
 TODO:
@@ -15,9 +13,10 @@ TODO:
 3 - Transição
 4 - Como ou quando matar o observable ?
 5 - Facebook login
-6 - multilanguage
+6 - multi-language
 7 - Criar botão de cancelar login no loading
 8 - Se estiver logado, deve ir para a home
+9 - Fazer o ESC voltar para o login em caso de erro
 */
 
 @Component({

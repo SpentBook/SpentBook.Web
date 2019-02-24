@@ -39,7 +39,7 @@ namespace SpentBook.Web.Middleware
                 if (!context.Response.HasStarted)
                 {
                     context.Response.ContentType = "application/json";
-                    var response = new ErrorViewModel(context.TraceIdentifier, message ?? ReasonPhrases.GetReasonPhrase(context.Response.StatusCode), ErrorType.Unkown);
+                    var response = new ErrorViewModel(context.TraceIdentifier, message ?? ReasonPhrases.GetReasonPhrase(context.Response.StatusCode), ErrorType.Unknown);
                     var json = JsonConvert.SerializeObject(response);
                     await context.Response.WriteAsync(json);
                 }
