@@ -25,15 +25,15 @@ TODO:
   styleUrls: ['./login.component.styl']
 })
 export class LoginComponent implements OnInit {
-  authForm: FormGroup;
+  form: FormGroup;
   isSubmitting = false;
   returnUrl: string;
   showError: boolean;
   errorMessage: string;
   loading: boolean;
 
-  get email(): any { return this.authForm.get('email'); }
-  get password(): any { return this.authForm.get('password'); }
+  get email(): any { return this.form.get('email'); }
+  get password(): any { return this.form.get('password'); }
 
   constructor(
     private route: ActivatedRoute,
@@ -42,7 +42,7 @@ export class LoginComponent implements OnInit {
     private fb: FormBuilder
   ) {
     // use FormBuilder to create a form group
-    this.authForm = this.fb.group({
+    this.form = this.fb.group({
       'email': ['', Validators.required],
       'password': ['', Validators.required]
     });
@@ -53,7 +53,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
   }
-
+  
   submitForm() {
     this.loading = true;
     timer(2000)

@@ -21,7 +21,8 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using SpentBook.Web.Config;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using SpentBook.Web.Email;
-using SpentBook.Web.Middleware;
+using SpentBook.Web.Error;
+using Microsoft.Extensions.Logging;
 
 namespace SpentBook.Web
 {
@@ -40,9 +41,23 @@ namespace SpentBook.Web
             var connection = Configuration.GetConnectionString("ApplicationDbContext");
 
             // Add MVC
-            services.AddMvc()
+            // services.AddMvcCore() ??
+            services.AddMvc(opt =>
+            {
+                opt.UseFilterInvalidModelState();
+            })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
-                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>());
+                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>())
+                .ConfigureApiBehaviorOptions(options =>
+                {
+                    //options.SuppressConsumesConstraintForFormFileParameters = true;
+                    //options.SuppressInferBindingSourcesForParameters = true;
+                    options.SuppressModelStateInvalidFilter = true;
+                    options.SuppressMapClientErrors = true;
+
+                    options.ClientErrorMapping[404].Link =
+                        "https://httpstatuses.com/404";
+                });
 
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
@@ -75,7 +90,7 @@ namespace SpentBook.Web
             // Get/Set JwtIssuerOptions from configuration
             var appConfig = new AppConfig();
             Configuration.GetSection(nameof(AppConfig)).Bind(appConfig);
-            appConfig.Jwt.ValidFor = TimeSpan.FromMinutes( appConfig.TimeoutTokenLogin);
+            appConfig.Jwt.ValidFor = TimeSpan.FromMinutes(appConfig.TimeoutTokenLogin);
             services.AddSingleton(appConfig);
 
             // JWT
@@ -89,7 +104,7 @@ namespace SpentBook.Web
                 options.DefaultForbidScheme = null;
                 options.DefaultScheme = null;
                 options.DefaultSignInScheme = null;
-                options.DefaultSignOutScheme = null;                             
+                options.DefaultSignOutScheme = null;
             })
             .AddCookie(IdentityConstants.ApplicationScheme)
             .AddJwtBearer(configureOptions =>
@@ -125,17 +140,18 @@ namespace SpentBook.Web
             var builder = services.AddIdentityCore<ApplicationUser>(o =>
             {
                 // configure identity options
-                o.Password.RequireDigit = false;
-                o.Password.RequireLowercase = false;
-                o.Password.RequireUppercase = false;
-                o.Password.RequireNonAlphanumeric = false;
+                o.Password.RequireDigit = true;
+                o.Password.RequireLowercase = true;
+                o.Password.RequireUppercase = true;
+                o.Password.RequireNonAlphanumeric = true;
                 o.Password.RequiredLength = 6;
+                o.Password.RequiredUniqueChars = 2;
 
                 // Quando true, os usuarios só vão logar quando aprovarem via e-mail
                 // a parte ruim é que se eu quiser ligar depois de já existir usuário na base, esses usuários não
                 // vão mais conseguir logar até aprovarem
                 o.SignIn.RequireConfirmedEmail = true;
-                           
+
                 o.Lockout = new LockoutOptions()
                 {
                     MaxFailedAccessAttempts = appConfig.MaxFailedAccessAttempts,
@@ -166,23 +182,23 @@ namespace SpentBook.Web
 
             // Add AutoMapper
             services.AddAutoMapper();
+
+            // Problem detail
+            services.ConfigureProblemDetailsModelState();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ApplicationDbContext context)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ApplicationDbContext context, ILoggerFactory loggerFactory)
         {
-            app.UseMiddleware(typeof(ErrorHandlingMiddleware));
-            
-            // if (env.IsDevelopment())
-            // {
-            //     app.UseDeveloperExceptionPage();
-            // }
-            // else
-            // {
-            //     app.UseExceptionHandler("/Error");
-            //     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-            //     app.UseHsts();
-            // }
+            if (!env.IsDevelopment())
+                app.UseHsts();
+
+            // 1) VER TRACE ID AK E NO MODEL VALIDATE
+            // 2) VER type para data invalida, antes do fluentvalidation
+            // 3) Ver error sem objeto
+            // 4) Ver os links gerais de cada erro e trocar tudo lá
+            // 5) Testar redirect
+            app.UseMiddlewareProblemDetails(env, loggerFactory);
 
             // Expose the members of the 'Microsoft.AspNetCore.Http' namespace 
             // at the top of the file:
@@ -221,6 +237,7 @@ namespace SpentBook.Web
                     spa.UseAngularCliServer(npmScript: "start");
                 }
             });
+
 
             context.Database.Migrate();
         }

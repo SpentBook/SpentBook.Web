@@ -11,6 +11,7 @@ import { ConfirmEmail } from './models/confirm-email.model';
 import { ResetPassword } from './models/reset-password.model';
 import { ChangePassword } from './models/change-password.model';
 import { delay } from 'rxjs/operators';
+import { UserRegister } from './models/user.register.model';
 
 @Injectable()
 export class ApiService {
@@ -19,7 +20,11 @@ export class ApiService {
   ) {}
 
   login(request: LoginRequest): Observable<Token> {
-    return this.http.post<Token>(`${environment.apiUrl}/Auth/login`, request).pipe(delay(10000));
+    return this.http.post<Token>(`${environment.apiUrl}/Auth/login`, request);
+  }
+
+  addUser(request: UserRegister): Observable<Token> {
+    return this.http.post<Token>(`${environment.apiUrl}/User`, request );
   }
 
   confirmEmail(request: ConfirmEmail): Observable<Token> {
@@ -38,9 +43,7 @@ export class ApiService {
     return this.http.post<ApiResult>(`${environment.apiUrl}/Auth/ChangePassword`, { request });
   }
 
-  addUser(request: User): Observable<ApiResult> {
-    return this.http.post<ApiResult>(`${environment.apiUrl}/User`, { request });
-  }
+
 
   getUser(id: string): Observable<User> {
     return this.http.get<User>(`${environment.apiUrl}/User`, { });

@@ -1,77 +1,24 @@
+// @import "~@angular/material/prebuilt-themes/indigo-pink.css";
+// @import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
+// @import "~@angular/material/prebuilt-themes/pink-bluegrey.css";
+@import "~@angular/material/prebuilt-themes/purple-green.css";
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('/assets/fonts/Roboto/Roboto-Regular.ttf') format('truetype');
+}
+
 router-outlet ~ * {
   position: absolute;
   height: 100%;
   width: 100%;
 }
 
-* {
-    font-family: "Segoe UI", "Arial"
-}
-
-/* You can add global styles to this file, and also import other style files */
-.form-input
-    margin-top 10px
-
-.form-input input
-    width 100%
-    height 20px
-    padding 8px
+body
+    // font-family: "Segoe UI", "Arial"
+    font-family: "Roboto", "Helvetica Neue", "sans-serif"
     color #ffffff
-    border: 0px solid #606C75
-    background-color #011A2C
-    border-radius 5px;
-
-.form-input input::placeholder
-    color #A7ADB1
-    font-size 15px
-
-.form-button button
-    background-color: transparent;
-    border: none;
-    color #ffffff
-    margin-top 5px
-    min-height 15px
-    outline:none;
-
-.form-button button:hover
-    opacity 0.8
-    cursor pointer
-
-.form-button button:active
-    opacity 0.70
-
-.form-button.btn-bg button
-    background-color #336890
-    // border-radius: 10px;
-    padding 10px
-
-// i {
-//   border: solid black;
-//   border-width: 0 3px 3px 0;
-//   display: inline-block;
-//   padding: 3px;
-// }
-
-// .right {
-//   transform: rotate(-45deg);
-//   -webkit-transform: rotate(-45deg);
-// }
-
-// .left {
-//   transform: rotate(135deg);
-//   -webkit-transform: rotate(135deg);
-// }
-
-// .up {
-//   transform: rotate(-135deg);
-//   -webkit-transform: rotate(-135deg);
-// }
-
-// .down {
-//   transform: rotate(45deg);
-//   -webkit-transform: rotate(45deg);
-// }
-
+    background-color #00223B
 
 .noselect {
   -webkit-touch-callout: none; /* iOS Safari */
@@ -81,4 +28,110 @@ router-outlet ~ * {
         -ms-user-select: none; /* Internet Explorer/Edge */
             user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome and Opera */
+}
+
+.animation-loading {
+    display: inline-block;
+    position: relative;
+    width: 64px;
+    height: 64px;
+
+    div {
+        animation: lds-roller 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+        transform-origin: 32px 32px;
+    }
+
+    div:after {
+        content: " ";
+        display: block;
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #fff;
+        margin: -3px 0 0 -3px;
+    }
+
+    div:nth-child(1) {
+        animation-delay: -0.036s;
+    }
+
+    div:nth-child(1):after {
+        top: 50px;
+        left: 50px;
+    }
+
+    div:nth-child(2) {
+        animation-delay: -0.072s;  
+    }
+
+    div:nth-child(2):after {
+        top: 54px;
+        left: 45px;
+    }
+
+    div:nth-child(3) {
+        animation-delay: -0.108s;
+    }
+
+    div:nth-child(3):after {
+        top: 57px;
+        left: 39px;
+    }
+
+    div:nth-child(4) {
+        animation-delay: -0.144s;
+    }
+
+    div:nth-child(4):after {
+        top: 58px;
+        left: 32px;
+    }
+
+    div:nth-child(5) {
+        animation-delay: -0.18s;
+    }
+
+    div:nth-child(5):after {
+        top: 57px;
+        left: 25px;
+    }
+
+    div:nth-child(6) {
+        animation-delay: -0.216s;
+    }
+
+    div:nth-child(6):after {
+        top: 54px;
+        left: 19px;
+    }
+
+    div:nth-child(7) {
+        animation-delay: -0.252s;
+    }
+
+    div:nth-child(7):after {
+        top: 50px;
+        left: 14px;
+    }
+
+    div:nth-child(8) {
+        animation-delay: -0.288s;
+    }
+
+    div:nth-child(8):after {
+        top: 45px;
+        left: 10px;
+    }
+
+    @keyframes lds-roller {
+        0% {
+            transform: rotate(0deg);
+            opacity 0
+        }
+        100% {
+            transform: rotate(360deg);
+            opacity 0.3
+        }
+    }
 }

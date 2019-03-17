@@ -5,6 +5,7 @@ using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -12,13 +13,15 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using SpentBook.Web.Config;
 using SpentBook.Web.Email;
+using SpentBook.Web.Error;
 using SpentBook.Web.Jwt;
 using SpentBook.Web.ViewsModels;
 
 namespace SpentBook.Web.Controllers
 {
     [Route("api/[controller]")]
-    public class UserController : Controller
+    [ApiController]
+    public class UserController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
@@ -52,15 +55,14 @@ namespace SpentBook.Web.Controllers
 
         // POST api/user
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody]RegistrationViewModel model)
+        [ProducesResponseType(typeof(TokenViewModel), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<TokenViewModel>> Post([FromBody]RegistrationViewModel model)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(new ErrorViewModel(this));
+            // throw new Exception("TESTE");
 
-            /// TODO: MOVER PARA VALIDATION
-            if (model.Password != model.ConfirmPassword)
-                return BadRequest(new ErrorViewModel(this, ErrorType.PasswordNotMatch));
-
+            return NotFound();
             var user = new ApplicationUser();
             user.UserName = model.Email;
             user.Email = model.Email;
@@ -70,7 +72,16 @@ namespace SpentBook.Web.Controllers
             var identityResult = await _signInManager.UserManager.CreateAsync(user, model.Password);
 
             if (!identityResult.Succeeded)
-               return BadRequest(new ErrorViewModel(this, identityResult, ErrorType.AddUserError));
+            {
+                var problemDetailsBuilder = new ProblemDetailsBuilder<RegistrationViewModel>(this, identityResult)
+                    .SetIdentityErrorEmail(e => e.Email)
+                    .SetIdentityErrorPassword(e => e.Password);
+
+                if (problemDetailsBuilder.HasProblem(e => e.Email, ProblemDetailFieldType.DuplicateUserName))
+                    return problemDetailsBuilder.Conflict();
+
+                return problemDetailsBuilder.BadRequest();
+            }
 
             // Register as locked if enabled
             // if (_appConfig.NewUserAsLocked)
@@ -83,11 +94,11 @@ namespace SpentBook.Web.Controllers
 
                 _emailService.ConfirmRegister(model.UrlCallbackConfirmation, user);
             }
-            
+
             // Return token to auto login
             var token = await TokenViewModel.GenerateAsync(_jwtFactory, _appConfig, user.Id, user.UserName);
-            if (token == null)
-                return BadRequest(new ErrorViewModel(this, ErrorType.JwtError));
+            // if (token == null)
+            //     return BadRequest(new ErrorModel(this, ErrorType.JwtError));
             return new OkObjectResult(token);
         }
 
@@ -96,21 +107,18 @@ namespace SpentBook.Web.Controllers
         [Authorize]
         public async Task<IActionResult> Put([FromBody]RegistrationViewModel model)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(new ErrorViewModel(this));
-
             var user = await _userManager.FindByIdAsync(model.UserId);
-            if (user == null)
-                return BadRequest(new ErrorViewModel(this, ErrorType.UserNotFound));
-            
+            // if (user == null)
+            //     return BadRequest(new ErrorModel(this, ErrorType.UserNotFound));
+
             user.Email = model.Email;
             user.FirstName = model.FirstName;
             user.LastName = model.LastName;
 
             var identityResult = await _signInManager.UserManager.UpdateAsync(user);
 
-            if (!identityResult.Succeeded)
-                return BadRequest(new ErrorViewModel(this, identityResult, ErrorType.UserUpdateError));
+            // if (!identityResult.Succeeded)
+            //     return BadRequest(new ErrorModel(this, identityResult, ErrorType.UserUpdateError));
 
             return new EmptyResult();
         }
@@ -120,12 +128,12 @@ namespace SpentBook.Web.Controllers
         [Authorize]
         public async Task<IActionResult> Get(string userId)
         {
-            if (!ModelState.IsValid || string.IsNullOrWhiteSpace(userId))
-                return BadRequest(new ErrorViewModel(this));
+            // if (!ModelState.IsValid || string.IsNullOrWhiteSpace(userId))
+            //     return BadRequest(new ErrorModel(this));
 
             var user = await _signInManager.UserManager.FindByIdAsync(userId);
-            if (user == null)
-                return BadRequest(new ErrorViewModel(this, ErrorType.UserNotFound));
+            // if (user == null)
+            //     return BadRequest(new ErrorModel(this, ErrorType.UserNotFound));
 
             return new OkObjectResult(user);
         }
@@ -135,17 +143,17 @@ namespace SpentBook.Web.Controllers
         [Authorize]
         public async Task<IActionResult> Delete(string userId)
         {
-            if (!ModelState.IsValid || string.IsNullOrWhiteSpace(userId))
-                return BadRequest(new ErrorViewModel(this));
+            // if (!ModelState.IsValid || string.IsNullOrWhiteSpace(userId))
+            //     return BadRequest(new ErrorModel(this));
 
             var user = await _userManager.FindByIdAsync(userId);
-            if (user == null)
-                return BadRequest(new ErrorViewModel(this, ErrorType.UserNotFound));
+            // if (user == null)
+            //     return BadRequest(new ErrorModel(this, ErrorType.UserNotFound));
 
             var identityResult = await _signInManager.UserManager.DeleteAsync(user);
 
-            if (!identityResult.Succeeded)
-                return BadRequest(new ErrorViewModel(this, identityResult, ErrorType.UserDeleteError));
+            // if (!identityResult.Succeeded)
+            //     return BadRequest(new ErrorModel(this, identityResult, ErrorType.UserDeleteError));
 
             return new EmptyResult();
         }

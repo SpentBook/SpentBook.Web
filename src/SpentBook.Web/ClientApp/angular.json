@@ -28,7 +28,9 @@
             ],
             "styles": [
               "src/styles.styl",
-              "node_modules/normalize.css/normalize.css"
+              "node_modules/normalize.css/normalize.css",
+              "src/assets/css/material-icons.css",
+              "src/assets/css/splash.css"
             ],
             "scripts": []
           },

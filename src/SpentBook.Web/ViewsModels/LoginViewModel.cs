@@ -1,6 +1,7 @@
 ﻿// using FluentValidation.Attributes;
 
 using FluentValidation;
+using SpentBook.Web.Error;
 
 namespace SpentBook.Web.ViewsModels
 {
@@ -15,9 +16,16 @@ namespace SpentBook.Web.ViewsModels
     {
         public LoginViewModelValidator()
         {
-            RuleFor(vm => vm.UserName).NotEmpty().WithMessage("Username cannot be empty");
-            RuleFor(vm => vm.Password).NotEmpty().WithMessage("Password cannot be empty");
-            RuleFor(vm => vm.Password).Length(6, 12).WithMessage("Password must be between 6 and 12 characters");
+             RuleFor(vm => vm.UserName)
+                .NotEmpty().WithMessage("E-mail cannot be empty").WithErrorCode(ProblemDetailFieldType.Required.ToString())
+                .EmailAddress().WithMessage("Invalid e-mail").WithErrorCode(ProblemDetailFieldType.InvalidEmail.ToString())
+                .MinimumLength(3).WithMessage("E-mail is too short").WithErrorCode(ProblemDetailFieldType.MaxLength.ToString())
+                .MaximumLength(100).WithMessage("E-mail is too long").WithErrorCode(ProblemDetailFieldType.MinLength.ToString());
+
+            RuleFor(vm => vm.Password)
+                .NotEmpty().WithMessage("Password cannot be empty").WithErrorCode(ProblemDetailFieldType.Required.ToString())
+                .MinimumLength(3).WithMessage("Password is too short").WithErrorCode(ProblemDetailFieldType.MinLength.ToString())
+                .MaximumLength(20).WithMessage("Password is too long").WithErrorCode(ProblemDetailFieldType.MaxLength.ToString());
         }
     }
 }

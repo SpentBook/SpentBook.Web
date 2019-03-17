@@ -1,42 +1,109 @@
-<form [formGroup]="authForm" (ngSubmit)="submitForm()">
+<div class="header">
+  <div class="btn">BACK</div>
+  <div class="title">Novo usuário {{form.invalid}} {{form.valid}}</div>
+</div>
+
+<form [formGroup]="form" (ngSubmit)="submitForm()">
   <fieldset [disabled]="loading">
-    <div class="box-login" *ngIf="!showError && !loading">
-      <div class="form-input">
-        <input formControlName="name" placeholder="Nome" type="text" />
+    <div class="box-logo">
+      <img src="assets/logo-white.png">
+    </div>
+
+    <div class="box-register" *ngIf="!showError && !loading">
+      <div class="form-field">
+        <mat-form-field color="accent">
+          <input matInput placeholder="E-mail" formControlName="email" maxlength="100" autocomplete="off">
+          <mat-error *ngIf="hasError(email, 'required')">E-mail é obrigatório</mat-error>
+          <mat-error *ngIf="hasError(email, 'email')">E-mail inválido</mat-error>
+        </mat-form-field>
       </div>
 
-      <div class="form-input">
-        <input formControlName="lastName" placeholder="Sobrenome" type="text" />
+      <div class="form-field">
+        <mat-form-field color="accent">
+          <input matInput placeholder="Nome" formControlName="name" maxlength="50" autocomplete="off">
+          <mat-error *ngIf="hasError(name, 'required')">Nome é obrigatório</mat-error>
+          <mat-error *ngIf="hasError(name, 'minlength')">Nome muito curto</mat-error>
+        </mat-form-field>
       </div>
 
-      <div class="form-input">
-        <input formControlName="email" placeholder="E-mail" type="text" />
+      <div class="form-field">
+        <mat-form-field color="accent">
+          <input matInput placeholder="Sobrenome" formControlName="lastName" maxlength="50" autocomplete="off">
+          <mat-error *ngIf="hasError(lastName, 'required')">Sobrenome obrigatório</mat-error>
+          <mat-error *ngIf="hasError(lastName, 'minlength')">Sobrenome muito curto</mat-error>
+        </mat-form-field>
       </div>
 
-      <div class="form-input">
-        <input formControlName="celphone" placeholder="Celular" type="text" />
+      <!-- <div class="form-field">
+        <mat-form-field>
+          <input matInput placeholder="Celular" formControlName="celphone">
+          <mat-error *ngIf="celphone?.invalid">ERRO</mat-error>
+        </mat-form-field>
+      </div> -->
+
+      <div class="form-field form-pwd" formGroupName="passwordGroup">
+        <mat-form-field color="accent">
+          <input [type]="showPwd ? 'text' : 'password'" matInput placeholder="Senha" formControlName="password"
+            maxlength="20">
+          <mat-icon matSuffix (click)="showPwd = !showPwd">{{showPwd ? 'visibility' : 'visibility_off'}}</mat-icon>
+          <mat-error *ngIf="hasError(password, 'required')">Senha obrigatória</mat-error>
+          <mat-error *ngIf="hasError(password, 'minlength')">Senha muito curta</mat-error>
+        </mat-form-field>
       </div>
 
-      <div class="form-input">
-        <input formControlName="password" placeholder="Senha" type="password" />
-      </div>
-      
-      <div class="form-input">
-        <input formControlName="password-confirm" placeholder="Confirmar senha" type="password" />
-      </div>
-
-      <div class="form-input">
-        <input type="radio" name="sex" formControlName="sex" placeholder="Sexo" value="0" /> Masculino
-        <input type="radio" name="sex" formControlName="sex" placeholder="Sexo" value="1" /> Feminino
+      <div class="form-field form-pwd" formGroupName="passwordGroup">
+        <mat-form-field color="accent">
+          <input [type]="showPwdConf ? 'text' : 'password'" matInput placeholder="Confirmar senha"
+            formControlName="passwordConfirm" maxlength="20">
+          <mat-icon matSuffix (click)="showPwdConf = !showPwdConf">{{showPwdConf ? 'visibility' : 'visibility_off'}}
+          </mat-icon>
+          <mat-error *ngIf="hasError(passwordConfirm, 'required')">Confirmação de senha obrigatória</mat-error>
+          <mat-error *ngIf="hasError(passwordConfirm, 'noMatch')">As senhas devem ser iguais</mat-error>
+        </mat-form-field>
       </div>
 
-      <div class="form-button btn-bg btn-login">
-        <button type="submit">Cadastrar</button>
+      <div class="form-field">
+        <mat-form-field color="accent">
+          <input matInput [matDatepicker]="picker" placeholder="Data de nascimento" formControlName="dateOfBirth"
+            maxlength="10" autocomplete="off">
+          <mat-error *ngIf="dateOfBirth?.invalid">Data de nascimento inválida</mat-error>
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker touchUi #picker></mat-datepicker>
+        </mat-form-field>
       </div>
+
+      <!-- <div class="form-field">
+        <mat-radio-group>
+          <mat-radio-button value="M">Masculino</mat-radio-button>
+          <mat-radio-button value="F">Feminino</mat-radio-button>
+        </mat-radio-group>
+      </div> -->
+
+      <div class="form-field">
+        <!-- <button mat-button [disabled]="form.invalid">Cadastrar</button> -->
+        <button mat-button>Cadastrar</button>
+      </div>
+
+
+      <!-- <div class="form-input"> -->
+      <!-- <mat-form-field class="example-full-width">
+          <input matInput placeholder="Email" [formControl]="emailFormControl" [errorStateMatcher]="matcher">
+          <mat-hint>Errors appear instantly!</mat-hint>
+          <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
+            Please enter a valid email address
+          </mat-error>
+          <mat-error *ngIf="emailFormControl.hasError('required')">
+            Email is <strong>required</strong>
+          </mat-error>
+        </mat-form-field> -->
+
+
+      <!-- </div> -->
+
     </div>
 
     <div class="box-loading" *ngIf="loading">
-      <div class="lds-roller">
+      <div class="animation-loading">
         <div></div>
         <div></div>
         <div></div>
@@ -50,9 +117,8 @@
 
     <div class="box-error" *ngIf="showError">
       <span>{{errorMessage}}</span>
-
-      <div class="form-button btn-bg btn-login">
-        <button type="button" (click)="backLogin()">Ok</button>
+      <div class="form-field">
+        <button mat-button (click)="backRegister()">Ok</button>
       </div>
     </div>
   </fieldset>

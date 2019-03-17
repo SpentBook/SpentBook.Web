@@ -11,7 +11,6 @@ namespace SpentBook.Web.Extensions
             {
                 modelState.TryAddModelError(e.Code, e.Description);
             }
-
             
             return modelState;
         }

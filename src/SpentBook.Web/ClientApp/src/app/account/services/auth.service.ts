@@ -4,6 +4,8 @@ import { LoginRequest } from 'src/app/core/models/login-request.model';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { Token } from 'src/app/core/models/token.model';
+import { User } from 'src/app/core/models/user.model';
+import { UserRegister } from 'src/app/core/models/user.register.model';
 
 
 @Injectable()
@@ -25,6 +27,15 @@ export class AuthService {
     );
   }
 
+  public register(user: UserRegister) : Observable<Token> {
+    return this.apiService.addUser(user).pipe(
+      tap(
+        token =>  {},
+        () => {}
+      )
+    );
+  }
+
   public isLogged() : boolean {
     return window.localStorage['token'] != null;
   }
@@ -33,5 +44,4 @@ export class AuthService {
   private saveToken(token: Token) {
     window.localStorage['token'] = JSON.stringify(token);
   }
-
 }
