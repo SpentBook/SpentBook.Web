@@ -188,7 +188,7 @@ namespace SpentBook.Web
             // 2) VER type para data invalida, antes do fluentvalidation
             // 4) Ver os links gerais de cada erro e trocar tudo lá
             // 5) Testar redirect
-            app.UseProblemDetailsMiddleware(env, loggerFactory);
+            app.UseProblemDetailsForExceptionsMiddleware(env, loggerFactory);
 
             // Expose the members of the 'Microsoft.AspNetCore.Http' namespace 
             // at the top of the file:
