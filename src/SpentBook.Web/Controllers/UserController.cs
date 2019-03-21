@@ -60,9 +60,6 @@ namespace SpentBook.Web.Controllers
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<TokenViewModel>> Post([FromBody]RegistrationViewModel model)
         {
-            // throw new Exception("TESTE");
-
-            return NotFound();
             var user = new ApplicationUser();
             user.UserName = model.Email;
             user.Email = model.Email;
@@ -73,14 +70,14 @@ namespace SpentBook.Web.Controllers
 
             if (!identityResult.Succeeded)
             {
-                var problemDetailsBuilder = new ProblemDetailsBuilder<RegistrationViewModel>(this, identityResult)
+                var problemDetailsBuilder = new ModelStateBuilder<RegistrationViewModel>(this, identityResult)
                     .SetIdentityErrorEmail(e => e.Email)
                     .SetIdentityErrorPassword(e => e.Password);
 
-                if (problemDetailsBuilder.HasProblem(e => e.Email, ProblemDetailFieldType.DuplicateUserName))
-                    return problemDetailsBuilder.Conflict();
+                if (problemDetailsBuilder.HasProblem(e => e.Email, ProblemDetailsFieldType.DuplicateUserName))
+                    return Conflict();
 
-                return problemDetailsBuilder.BadRequest();
+                return BadRequest();
             }
 
             // Register as locked if enabled

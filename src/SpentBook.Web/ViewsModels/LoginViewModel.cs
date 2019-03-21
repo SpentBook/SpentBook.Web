@@ -17,15 +17,15 @@ namespace SpentBook.Web.ViewsModels
         public LoginViewModelValidator()
         {
              RuleFor(vm => vm.UserName)
-                .NotEmpty().WithMessage("E-mail cannot be empty").WithErrorCode(ProblemDetailFieldType.Required.ToString())
-                .EmailAddress().WithMessage("Invalid e-mail").WithErrorCode(ProblemDetailFieldType.InvalidEmail.ToString())
-                .MinimumLength(3).WithMessage("E-mail is too short").WithErrorCode(ProblemDetailFieldType.MaxLength.ToString())
-                .MaximumLength(100).WithMessage("E-mail is too long").WithErrorCode(ProblemDetailFieldType.MinLength.ToString());
+                .NotEmpty().WithMessage("E-mail cannot be empty").WithErrorCode(ProblemDetailsFieldType.Required.ToString())
+                .EmailAddress().WithMessage("Invalid e-mail").WithErrorCode(ProblemDetailsFieldType.InvalidEmail.ToString())
+                .MinimumLength(3).WithMessage("E-mail is too short").WithErrorCode(ProblemDetailsFieldType.MaxLength.ToString())
+                .MaximumLength(100).WithMessage("E-mail is too long").WithErrorCode(ProblemDetailsFieldType.MinLength.ToString());
 
             RuleFor(vm => vm.Password)
-                .NotEmpty().WithMessage("Password cannot be empty").WithErrorCode(ProblemDetailFieldType.Required.ToString())
-                .MinimumLength(3).WithMessage("Password is too short").WithErrorCode(ProblemDetailFieldType.MinLength.ToString())
-                .MaximumLength(20).WithMessage("Password is too long").WithErrorCode(ProblemDetailFieldType.MaxLength.ToString());
+                .NotEmpty().WithMessage("Password cannot be empty").WithErrorCode(ProblemDetailsFieldType.Required.ToString())
+                .MinimumLength(3).WithMessage("Password is too short").WithErrorCode(ProblemDetailsFieldType.MinLength.ToString())
+                .MaximumLength(20).WithMessage("Password is too long").WithErrorCode(ProblemDetailsFieldType.MaxLength.ToString());
         }
     }
 }

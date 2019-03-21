@@ -1,6 +1,6 @@
 ﻿namespace SpentBook.Web.Error
 {
-    public enum ProblemDetailFieldType
+    public enum ProblemDetailsFieldType
     {
         Unknown,
         JwtError,

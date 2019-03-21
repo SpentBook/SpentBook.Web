@@ -28,6 +28,8 @@ namespace SpentBook.Web
 {
     public class Startup
     {
+        // 1) Melhorar forma para limpar o startu, deixar modular
+        
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -44,20 +46,23 @@ namespace SpentBook.Web
             // services.AddMvcCore() ??
             services.AddMvc(opt =>
             {
-                opt.UseFilterInvalidModelState();
+                // Problem detail model state
+                opt.UseFilterInvalidModelState();                
             })
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
-                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>())
-                .ConfigureApiBehaviorOptions(options =>
-                {
-                    //options.SuppressConsumesConstraintForFormFileParameters = true;
-                    //options.SuppressInferBindingSourcesForParameters = true;
-                    options.SuppressModelStateInvalidFilter = true;
-                    options.SuppressMapClientErrors = true;
-
-                    options.ClientErrorMapping[404].Link =
-                        "https://httpstatuses.com/404";
-                });
+            // alterar ak
+            .ConfigureApiBehaviorOptions(opt =>
+            {
+                 // Problem detail model state
+                opt.UseFilterInvalidModelState();                
+            })
+            .AddFluentValidation(fv =>
+            {
+                fv.RegisterValidatorsFromAssemblyContaining<Startup>();
+            })
+            .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            
+             // Problem detail model state
+            services.ConfigureProblemDetailsModelState();
 
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
@@ -183,8 +188,7 @@ namespace SpentBook.Web
             // Add AutoMapper
             services.AddAutoMapper();
 
-            // Problem detail
-            services.ConfigureProblemDetailsModelState();
+           
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -193,9 +197,7 @@ namespace SpentBook.Web
             if (!env.IsDevelopment())
                 app.UseHsts();
 
-            // 1) VER TRACE ID AK E NO MODEL VALIDATE
             // 2) VER type para data invalida, antes do fluentvalidation
-            // 3) Ver error sem objeto
             // 4) Ver os links gerais de cada erro e trocar tudo lá
             // 5) Testar redirect
             app.UseMiddlewareProblemDetails(env, loggerFactory);

@@ -22,35 +22,35 @@ namespace SpentBook.Web.ViewsModels
         public RegistrationViewModelValidator()
         {
             RuleFor(vm => vm.Email)
-                .NotEmpty().WithMessage("E-mail cannot be empty").WithErrorCode(ProblemDetailFieldType.Required.ToString())
-                .EmailAddress().WithMessage("Invalid e-mail").WithErrorCode(ProblemDetailFieldType.InvalidEmail.ToString())
-                .MinimumLength(3).WithMessage("E-mail is too short").WithErrorCode(ProblemDetailFieldType.MaxLength.ToString())
-                .MaximumLength(100).WithMessage("E-mail is too long").WithErrorCode(ProblemDetailFieldType.MinLength.ToString());
+                .NotEmpty().WithMessage("E-mail cannot be empty").WithErrorCode(ProblemDetailsFieldType.Required.ToString())
+                .EmailAddress().WithMessage("Invalid e-mail").WithErrorCode(ProblemDetailsFieldType.InvalidEmail.ToString())
+                .MinimumLength(3).WithMessage("E-mail is too short").WithErrorCode(ProblemDetailsFieldType.MaxLength.ToString())
+                .MaximumLength(100).WithMessage("E-mail is too long").WithErrorCode(ProblemDetailsFieldType.MinLength.ToString());
 
             RuleFor(vm => vm.Password)
-                .NotEmpty().WithMessage("Password cannot be empty").WithErrorCode(ProblemDetailFieldType.Required.ToString())
-                .MinimumLength(3).WithMessage("Password is too short").WithErrorCode(ProblemDetailFieldType.MinLength.ToString())
-                .MaximumLength(20).WithMessage("Password is too long").WithErrorCode(ProblemDetailFieldType.MaxLength.ToString());
+                .NotEmpty().WithMessage("Password cannot be empty").WithErrorCode(ProblemDetailsFieldType.Required.ToString())
+                .MinimumLength(3).WithMessage("Password is too short").WithErrorCode(ProblemDetailsFieldType.MinLength.ToString())
+                .MaximumLength(20).WithMessage("Password is too long").WithErrorCode(ProblemDetailsFieldType.MaxLength.ToString());
 
             RuleFor(vm => vm.PasswordConfirm)
-                .NotEmpty().WithMessage("Password confirmation cannot be empty").WithErrorCode(ProblemDetailFieldType.Required.ToString())
-                .Equal(vm => vm.Password).WithMessage("Passwords do not match").WithErrorCode(ProblemDetailFieldType.PasswordNotMatch.ToString())
-                .MinimumLength(3).WithMessage("Password confirmation is too short").WithErrorCode(ProblemDetailFieldType.MinLength.ToString())
-                .MaximumLength(20).WithMessage("Password confirmation is too long").WithErrorCode(ProblemDetailFieldType.MaxLength.ToString());
+                .NotEmpty().WithMessage("Password confirmation cannot be empty").WithErrorCode(ProblemDetailsFieldType.Required.ToString())
+                .Equal(vm => vm.Password).WithMessage("Passwords do not match").WithErrorCode(ProblemDetailsFieldType.PasswordNotMatch.ToString())
+                .MinimumLength(3).WithMessage("Password confirmation is too short").WithErrorCode(ProblemDetailsFieldType.MinLength.ToString())
+                .MaximumLength(20).WithMessage("Password confirmation is too long").WithErrorCode(ProblemDetailsFieldType.MaxLength.ToString());
 
             RuleFor(vm => vm.FirstName)
-                .NotEmpty().WithMessage("First name cannot be empty").WithErrorCode(ProblemDetailFieldType.Required.ToString())
-                .MinimumLength(2).WithMessage("First name is too short").WithErrorCode(ProblemDetailFieldType.MinLength.ToString())
-                .MaximumLength(50).WithMessage("First name is too long").WithErrorCode(ProblemDetailFieldType.MaxLength.ToString());
+                .NotEmpty().WithMessage("First name cannot be empty").WithErrorCode(ProblemDetailsFieldType.Required.ToString())
+                .MinimumLength(2).WithMessage("First name is too short").WithErrorCode(ProblemDetailsFieldType.MinLength.ToString())
+                .MaximumLength(50).WithMessage("First name is too long").WithErrorCode(ProblemDetailsFieldType.MaxLength.ToString());
             
             RuleFor(vm => vm.LastName)
-                .NotEmpty().WithMessage("Last name cannot be empty").WithErrorCode(ProblemDetailFieldType.Required.ToString())
-                .MinimumLength(2).WithMessage("Last name is too short").WithErrorCode(ProblemDetailFieldType.MaxLength.ToString())
-                .MaximumLength(50).WithMessage("Last name is too long").WithErrorCode(ProblemDetailFieldType.MaxLength.ToString());
+                .NotEmpty().WithMessage("Last name cannot be empty").WithErrorCode(ProblemDetailsFieldType.Required.ToString())
+                .MinimumLength(2).WithMessage("Last name is too short").WithErrorCode(ProblemDetailsFieldType.MaxLength.ToString())
+                .MaximumLength(50).WithMessage("Last name is too long").WithErrorCode(ProblemDetailsFieldType.MaxLength.ToString());
 
             RuleFor(vm => vm.DateOfBirth)
-                .NotEmpty().WithMessage("Date of birth cannot be empty").WithErrorCode(ProblemDetailFieldType.Required.ToString())
-                .Must(date => date != default(DateTime)).WithMessage("Date of birth is invalid").WithErrorCode(ProblemDetailFieldType.InvalidDate.ToString());
+                .NotEmpty().WithMessage("Date of birth cannot be empty").WithErrorCode(ProblemDetailsFieldType.Required.ToString())
+                .Must(date => date != default(DateTime)).WithMessage("Date of birth is invalid").WithErrorCode(ProblemDetailsFieldType.InvalidDate.ToString());
              
             //  RuleFor(vm => vm.Location)
             //     .NotEmpty().WithMessage("Email cannot be empty")
