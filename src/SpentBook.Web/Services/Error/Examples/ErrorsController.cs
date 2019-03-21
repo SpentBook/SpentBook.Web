@@ -11,7 +11,7 @@ namespace SpentBook.Web.Error
     /// <summary>
     /// ErrorController
     /// </summary>
-    public class ErrorsController : Controller
+    public class ErrorsController : ControllerBase
     {
         [Route("api/Error/500")]
         public IActionResult Error500()

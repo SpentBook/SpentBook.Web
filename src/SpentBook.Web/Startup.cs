@@ -29,7 +29,7 @@ namespace SpentBook.Web
     public class Startup
     {
         // 1) Melhorar forma para limpar o startu, deixar modular
-        
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -44,25 +44,15 @@ namespace SpentBook.Web
 
             // Add MVC
             // services.AddMvcCore() ??
-            services.AddMvc(opt =>
-            {
-                // Problem detail model state
-                opt.UseFilterInvalidModelState();                
-            })
-            // alterar ak
-            .ConfigureApiBehaviorOptions(opt =>
-            {
-                 // Problem detail model state
-                opt.UseFilterInvalidModelState();                
-            })
-            .AddFluentValidation(fv =>
-            {
-                fv.RegisterValidatorsFromAssemblyContaining<Startup>();
-            })
-            .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            
-             // Problem detail model state
-            services.ConfigureProblemDetailsModelState();
+            services.AddMvc()
+                .AddFluentValidation(fv =>
+                {
+                    fv.RegisterValidatorsFromAssemblyContaining<Startup>();
+                })
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            // Add problem details for model state
+            services.AddProblemDetailsForInvalidModelState();
 
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
@@ -187,8 +177,6 @@ namespace SpentBook.Web
 
             // Add AutoMapper
             services.AddAutoMapper();
-
-           
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -200,7 +188,7 @@ namespace SpentBook.Web
             // 2) VER type para data invalida, antes do fluentvalidation
             // 4) Ver os links gerais de cada erro e trocar tudo lá
             // 5) Testar redirect
-            app.UseMiddlewareProblemDetails(env, loggerFactory);
+            app.UseProblemDetailsMiddleware(env, loggerFactory);
 
             // Expose the members of the 'Microsoft.AspNetCore.Http' namespace 
             // at the top of the file:
