@@ -228,7 +228,6 @@ namespace SpentBook.Web
                 }
             });
 
-
             context.Database.Migrate();
         }
     }

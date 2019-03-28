@@ -18,5 +18,6 @@
         DuplicateUserName,
         InvalidEmail,
         InvalidDate,
+        Invalid,
     }
 }

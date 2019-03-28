@@ -59,7 +59,7 @@ namespace SpentBook.Web.Error
 
         public ProblemDetails GetClientError(ModelStateDictionary modelState, int statusCode)
         {
-            var problemDetails = new ValidationProblemDetails(modelState)
+            var problemDetails = new ModelStateProblemDetails(modelState)
             {
                 Detail = modelState.Count > 0 ? CLIENT_VALIDATIN_ERROR_DETAIL : null
             };
