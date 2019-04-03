@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Newtonsoft.Json;
-using SpentBook.Web.Config;
-using SpentBook.Web.Jwt;
+using SpentBook.Web.Services.Config;
+using SpentBook.Web.Services.Jwt;
 
 namespace SpentBook.Web.ViewsModels
 {

@@ -10,7 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
-namespace SpentBook.Web.Error
+namespace SpentBook.Web.Services.Error
 {
     /// <summary>
     /// ExceptionHandlerExtensions

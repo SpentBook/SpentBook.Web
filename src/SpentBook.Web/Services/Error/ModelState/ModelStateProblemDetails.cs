@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Newtonsoft.Json;
 
-namespace SpentBook.Web.Error
+namespace SpentBook.Web.Services.Error
 {
     public class ModelStateProblemDetails : ProblemDetails
     {

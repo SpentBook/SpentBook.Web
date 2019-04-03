@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Options;
 
-namespace SpentBook.Web.Error
+namespace SpentBook.Web.Services.Error
 {
     /// <summary>
     /// ValidateModelFilter

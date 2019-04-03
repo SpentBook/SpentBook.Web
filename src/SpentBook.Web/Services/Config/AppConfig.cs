@@ -1,8 +1,8 @@
-using SpentBook.Web.Email;
-using SpentBook.Web.Facebook;
-using SpentBook.Web.Jwt;
+using SpentBook.Web.Services.Email;
+using SpentBook.Web.Services.Facebook;
+using SpentBook.Web.Services.Jwt;
 
-namespace SpentBook.Web.Config
+namespace SpentBook.Web.Services.Config
 {
     public class AppConfig
     {

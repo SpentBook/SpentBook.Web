@@ -1,4 +1,4 @@
-﻿namespace SpentBook.Web.Jwt
+﻿namespace SpentBook.Web.Services.Jwt
 {
     public static class Constants
     {

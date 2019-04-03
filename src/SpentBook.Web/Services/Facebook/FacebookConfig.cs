@@ -1,4 +1,4 @@
-namespace SpentBook.Web.Facebook
+namespace SpentBook.Web.Services.Facebook
 {
     public class FacebookConfig 
     {

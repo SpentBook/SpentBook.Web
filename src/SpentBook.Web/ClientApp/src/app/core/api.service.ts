@@ -4,7 +4,6 @@ import { LoginRequest } from './models/login-request.model';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/internal/Observable';
 import { environment } from 'src/environments/environment';
-import { ApiResult } from './models/api-result.model';
 import { User } from './models/user.model';
 import { ConfirmEmailResend } from './models/confirm-email-resend.model';
 import { ConfirmEmail } from './models/confirm-email.model';
@@ -31,29 +30,27 @@ export class ApiService {
     return this.http.post<Token>(`${environment.apiUrl}/Auth/ConfirmEmail`, { request });
   }
 
-  confirmEmailResend(request: ConfirmEmailResend): Observable<ApiResult> {
-    return this.http.post<ApiResult>(`${environment.apiUrl}/Auth/ConfirmEmailResend`, { request });
+  confirmEmailResend(request: ConfirmEmailResend): Observable<Object> {
+    return this.http.post(`${environment.apiUrl}/Auth/ConfirmEmailResend`, { request });
   }
 
-  resetPassword(request: ResetPassword): Observable<ApiResult> {
-    return this.http.post<ApiResult>(`${environment.apiUrl}/Auth/ResetPassword`, { request });
+  resetPassword(request: ResetPassword): Observable<Object> {
+    return this.http.post(`${environment.apiUrl}/Auth/ResetPassword`, { request });
   }
 
-  changePassword(request: ChangePassword): Observable<ApiResult> {
-    return this.http.post<ApiResult>(`${environment.apiUrl}/Auth/ChangePassword`, { request });
+  changePassword(request: ChangePassword): Observable<Object> {
+    return this.http.post(`${environment.apiUrl}/Auth/ChangePassword`, { request });
   }
-
-
 
   getUser(id: string): Observable<User> {
     return this.http.get<User>(`${environment.apiUrl}/User`, { });
   }
 
-  updateUser(request: User): Observable<ApiResult> {
-    return this.http.put<ApiResult>(`${environment.apiUrl}/User`, { request });
+  updateUser(request: User): Observable<Object> {
+    return this.http.put(`${environment.apiUrl}/User`, { request });
   }
 
-  deleteUser(id: string): Observable<ApiResult> {
-    return this.http.post<ApiResult>(`${environment.apiUrl}/User`, { id });
+  deleteUser(id: string): Observable<Object> {
+    return this.http.post(`${environment.apiUrl}/User`, { id });
   }
 }

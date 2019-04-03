@@ -2,10 +2,10 @@
 using Microsoft.Extensions.Options;
 using SendGrid;
 using SendGrid.Helpers.Mail;
-using SpentBook.Web.Config;
+using SpentBook.Web.Services.Config;
 using System.Threading.Tasks;
 
-namespace SpentBook.Web.Email
+namespace SpentBook.Web.Services.Email
 {
     public class SendGridService : IEmailSender
     {

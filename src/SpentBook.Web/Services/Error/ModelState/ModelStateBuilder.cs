@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
-namespace SpentBook.Web.Error
+namespace SpentBook.Web.Services.Error
 {
     public class ModelStateBuilder<T>
     {
@@ -77,9 +77,8 @@ namespace SpentBook.Web.Error
 
         private ModelStateBuilder<T> SetFieldError(Expression<Func<T, object>> expression, ProblemDetailsFieldType errorType, string message = null)
         {
-            string typeName = Enum.GetName(typeof(ProblemDetailsFieldType), errorType);
             var fieldName = GetFieldName(expression);
-            this._controller.ModelState.TryAddModelError(fieldName, $"{typeName}/{message}");
+            this._controller.ModelState.TryAddModelError(fieldName, ProblemDetailsFactory.GetComposeTypeAndErrorMessage(errorType, message));
             return this;
         }
 

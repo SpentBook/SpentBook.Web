@@ -1,6 +1,6 @@
-using SpentBook.Web.Jwt;
+using SpentBook.Web.Services.Jwt;
 
-namespace SpentBook.Web.Email
+namespace SpentBook.Web.Services.Email
 {
     public class EmailConfig
     {

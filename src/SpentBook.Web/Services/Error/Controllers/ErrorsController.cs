@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace SpentBook.Web.Error
+namespace SpentBook.Web.Services.Error
 {
     /// <summary>
     /// ErrorController

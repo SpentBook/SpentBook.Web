@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace SpentBook.Web.Jwt
+namespace SpentBook.Web.Services.Jwt
 {
     public interface IJwtFactory
     {

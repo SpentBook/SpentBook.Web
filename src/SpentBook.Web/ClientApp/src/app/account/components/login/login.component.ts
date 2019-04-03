@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ApiErrorType } from 'src/app/core/models/api-error-type.enum';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ApiError } from 'src/app/core/models/api-error.model';
+import { ProblemDetails, ProblemDetailsItem, ProblemDetailsFieldType } from 'src/app/core/models/problem-details.model';
 import { timer } from 'rxjs';
 
 /*
@@ -53,7 +52,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
   }
-  
+
   submitForm() {
     this.loading = true;
     timer(2000)
@@ -66,23 +65,27 @@ export class LoginComponent implements OnInit {
             },
             error => {
               this.loading = false;
-              var objError = <ApiError>error.error;
+              var problemDetails = <ProblemDetails>error.error;
               this.showError = true;
 
-              switch (objError.errorType) {
-                case ApiErrorType.UserNotFound:
-                case ApiErrorType.InvalidForm:
-                  this.errorMessage = "Usuário ou senha inválida";
-                  break;
-                case ApiErrorType.IsLockedOut:
-                  this.errorMessage = "Usuário bloqueado";
-                  break;
-                case ApiErrorType.IsNotAllowed:
-                  this.errorMessage = "Confirme seu e-mail para continuar";
-                  break;
-                default:
-                  this.errorMessage = "Ocorreu um erro inesperado, tente novamente mais tarde";
-              }
+              // for (let key in problemDetails.errors) {
+              //   var e = problemDetails.errors[key];
+              //   switch (e.type) {
+              //     case ProblemDetailsFieldType.UserNotFound:
+              //     case ProblemDetailsFieldType.InvalidForm:
+              //       this.errorMessage = "Usuário ou senha inválida";
+              //       break;
+              //     case ProblemDetailsFieldType.IsLockedOut:
+              //       this.errorMessage = "Usuário bloqueado";
+              //       break;
+              //     case ProblemDetailsFieldType.IsNotAllowed:
+              //       this.errorMessage = "Confirme seu e-mail para continuar";
+              //       break;
+              //     default:
+              //       this.errorMessage = "Ocorreu um erro inesperado, tente novamente mais tarde";
+              //   }
+              // }
+
             }
           );
       });

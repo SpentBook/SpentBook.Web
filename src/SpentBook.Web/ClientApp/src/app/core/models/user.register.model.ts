@@ -4,4 +4,5 @@ export class UserRegister {
   lastName: string;
   password: string;
   passwordConfirm: string;
+  dateOfBirth: Date;
 }

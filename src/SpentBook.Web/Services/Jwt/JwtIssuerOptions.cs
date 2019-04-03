@@ -3,7 +3,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.IdentityModel.Tokens;
 
-namespace SpentBook.Web.Jwt
+namespace SpentBook.Web.Services.Jwt
 {
     public class JwtIssuerOptions
     {

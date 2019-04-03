@@ -7,12 +7,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using SpentBook.Web.Config;
-using SpentBook.Web.Email;
-using SpentBook.Web.Error;
 using SpentBook.Web.Extensions;
-using SpentBook.Web.Jwt;
 using SpentBook.Web.ViewsModels;
+
+using SpentBook.Web.Services.Error;
+using SpentBook.Web.Services.Jwt;
+using SpentBook.Web.Services.Config;
+using SpentBook.Web.Services.Email;
 
 namespace SpentBook.Web
 {

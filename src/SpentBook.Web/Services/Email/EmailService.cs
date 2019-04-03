@@ -4,11 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using SendGrid;
 using SendGrid.Helpers.Mail;
-using SpentBook.Web.Config;
+using SpentBook.Web.Services.Config;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 
-namespace SpentBook.Web.Email
+namespace SpentBook.Web.Services.Email
 {
     public class EmailService
     {

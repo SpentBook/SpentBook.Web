@@ -1,23 +1,21 @@
-﻿namespace SpentBook.Web.Error
+﻿namespace SpentBook.Web.Services.Error
 {
     public enum ProblemDetailsFieldType
     {
         Unknown,
+        Invalid,
+        Required,
         JwtError,
-        InvalidForm,
         IsLockedOut,
         IsNotAllowed,
         UserNotFound,
         MinLength,
         MaxLength,
         PasswordNotMatch,
-        Required,
         PasswordRequiresLower,
         PasswordRequiresUpper,
         PasswordRequiresNonAlphanumeric,
         DuplicateUserName,
-        InvalidEmail,
-        InvalidDate,
-        Invalid,
+        Email,
     }
 }

@@ -6,10 +6,10 @@ using System.Security.Principal;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using SpentBook.Web.Config;
+using SpentBook.Web.Services.Config;
 using SpentBook.Web.ViewsModels;
 
-namespace SpentBook.Web.Jwt
+namespace SpentBook.Web.Services.Jwt
 {
     public class JwtFactory : IJwtFactory
     {

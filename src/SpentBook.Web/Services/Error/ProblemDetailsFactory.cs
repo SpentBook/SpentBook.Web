@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
-namespace SpentBook.Web.Error
+namespace SpentBook.Web.Services.Error
 {
     public class ProblemDetailsFactory
     {
@@ -86,6 +86,12 @@ namespace SpentBook.Web.Error
                 problemDetails.Type = string.Format(STATUS_CODE_TYPE_URI, statusCode);
                 problemDetails.Title = ReasonPhrases.GetReasonPhrase(statusCode);
             }
+        }
+
+        public static string GetComposeTypeAndErrorMessage(ProblemDetailsFieldType errorType, string message)
+        {
+            string typeName = Enum.GetName(typeof(ProblemDetailsFieldType), errorType);
+            return $"{typeName}/{message}";
         }
     }
 }

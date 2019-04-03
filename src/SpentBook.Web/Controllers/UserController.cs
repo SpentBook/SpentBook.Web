@@ -11,11 +11,12 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
-using SpentBook.Web.Config;
-using SpentBook.Web.Email;
-using SpentBook.Web.Error;
-using SpentBook.Web.Jwt;
 using SpentBook.Web.ViewsModels;
+
+using SpentBook.Web.Services.Config;
+using SpentBook.Web.Services.Email;
+using SpentBook.Web.Services.Error;
+using SpentBook.Web.Services.Jwt;
 
 namespace SpentBook.Web.Controllers
 {

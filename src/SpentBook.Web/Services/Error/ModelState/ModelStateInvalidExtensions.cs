@@ -15,7 +15,7 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
-namespace SpentBook.Web.Error
+namespace SpentBook.Web.Services.Error
 {
     /// <summary>
     /// InvalidModelStateExtensions

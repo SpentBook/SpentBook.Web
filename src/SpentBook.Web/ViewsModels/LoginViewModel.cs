@@ -1,7 +1,7 @@
 ﻿// using FluentValidation.Attributes;
 
 using FluentValidation;
-using SpentBook.Web.Error;
+using SpentBook.Web.Services.Error;
 
 namespace SpentBook.Web.ViewsModels
 {
@@ -18,7 +18,7 @@ namespace SpentBook.Web.ViewsModels
         {
              RuleFor(vm => vm.UserName)
                 .NotEmpty().WithMessage("E-mail cannot be empty").WithErrorCode(ProblemDetailsFieldType.Required.ToString())
-                .EmailAddress().WithMessage("Invalid e-mail").WithErrorCode(ProblemDetailsFieldType.InvalidEmail.ToString())
+                .EmailAddress().WithMessage("Invalid e-mail").WithErrorCode(ProblemDetailsFieldType.Email.ToString())
                 .MinimumLength(3).WithMessage("E-mail is too short").WithErrorCode(ProblemDetailsFieldType.MaxLength.ToString())
                 .MaximumLength(100).WithMessage("E-mail is too long").WithErrorCode(ProblemDetailsFieldType.MinLength.ToString());
 

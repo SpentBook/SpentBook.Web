@@ -7,7 +7,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
-using SpentBook.Web.Jwt;
 using System;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -18,11 +17,12 @@ using Swashbuckle.AspNetCore.Swagger;
 using System.Linq;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using SpentBook.Web.Config;
 using Microsoft.AspNetCore.Identity.UI.Services;
-using SpentBook.Web.Email;
-using SpentBook.Web.Error;
 using Microsoft.Extensions.Logging;
+using SpentBook.Web.Services.Jwt;
+using SpentBook.Web.Services.Config;
+using SpentBook.Web.Services.Email;
+using SpentBook.Web.Services.Error;
 
 namespace SpentBook.Web
 {
@@ -43,7 +43,6 @@ namespace SpentBook.Web
             var connection = Configuration.GetConnectionString("ApplicationDbContext");
 
             // Add MVC
-            // services.AddMvcCore() ??
             services.AddMvc()
                 .AddFluentValidation(fv =>
                 {

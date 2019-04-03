@@ -19,8 +19,7 @@ import { timer, Observable } from 'rxjs';
 // models
 import { AuthService } from '../../services/auth.service';
 import { Token } from 'src/app/core/models/token.model';
-import { ApiError } from 'src/app/core/models/api-error.model';
-import { ApiErrorType } from 'src/app/core/models/api-error-type.enum';
+import { ProblemDetails, ProblemDetailsFieldType } from 'src/app/core/models/problem-details.model';
 import { UserRegister } from 'src/app/core/models/user.register.model';
 import { inherits } from 'util';
 import { baseDirectiveCreate } from '@angular/core/src/render3/instructions';
@@ -80,13 +79,13 @@ export class RegisterComponent implements OnInit {
     this.form = this.fb.group(
       {
         'email': ['', Validators.compose([Validators.required, Validators.email])],
-        'name': ['',  Validators.compose([Validators.required, Validators.minLength(2)])],
-        'lastName': ['',  Validators.compose([Validators.required, Validators.minLength(2)])],
-        'dateOfBirth': ['',  Validators.compose([Validators.required, Validators.minLength(10)])],
+        'name': ['', Validators.compose([Validators.required, Validators.minLength(2)])],
+        'lastName': ['', Validators.compose([Validators.required, Validators.minLength(2)])],
+        'dateOfBirth': ['', Validators.compose([Validators.required, Validators.minLength(10)])],
         'passwordGroup': this.fb.group({
-            'password': ['',  Validators.compose([Validators.required, Validators.minLength(3)])],
-            'passwordConfirm': ['',  Validators.compose([Validators.required])]
-          }, 
+          'password': ['', Validators.compose([Validators.required, Validators.minLength(3)])],
+          'passwordConfirm': ['', Validators.compose([Validators.required])]
+        },
           {
             validator: CustomValidations.passwordMatchValidator('passwordConfirm', 'password')
           }),
@@ -106,11 +105,11 @@ export class RegisterComponent implements OnInit {
 
   submitForm() {
     if (!this.form.valid) {
-      //this.form.markAsTouched();
-      return;
+      //return;
     }
 
     this.loading = true;
+
     timer(2000).subscribe(() => {
       let user = new UserRegister();
       user.email = this.email.value;
@@ -118,6 +117,7 @@ export class RegisterComponent implements OnInit {
       user.lastName = this.lastName.value;
       user.password = this.password.value;
       user.passwordConfirm = this.passwordConfirm.value;
+      user.dateOfBirth = this.dateOfBirth.value;
 
       this.register$ = this.authService.register(user);
       this.register$.subscribe(
@@ -127,28 +127,50 @@ export class RegisterComponent implements OnInit {
         },
         error => {
           this.loading = false;
-          var objError = <ApiError>error.error;
-          this.showError = true;
-
-          switch (objError.errorType) {
-            case ApiErrorType.InvalidForm:
-              this.errorMessage = "Existem erros que precisam ser corrigidos ;)";
-              break;
-            case ApiErrorType.AddUserError:
-              this.errorMessage = "Erro ao cadastrar usuário (TALVEZ USUARIO EXISTA)";
-              break;
-            case ApiErrorType.PasswordNotMatch:
-              this.errorMessage = "O campo senha é diferente da sua confirmação";
-              break;
-            default:
-              this.errorMessage = "Ocorreu um erro inesperado, tente novamente mais tarde";
-          }
+          this.validatePosSubmit(error);
         }
       );
     });
   }
-
+  
   backRegister() {
     this.showError = false;
+  }
+
+  private validatePosSubmit(error: any) {
+    var problemDetails = <ProblemDetails>error.error;
+    for (let fieldName in problemDetails.errors) {
+      let field = this[this.toLowerCaseFirstLetter(fieldName)];
+      if (field == null) {
+        this.showError = true;
+        this.errorMessage = "Ocorreu um erro inesperado, tente novamente mais tarde";
+      }
+      else {
+        var fieldErrors = problemDetails.errors[fieldName];
+        var errors = {};
+        for (let index in fieldErrors) {
+          let e = fieldErrors[index];
+          errors[this.toLowerCaseFirstLetter(e.type)] = true;
+          // switch (e.type) {
+          //   case ProblemDetailsFieldType.InvalidForm:
+          //     this.errorMessage = "Existem erros que precisam ser corrigidos ;)";
+          //     break;
+          //   case ProblemDetailsFieldType.AddUserError:
+          //     this.errorMessage = "Erro ao cadastrar usuário (TALVEZ USUARIO EXISTA)";
+          //     break;
+          //   case ProblemDetailsFieldType.PasswordNotMatch:
+          //     this.errorMessage = "O campo senha é diferente da sua confirmação";
+          //     break;
+          //   default:
+          //     this.errorMessage = "Ocorreu um erro inesperado, tente novamente mais tarde";
+          // }
+        }
+        field.setErrors(errors);
+      }
+    }
+  }
+
+  private toLowerCaseFirstLetter(value: string): string {
+    return value.charAt(0).toLowerCase() + value.slice(1);
   }
 }
