@@ -24,8 +24,8 @@ namespace SpentBook.Web.ViewsModels
             RuleFor(vm => vm.Email)
                 .NotEmpty().WithMessage(ProblemDetailsFieldType.Required, "E-mail cannot be empty")
                 .EmailAddress().WithMessage(ProblemDetailsFieldType.Email, "Invalid e-mail")
-                .MinimumLength(3).WithMessage(ProblemDetailsFieldType.MaxLength, "E-mail is too short")
-                .MaximumLength(100).WithMessage(ProblemDetailsFieldType.MinLength, "E-mail is too long");
+                .MinimumLength(5).WithMessage(ProblemDetailsFieldType.MinLength, "E-mail is too short")
+                .MaximumLength(100).WithMessage(ProblemDetailsFieldType.MaxLength, "E-mail is too long");
 
             RuleFor(vm => vm.Password)
                 .NotEmpty().WithMessage(ProblemDetailsFieldType.Required, "Password cannot be empty")
@@ -45,7 +45,7 @@ namespace SpentBook.Web.ViewsModels
             
             RuleFor(vm => vm.LastName)
                 .NotEmpty().WithMessage(ProblemDetailsFieldType.Required, "Last name cannot be empty")
-                .MinimumLength(2).WithMessage(ProblemDetailsFieldType.MaxLength, "Last name is too short")
+                .MinimumLength(2).WithMessage(ProblemDetailsFieldType.MinLength, "Last name is too short")
                 .MaximumLength(50).WithMessage(ProblemDetailsFieldType.MaxLength, "Last name is too long");
 
             RuleFor(vm => vm.DateOfBirth)

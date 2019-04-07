@@ -12,13 +12,13 @@
     <div class="box-register" [hidden]="showError || loading">
       <div class="form-field">
         <mat-form-field color="accent">
-          <input matInput placeholder="E-mail" formControlName="email" maxlength="100" autocomplete="off">
+          <input matInput placeholder="E-mail" formControlName="email" minlength="5" maxlength="100" autocomplete="off">
           <mat-error *ngIf="hasError(email, 'required')">E-mail é obrigatório</mat-error>
-          <mat-error *ngIf="hasError(email, 'invalid')">E-mail inválido</mat-error>
-          <mat-error *ngIf="hasError(email, 'minlength')">E-mail muito curto</mat-error>
-          <mat-error *ngIf="hasError(email, 'maxlength')">E-mail muito longo</mat-error>
+          <!-- <mat-error *ngIf="hasError(email, 'invalid')">E-mail inválido</mat-error> -->
+          <!-- <mat-error *ngIf="hasError(email, 'minlength')">E-mail muito curto</mat-error>
+          <mat-error *ngIf="hasError(email, 'maxlength')">E-mail muito longo</mat-error> -->
           <mat-error *ngIf="hasError(email, 'unknown')">Ocorreu um erro desconhecido ao cadastrar</mat-error>
-          
+
           <mat-error *ngIf="hasError(email, 'email')">E-mail inválido</mat-error>
           <mat-error *ngIf="hasError(email, 'duplicateUserName')">Usuário já cadastrado</mat-error>
           <mat-error *ngIf="hasError(email, 'jwtError')">Ocorreu um erro ao tentar o logar o usuário</mat-error>
@@ -27,12 +27,12 @@
 
       <div class="form-field">
         <mat-form-field color="accent">
-          <input matInput placeholder="Nome" formControlName="name" maxlength="50" autocomplete="off">
-          <mat-error *ngIf="hasError(name, 'required')">Nome é obrigatório</mat-error>
-          <mat-error *ngIf="hasError(name, 'invalid')">Nome inválido</mat-error>
-          <mat-error *ngIf="hasError(name, 'minlength')">Nome muito curto</mat-error>
-          <mat-error *ngIf="hasError(name, 'maxlength')">Nome muito longo</mat-error>
-          <mat-error *ngIf="hasError(name, 'unknown')">Ocorreu um erro desconhecido ao cadastrar</mat-error>
+          <input matInput placeholder="Nome" formControlName="firstName" maxlength="50" autocomplete="off">
+          <mat-error *ngIf="hasError(firstName, 'required')">Nome é obrigatório</mat-error>
+          <mat-error *ngIf="hasError(firstName, 'invalid')">Nome inválido</mat-error>
+          <mat-error *ngIf="hasError(firstName, 'minlength')">Nome muito curto</mat-error>
+          <mat-error *ngIf="hasError(firstName, 'maxlength')">Nome muito longo</mat-error>
+          <mat-error *ngIf="hasError(firstName, 'unknown')">Ocorreu um erro desconhecido ao cadastrar</mat-error>
         </mat-form-field>
       </div>
 
@@ -59,16 +59,19 @@
           <input [type]="showPwd ? 'text' : 'password'" matInput placeholder="Senha" formControlName="password"
             maxlength="20">
           <mat-icon matSuffix (click)="showPwd = !showPwd">{{showPwd ? 'visibility' : 'visibility_off'}}</mat-icon>
-          
+
           <mat-error *ngIf="hasError(password, 'required')">Senha é obrigatório</mat-error>
           <mat-error *ngIf="hasError(password, 'invalid')">Senha inválida</mat-error>
           <mat-error *ngIf="hasError(password, 'minlength')">Senha muito curta</mat-error>
           <mat-error *ngIf="hasError(password, 'maxlength')">Senha muito longa</mat-error>
           <mat-error *ngIf="hasError(password, 'unknown')">Ocorreu um erro desconhecido ao cadastrar</mat-error>
 
-          <mat-error *ngIf="hasError(password, 'passwordRequiresLower')">É necessário ao menos um caractere minusculo</mat-error>
-          <mat-error *ngIf="hasError(password, 'passwordRequiresUpper')">É necessário ao menos um caractere maiúsculo</mat-error>
-          <mat-error *ngIf="hasError(password, 'passwordRequiresNonAlphanumeric')">É necessário ao menos um caractere alfanumérico</mat-error>          
+          <mat-error *ngIf="hasError(password, 'passwordRequiresLower')">É necessário ao menos um caractere minusculo
+          </mat-error>
+          <mat-error *ngIf="hasError(password, 'passwordRequiresUpper')">É necessário ao menos um caractere maiúsculo
+          </mat-error>
+          <mat-error *ngIf="hasError(password, 'passwordRequiresNonAlphanumeric')">É necessário ao menos um caractere
+            alfanumérico</mat-error>
         </mat-form-field>
       </div>
 
@@ -84,20 +87,20 @@
           <mat-error *ngIf="hasError(passwordConfirm, 'minlength')">Confirmação de senha muito curta</mat-error>
           <mat-error *ngIf="hasError(passwordConfirm, 'maxlength')">Confirmação de senha muito longa</mat-error>
           <mat-error *ngIf="hasError(passwordConfirm, 'unknown')">Ocorreu um erro desconhecido ao cadastrar</mat-error>
-          
           <mat-error *ngIf="hasError(passwordConfirm, 'passwordNotMatch')">As senhas devem ser iguais</mat-error>
         </mat-form-field>
       </div>
 
       <div class="form-field">
         <mat-form-field color="accent">
-          <input matInput [matDatepicker]="picker" placeholder="Data de nascimento" formControlName="dateOfBirth" maxlength="10" autocomplete="off">
+          <input matInput [matDatepicker]="picker" placeholder="Data de nascimento" formControlName="dateOfBirth"
+            maxlength="10" autocomplete="off">
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker touchUi #picker></mat-datepicker>
 
           <mat-error *ngIf="dateOfBirth?.invalid">Data de nascimento inválida</mat-error>
           <!-- <mat-error *ngIf="hasError(dateOfBirth, 'required')">Data de nascimento é obrigatória</mat-error> -->
-          <mat-error *ngIf="hasError(dateOfBirth, 'invalid')">Data de nascimento inválida</mat-error>
+          <!-- <mat-error *ngIf="hasError(dateOfBirth, 'invalid')">Data de nascimento inválida</mat-error> -->
           <mat-error *ngIf="hasError(dateOfBirth, 'minlength')">Data de nascimento muito curta</mat-error>
           <mat-error *ngIf="hasError(dateOfBirth, 'maxlength')">Data de nascimento muito longa</mat-error>
           <mat-error *ngIf="hasError(dateOfBirth, 'unknown')">Ocorreu um erro desconhecido ao cadastrar</mat-error>
@@ -148,9 +151,21 @@
     </div>
 
     <div class="box-error" [hidden]="!showError">
-      <span>{{errorMessage}}</span>
+      <span>{{problemDetails?.detail}}</span>
+      {{unknownFieldsErrors | json}}
+      <ul>
+        <li ng-repeat="(key, field) in unknownFieldsErrors">
+          {{field | json}}
+          <ul>
+            <li ng-repeat="error in field.errors">
+              <span>({{error?.type}}) {{error?.message}}</span>
+            </li>
+          </ul>
+        </li>
+      </ul>
+
       <div class="form-field">
-        <button mat-button (click)="backRegister()">Ok</button>
+        <button mat-button (click)="backRegister()" type="button">Ok</button>
       </div>
     </div>
   </fieldset>

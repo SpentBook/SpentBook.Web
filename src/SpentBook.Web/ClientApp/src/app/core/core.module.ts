@@ -6,7 +6,7 @@ import { AuthService } from '../account/services/auth.service';
 import { TruncatePipe } from './pipes/truncate/truncate.pipe';
 
 @NgModule({
-  providers: [ ApiService, AuthService ],
+  providers: [ApiService, AuthService],
   declarations: [TruncatePipe],
   imports: [
     CommonModule,

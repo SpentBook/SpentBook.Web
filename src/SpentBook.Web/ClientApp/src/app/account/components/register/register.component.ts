@@ -1,14 +1,8 @@
 // angular
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { FormControl, FormGroupDirective, NgForm, Validators } from '@angular/forms';
-import { ErrorStateMatcher, MatDateFormats } from '@angular/material/core';
+import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-
-// date
-import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
-import { Moment } from 'moment';
-import { MomentDateAdapter } from '@angular/material-moment-adapter';
 
 // touch
 import 'hammerjs';
@@ -19,31 +13,36 @@ import { timer, Observable } from 'rxjs';
 // models
 import { AuthService } from '../../services/auth.service';
 import { Token } from 'src/app/core/models/token.model';
-import { ProblemDetails, ProblemDetailsFieldType } from 'src/app/core/models/problem-details.model';
 import { UserRegister } from 'src/app/core/models/user.register.model';
-import { inherits } from 'util';
-import { baseDirectiveCreate } from '@angular/core/src/render3/instructions';
 import { CustomValidations } from 'src/app/core/validations/custom-validations';
+import { ServerSideValidationService } from 'src/app/core/services/server-side-validation.service';
+import { ProblemDetailsItem, ProblemDetails } from 'src/app/core/models/problem-details.model';
+
+// // date
+// import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+// import { Moment } from 'moment';
+// import { MomentDateAdapter } from '@angular/material-moment-adapter';
 
 /** Error when invalid control is dirty, touched, or submitted. */
-export class MyErrorStateMatcher implements ErrorStateMatcher {
-  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
-    const isSubmitted = form && form.submitted;
-    return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
-  }
-}
+// export class MyErrorStateMatcher implements ErrorStateMatcher {
+//   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+//     const isSubmitted = form && form.submitted;
+//     return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
+//   }
+// }
 
 /*
 1) Criar "Declaro estar ciente" e salvar termo assinado (ler mais sobre)
 2) Apagar imports não usados
-3) Validações cliente side
-4) Senha como passowrd
+3) Validações cliente side - ok
+4) Senha como passowrd - ok
 5) Subir imagem do usuário
 6) Cadastro multi-step
 7) Erro server side
 8) Mascaras
 9) O auto complete do browser zoa todo o layout do input
 8) Enter deve mudar d campo
+9) Acertar injeção dos services authservice e apiservice que estão no core, mas sao de outro modulo
 */
 
 @Component({
@@ -57,14 +56,16 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
 })
 export class RegisterComponent implements OnInit {
   form: FormGroup;
-  loading: boolean = false;
   showError: boolean = false;
+  problemDetails: ProblemDetails;
+  unknownFieldsErrors: { [id: string]: ProblemDetailsItem; };
+
+  loading: boolean = false;
   register$: Observable<Token>;
   returnUrl: string;
-  errorMessage: string;
 
   get email(): any { return this.form.get('email'); }
-  get name(): any { return this.form.get('name'); }
+  get firstName(): any { return this.form.get('firstName'); }
   get lastName(): any { return this.form.get('lastName'); }
   get password(): any { return this.form.get('passwordGroup').get('password'); }
   get passwordConfirm(): any { return this.form.get('passwordGroup').get('passwordConfirm'); }
@@ -73,25 +74,10 @@ export class RegisterComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
+    private serverSideValidate: ServerSideValidationService,
     private router: Router
   ) {
-
-    this.form = this.fb.group(
-      {
-        'email': ['', Validators.compose([Validators.required, Validators.email])],
-        'name': ['', Validators.compose([Validators.required, Validators.minLength(2)])],
-        'lastName': ['', Validators.compose([Validators.required, Validators.minLength(2)])],
-        'dateOfBirth': ['', Validators.compose([Validators.required, Validators.minLength(10)])],
-        'passwordGroup': this.fb.group({
-          'password': ['', Validators.compose([Validators.required, Validators.minLength(3)])],
-          'passwordConfirm': ['', Validators.compose([Validators.required])]
-        },
-          {
-            validator: CustomValidations.passwordMatchValidator('passwordConfirm', 'password')
-          }),
-      }
-    );
-
+    this.createForm();
     this.returnUrl = 'home';
   }
 
@@ -99,8 +85,23 @@ export class RegisterComponent implements OnInit {
 
   }
 
-  public hasError = (control: FormControl, errorName: string) => {
-    return control.hasError(errorName);
+  private createForm() {
+    this.form = this.fb.group({
+      'email': ['', Validators.compose([Validators.required, Validators.email])],
+      'firstName': ['', Validators.compose([Validators.required, Validators.minLength(2)])],
+      'lastName': ['', Validators.compose([Validators.required, Validators.minLength(2)])],
+      'dateOfBirth': ['', Validators.compose([Validators.required, Validators.minLength(10)])],
+      'passwordGroup': this.fb.group({
+        'password': ['', Validators.compose([Validators.required, Validators.minLength(3)])],
+        'passwordConfirm': ['', Validators.compose([Validators.required])]
+      }, {
+          validator: CustomValidations.passwordMatchValidator('passwordConfirm', 'password')
+        }),
+    });
+  }
+
+  hasError(control: FormControl, errorName: string) {
+    return this.serverSideValidate.hasError(control, errorName);
   }
 
   submitForm() {
@@ -113,7 +114,7 @@ export class RegisterComponent implements OnInit {
     timer(2000).subscribe(() => {
       let user = new UserRegister();
       user.email = this.email.value;
-      user.firstName = this.name.value;
+      user.firstName = this.firstName.value;
       user.lastName = this.lastName.value;
       user.password = this.password.value;
       user.passwordConfirm = this.passwordConfirm.value;
@@ -127,50 +128,26 @@ export class RegisterComponent implements OnInit {
         },
         error => {
           this.loading = false;
-          this.validatePosSubmit(error);
+          this.unknownFieldsErrors = null;
+          this.problemDetails = null;
+          
+          this.serverSideValidate.validate(
+            this,
+            error,
+            (unknownFieldsErrors) => {
+              this.showError = true;
+              this.unknownFieldsErrors = unknownFieldsErrors;
+            },
+            (problemDetails) => {
+              this.showError = true;
+              this.problemDetails = problemDetails;
+            });
         }
       );
     });
   }
-  
+
   backRegister() {
     this.showError = false;
-  }
-
-  private validatePosSubmit(error: any) {
-    var problemDetails = <ProblemDetails>error.error;
-    for (let fieldName in problemDetails.errors) {
-      let field = this[this.toLowerCaseFirstLetter(fieldName)];
-      if (field == null) {
-        this.showError = true;
-        this.errorMessage = "Ocorreu um erro inesperado, tente novamente mais tarde";
-      }
-      else {
-        var fieldErrors = problemDetails.errors[fieldName];
-        var errors = {};
-        for (let index in fieldErrors) {
-          let e = fieldErrors[index];
-          errors[this.toLowerCaseFirstLetter(e.type)] = true;
-          // switch (e.type) {
-          //   case ProblemDetailsFieldType.InvalidForm:
-          //     this.errorMessage = "Existem erros que precisam ser corrigidos ;)";
-          //     break;
-          //   case ProblemDetailsFieldType.AddUserError:
-          //     this.errorMessage = "Erro ao cadastrar usuário (TALVEZ USUARIO EXISTA)";
-          //     break;
-          //   case ProblemDetailsFieldType.PasswordNotMatch:
-          //     this.errorMessage = "O campo senha é diferente da sua confirmação";
-          //     break;
-          //   default:
-          //     this.errorMessage = "Ocorreu um erro inesperado, tente novamente mais tarde";
-          // }
-        }
-        field.setErrors(errors);
-      }
-    }
-  }
-
-  private toLowerCaseFirstLetter(value: string): string {
-    return value.charAt(0).toLowerCase() + value.slice(1);
   }
 }
