@@ -1,6 +1,12 @@
 import { Injectable } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ProblemDetails, ProblemDetailsItem } from '../models/problem-details.model';
+import { BoxErrorComponent } from '../components/box-error/box-error.component';
+
+export interface UnknownFieldError {
+  name: string;
+  errors: { [id: string]: ProblemDetailsItem; }
+}
 
 @Injectable({
   providedIn: 'root'
@@ -8,16 +14,6 @@ import { ProblemDetails, ProblemDetailsItem } from '../models/problem-details.mo
 export class ServerSideValidationService {
 
   constructor() { }
-
-  public hasError(control: FormControl, errorName: string) {
-    if (control.errors != null) {
-      for (var i in control.errors) {
-        if (i.toLowerCase() == errorName.toLowerCase())
-          return true;
-      }
-    }
-    return false;
-  }
 
   /*
     Esse método prioriza os erros da seguinte forma:
@@ -30,7 +26,7 @@ export class ServerSideValidationService {
   public validate(
     componentInstance: Object,
     serverError: any,
-    unknownFieldsAction: (unknownFields: { [id: string]: ProblemDetailsItem; }) => void,
+    unknownFieldsAction: (unknownFields: UnknownFieldError[]) => void,
     unknownErrorAction: (problemDetails: ProblemDetails) => void
   ) {
     let unknownFields = [];
@@ -68,6 +64,32 @@ export class ServerSideValidationService {
     else {
       unknownErrorAction(problemDetails);
     }
+  }
+
+  public validateWithBoxError(
+    componentInstance: Object,
+    serverError: any,
+    boxError: BoxErrorComponent
+  ) {
+    this.validate(
+      componentInstance,
+      serverError,
+      (unknownFieldsErrors) => {
+        boxError.unknownFieldsErrors = unknownFieldsErrors;
+      },
+      (problemDetails) => {
+        boxError.problemDetails = problemDetails;
+      });
+  }
+
+  public hasError(control: FormControl, errorName: string) {
+    if (control.errors != null) {
+      for (var i in control.errors) {
+        if (i.toLowerCase() == errorName.toLowerCase())
+          return true;
+      }
+    }
+    return false;
   }
 
   private toLowerCaseFirstLetter(value: string): string {

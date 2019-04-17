@@ -1,79 +1,99 @@
 $loginWidth = 500px;
 
 .header {
-    width 100%
-    height 30px
-    background-color black
+    width: 100%;
+    height: 30px;
+    background-color: black;
 
     .btn {
-        display inline-block
-        width 30px
-        background-color red    
+        display: inline-block;
+        width: 30px;
+        background-color: red;
     }
-    
+
     .title {
-        background-color blue
+        background-color: blue;
     }
 }
 
 fieldset {
-    border none
-    text-align: center
-    
+    border: none;
+    text-align: center;
+
     .box-logo {
-        height 100px
+        height: 100px;
+
         img {
-            width 100px
+            width: 100px;
         }
     }
 
     .box-register {
         .form-pwd mat-icon {
-            cursor pointer
+            cursor: pointer;
         }
 
         mat-error {
-            font-size 10px
+            font-size: 10px;
         }
 
         .form-field {
-            margin-bottom 10px;
+            margin-bottom: 10px;
         }
-        
+
         .mat-form-field {
-            width 50%
+            width: 50%;
         }
 
         @media only screen and (max-width: 768px) {
             .mat-form-field {
-                width 100%
+                width: 100%;
             }
         }
-        
+
         .mat-radio-button ~ .mat-radio-button {
             margin-left: 50px;
         }
-     
+
         button {
-            margin-top 15px
-            min-width 200px
-            border-radius 19px
-            background-color #336890
+            margin-top: 15px;
+            min-width: 200px;
+            border-radius: 19px;
+            background-color: #336890;
         }
     }
 
     .box-loading {
-        margin-top 30px
+        margin-top: 30px;
+    }
+}
+
+.box-error {
+    margin-top: 30px;
+
+    button {
+        margin-top: 15px;
+        min-width: 200px;
+        border-radius: 19px;
+        background-color: #336890;
     }
 
-    .box-error {
-        margin-top 30px
+    ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        min-width: 50%;    
+        text-align: center;
+        margin: 0 auto;
+    }
 
-        button {
-            margin-top 15px
-            min-width 200px
-            border-radius 19px
-            background-color #336890
-        }
+    li {
+        border-bottom: 1px solid #ccc;
+        padding: 7px;
+        // color: #f44336;
+    }
+
+    li:last-child {
+        border: none;
     }
 }

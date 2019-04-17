@@ -151,18 +151,7 @@
     </div>
 
     <div class="box-error" [hidden]="!showError">
-      <span>{{problemDetails?.detail}}</span>
-      {{unknownFieldsErrors | json}}
-      <ul>
-        <li ng-repeat="(key, field) in unknownFieldsErrors">
-          {{field | json}}
-          <ul>
-            <li ng-repeat="error in field.errors">
-              <span>({{error?.type}}) {{error?.message}}</span>
-            </li>
-          </ul>
-        </li>
-      </ul>
+      <app-box-error></app-box-error>
 
       <div class="form-field">
         <button mat-button (click)="backRegister()" type="button">Ok</button>

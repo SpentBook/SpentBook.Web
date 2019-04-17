@@ -1,0 +1,19 @@
+<h2>Alguns erros inesperados foram identificados:</h2>
+
+<div *ngIf="!unknownFieldsErrors">
+  <ul>
+    <li>
+      <span>{{problemDetails?.detail}}</span>
+    </li>
+  </ul>
+</div>
+
+<div *ngIf="unknownFieldsErrors">
+  <ul>
+    <ng-template ngFor let-field [ngForOf]="unknownFieldsErrors" let-i="index" let-odd="odd">
+      <li *ngFor="let error of field.errors">
+        <span>({{field.name}}/{{error?.type}}) {{error?.message}}</span>
+      </li>
+    </ng-template>
+  </ul>
+</div>

@@ -16,6 +16,7 @@ import {
 } from '@angular/material';
 import { LayoutModule } from '@angular/cdk/layout';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BoxErrorComponent } from '../core/components/box-error/box-error.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     LoginComponent,
     PageLogoutComponent,
     PageRegisterComponent,
-    RegisterComponent,
+    RegisterComponent
   ],
   imports: [
     CommonModule,

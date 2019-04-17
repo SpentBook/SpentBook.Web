@@ -1,5 +1,5 @@
 // angular
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -15,8 +15,9 @@ import { AuthService } from '../../services/auth.service';
 import { Token } from 'src/app/core/models/token.model';
 import { UserRegister } from 'src/app/core/models/user.register.model';
 import { CustomValidations } from 'src/app/core/validations/custom-validations';
-import { ServerSideValidationService } from 'src/app/core/services/server-side-validation.service';
-import { ProblemDetailsItem, ProblemDetails } from 'src/app/core/models/problem-details.model';
+import { ServerSideValidationService, UnknownFieldError } from 'src/app/core/services/server-side-validation.service';
+import { ProblemDetails } from 'src/app/core/models/problem-details.model';
+import { BoxErrorComponent } from 'src/app/core/components/box-error/box-error.component';
 
 // // date
 // import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
@@ -48,18 +49,18 @@ import { ProblemDetailsItem, ProblemDetails } from 'src/app/core/models/problem-
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.styl'],
+  styleUrls: ['./register.component.styl'],  
   // providers: [
   //   { provide: DateAdapter, useClass: CustomMomentDateAdapter  },
   //   { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }
   // ]
 })
 export class RegisterComponent implements OnInit {
+  @ViewChild(BoxErrorComponent)
+  boxError: BoxErrorComponent;
+
   form: FormGroup;
   showError: boolean = false;
-  problemDetails: ProblemDetails;
-  unknownFieldsErrors: { [id: string]: ProblemDetailsItem; };
-
   loading: boolean = false;
   register$: Observable<Token>;
   returnUrl: string;
@@ -128,20 +129,8 @@ export class RegisterComponent implements OnInit {
         },
         error => {
           this.loading = false;
-          this.unknownFieldsErrors = null;
-          this.problemDetails = null;
-          
-          this.serverSideValidate.validate(
-            this,
-            error,
-            (unknownFieldsErrors) => {
-              this.showError = true;
-              this.unknownFieldsErrors = unknownFieldsErrors;
-            },
-            (problemDetails) => {
-              this.showError = true;
-              this.problemDetails = problemDetails;
-            });
+          this.showError = true;
+          this.serverSideValidate.validateWithBoxError(this, error, this.boxError);
         }
       );
     });
