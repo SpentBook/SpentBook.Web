@@ -66,6 +66,7 @@ export class RegisterComponent implements OnInit {
   returnUrl: string;
 
   get email(): any { return this.form.get('email'); }
+  get email2(): any { return this.form.get('email2'); }
   get firstName(): any { return this.form.get('firstName'); }
   get lastName(): any { return this.form.get('lastName'); }
   get password(): any { return this.form.get('passwordGroup').get('password'); }
@@ -89,6 +90,7 @@ export class RegisterComponent implements OnInit {
   private createForm() {
     this.form = this.fb.group({
       'email': ['', Validators.compose([Validators.required, Validators.email])],
+      'email2': ['', Validators.compose([Validators.required, Validators.email])],
       'firstName': ['', Validators.compose([Validators.required, Validators.minLength(2)])],
       'lastName': ['', Validators.compose([Validators.required, Validators.minLength(2)])],
       'dateOfBirth': ['', Validators.compose([Validators.required, Validators.minLength(10)])],

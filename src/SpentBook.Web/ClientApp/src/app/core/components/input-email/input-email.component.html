@@ -1,0 +1,22 @@
+<div class="form-field">
+  <mat-form-field color="accent">
+    <ng-content></ng-content>
+
+    <mat-error *ngIf="hasError('required')">E-mail é obrigatório</mat-error>
+    <!-- <mat-error *ngIf="hasError('invalid')">E-mail inválido</mat-error> -->
+    <!-- <mat-error *ngIf="hasError('minlength')">E-mail muito curto</mat-error>
+          <mat-error *ngIf="hasError('maxlength')">E-mail muito longo</mat-error> -->
+    <mat-error *ngIf="hasError('unknown')">Ocorreu um erro desconhecido ao cadastrar</mat-error>
+
+    <!-- <mat-error *ngIf="hasError('email')">E-mail inválido</mat-error> -->
+    <mat-error *ngIf="hasError('duplicateUserName')">Usuário já cadastrado</mat-error>
+    <mat-error *ngIf="hasError('jwtError')">Ocorreu um erro ao tentar o logar o usuário</mat-error>
+
+    <ng-content select="mat-error" *ngIf="false"></ng-content>
+    <mat-error *ngFor="let _matError of _matErrors">{{_matError.nativeElement.innerText}}</mat-error>
+
+    <!-- <ng-container *ngFor="let _matError of _matErrors">
+      <mat-error>Ocorreu um erro ao tentar o logar o usuário</mat-error>
+    </ng-container> -->
+  </mat-form-field>
+</div>

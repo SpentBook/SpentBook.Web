@@ -83,7 +83,7 @@ export class ServerSideValidationService {
   }
 
   public hasError(control: FormControl, errorName: string) {
-    if (control.errors != null) {
+    if (control && control.errors) {
       for (var i in control.errors) {
         if (i.toLowerCase() == errorName.toLowerCase())
           return true;

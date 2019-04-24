@@ -10,6 +10,21 @@
     </div>
 
     <div class="box-register" [hidden]="showError || loading">
+      <app-input-name></app-input-name>
+      <app-input-name></app-input-name>
+      <app-input-password></app-input-password>
+      <app-input-date></app-input-date>
+      <app-input-button></app-input-button>
+
+      <app-input-email [formControl]="email2">
+        <input matInput placeholder="E-mail" formControlName="email2" minlength="5" maxlength="100"
+          autocomplete="off" />
+
+        <mat-error *ngIf="hasError(email2, 'email')">E-mail inválido</mat-error>
+        <mat-error *ngIf="hasError(email2, 'email')">E-mail inválid 2 </mat-error>
+        <mat-error *ngIf="hasError(email2, 'email')">E-mail inválid 2 3</mat-error>
+      </app-input-email>
+
       <div class="form-field">
         <mat-form-field color="accent">
           <input matInput placeholder="E-mail" formControlName="email" minlength="5" maxlength="100" autocomplete="off">
@@ -137,18 +152,7 @@
 
     </div>
 
-    <div class="box-loading" [hidden]="!loading">
-      <div class="animation-loading">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-      </div>
-    </div>
+    <app-loading class="box-loading" [hidden]="!loading"></app-loading>
 
     <div class="box-error" [hidden]="!showError">
       <app-box-error></app-box-error>
@@ -157,5 +161,6 @@
         <button mat-button (click)="backRegister()" type="button">Ok</button>
       </div>
     </div>
+
   </fieldset>
 </form>

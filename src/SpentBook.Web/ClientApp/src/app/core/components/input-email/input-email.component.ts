@@ -1,0 +1,42 @@
+import { Component, OnInit, ContentChild, ViewChild, AfterContentInit, Input, ContentChildren, QueryList, ElementRef } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { ServerSideValidationService } from '../../services/server-side-validation.service';
+
+// touch
+import 'hammerjs';
+
+// Material
+import { MatFormFieldControl, MatFormField, MatError } from '@angular/material';
+
+@Component({
+  selector: 'app-input-email',
+  templateUrl: './input-email.component.html',
+  styleUrls: ['./input-email.component.styl']
+})
+export class InputEmailComponent implements OnInit, AfterContentInit {
+
+  @ViewChild(MatFormField)
+  _matFormField: MatFormField;
+
+  @ContentChild(MatFormFieldControl)
+  _control: MatFormFieldControl<FormControl>;
+
+  @Input()
+  formControl: FormControl;
+
+  @ContentChildren(MatError, { read: ElementRef })
+  _matErrors: QueryList<ElementRef>;
+
+  constructor(private serverSideValidate: ServerSideValidationService) { }
+
+  ngOnInit() {
+    this._matFormField._control = this._control;
+  }
+
+  ngAfterContentInit(): void {
+  }
+
+  hasError(errorName: string) {
+    return this.serverSideValidate.hasError(this.formControl, errorName);
+  }
+}

@@ -1,138 +1,46 @@
-// @import "~@angular/material/prebuilt-themes/indigo-pink.css";
-// @import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
-// @import "~@angular/material/prebuilt-themes/pink-bluegrey.css";
-@import "~@angular/material/prebuilt-themes/purple-green.css";
+/*
+ * Fonts
+ */
+@import '~@angular/material/prebuilt-themes/purple-green.css';
 
 @font-face {
-  font-family: 'Roboto';
-  src: url('/assets/fonts/Roboto/Roboto-Regular.ttf') format('truetype');
+    font-family: 'Roboto';
+    src: url('/assets/fonts/Roboto/Roboto-Regular.ttf') format('truetype');
 }
 
+/*
+ * Animations
+ */
 router-outlet ~ * {
-  position: absolute;
-  height: 100%;
-  width: 100%;
+    position: absolute;
+    height: 100%;
+    width: 100%;
 }
 
-body
+/*
+ * Fix [hidden] attribute error
+ * https://www.talkingdotnet.com/dont-use-hidden-attribute-angularjs-2/
+ */
+[hidden] {
+    display: none !important;
+}
+
+/*
+ * App General Style
+ */
+body {
     // font-family: "Segoe UI", "Arial"
-    font-family: "Roboto", "Helvetica Neue", "sans-serif"
-    color #ffffff
-    background-color #00223B
-    font-size 14px
+    font-family: 'Roboto', 'Helvetica Neue', 'sans-serif';
+    color: #ffffff;
+    background-color: #00223B;
+    font-size: 14px;
+}
 
 .noselect {
-  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
-     -khtml-user-select: none; /* Konqueror HTML */
-       -moz-user-select: none; /* Firefox */
-        -ms-user-select: none; /* Internet Explorer/Edge */
-            user-select: none; /* Non-prefixed version, currently
-                                  supported by Chrome and Opera */
-}
-
-.animation-loading {
-    display: inline-block;
-    position: relative;
-    width: 64px;
-    height: 64px;
-
-    div {
-        animation: lds-roller 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-        transform-origin: 32px 32px;
-    }
-
-    div:after {
-        content: " ";
-        display: block;
-        position: absolute;
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-        background: #fff;
-        margin: -3px 0 0 -3px;
-    }
-
-    div:nth-child(1) {
-        animation-delay: -0.036s;
-    }
-
-    div:nth-child(1):after {
-        top: 50px;
-        left: 50px;
-    }
-
-    div:nth-child(2) {
-        animation-delay: -0.072s;  
-    }
-
-    div:nth-child(2):after {
-        top: 54px;
-        left: 45px;
-    }
-
-    div:nth-child(3) {
-        animation-delay: -0.108s;
-    }
-
-    div:nth-child(3):after {
-        top: 57px;
-        left: 39px;
-    }
-
-    div:nth-child(4) {
-        animation-delay: -0.144s;
-    }
-
-    div:nth-child(4):after {
-        top: 58px;
-        left: 32px;
-    }
-
-    div:nth-child(5) {
-        animation-delay: -0.18s;
-    }
-
-    div:nth-child(5):after {
-        top: 57px;
-        left: 25px;
-    }
-
-    div:nth-child(6) {
-        animation-delay: -0.216s;
-    }
-
-    div:nth-child(6):after {
-        top: 54px;
-        left: 19px;
-    }
-
-    div:nth-child(7) {
-        animation-delay: -0.252s;
-    }
-
-    div:nth-child(7):after {
-        top: 50px;
-        left: 14px;
-    }
-
-    div:nth-child(8) {
-        animation-delay: -0.288s;
-    }
-
-    div:nth-child(8):after {
-        top: 45px;
-        left: 10px;
-    }
-
-    @keyframes lds-roller {
-        0% {
-            transform: rotate(0deg);
-            opacity 0
-        }
-        100% {
-            transform: rotate(360deg);
-            opacity 0.3
-        }
-    }
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none;     /* Non-prefixed version, currently supported by Chrome and Opera */
 }
