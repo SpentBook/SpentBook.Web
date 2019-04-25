@@ -19,7 +19,7 @@ export class InputEmailComponent implements OnInit, AfterContentInit {
   _matFormField: MatFormField;
 
   @ContentChild(MatFormFieldControl)
-  _control: MatFormFieldControl<FormControl>;
+  _control: MatFormFieldControl<any>;
 
   @Input()
   formControl: FormControl;
@@ -30,13 +30,15 @@ export class InputEmailComponent implements OnInit, AfterContentInit {
   constructor(private serverSideValidate: ServerSideValidationService) { }
 
   ngOnInit() {
+    // Por algum motivo, projetar apenas input para dentro do mat-input não funciona
+    // É necessário esse fix para forçar o mat-input a conhecer o elemento externo.
     this._matFormField._control = this._control;
   }
 
   ngAfterContentInit(): void {
   }
 
-  hasError(errorName: string) {
+  hasErr(errorName: string) {
     return this.serverSideValidate.hasError(this.formControl, errorName);
   }
 }

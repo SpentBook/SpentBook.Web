@@ -3,7 +3,7 @@ import { FormControl } from '@angular/forms';
 import { ProblemDetails, ProblemDetailsItem } from '../models/problem-details.model';
 import { BoxErrorComponent } from '../components/box-error/box-error.component';
 
-export interface UnknownFieldError {
+export interface FieldError {
   name: string;
   errors: { [id: string]: ProblemDetailsItem; }
 }
@@ -26,16 +26,17 @@ export class ServerSideValidationService {
   public validate(
     componentInstance: Object,
     serverError: any,
-    unknownFieldsAction: (unknownFields: UnknownFieldError[]) => void,
-    unknownErrorAction: (problemDetails: ProblemDetails) => void
+    knownFieldsAction: (knownFields: FieldError[]) => void,
+    unknownFieldsAction: (unknownFields: FieldError[]) => void,
+    genericErrorAction: (problemDetails: ProblemDetails) => void
   ) {
+    let knownFields = [];
     let unknownFields = [];
     let problemDetails = <ProblemDetails>serverError.error;
-    let hasKnownFieldError = false;
 
     if (problemDetails.errors != null) {
       for (let fieldName in problemDetails.errors) {
-        let field = componentInstance[this.toLowerCaseFirstLetter(fieldName) + "A"];
+        let field = componentInstance[this.toLowerCaseFirstLetter(fieldName)];
         let fieldErrors = problemDetails.errors[fieldName];
         if (field == null) {
           unknownFields.push({
@@ -44,7 +45,11 @@ export class ServerSideValidationService {
           });
         }
         else {
-          hasKnownFieldError = true;
+          knownFields.push({
+            name: fieldName,
+            errors: fieldErrors
+          });
+
           var errors = {};
           for (let index in fieldErrors) {
             let e = fieldErrors[index];
@@ -54,15 +59,18 @@ export class ServerSideValidationService {
         }
       }
 
-      if (!hasKnownFieldError) {
-        if (unknownFields != null)
-          unknownFieldsAction(unknownFields);
-        else
-          unknownErrorAction(problemDetails);
+      if (knownFields.length > 0) {
+        knownFieldsAction(knownFields);
+      }
+      else if (unknownFields.length > 0) {
+        unknownFieldsAction(unknownFields);
+      }
+      else {
+        genericErrorAction(problemDetails);
       }
     }
     else {
-      unknownErrorAction(problemDetails);
+      genericErrorAction(problemDetails);
     }
   }
 
@@ -74,11 +82,16 @@ export class ServerSideValidationService {
     this.validate(
       componentInstance,
       serverError,
+      (knownFieldsErrors) => {
+        boxError.show = false;
+      },
       (unknownFieldsErrors) => {
         boxError.unknownFieldsErrors = unknownFieldsErrors;
+        boxError.show = true;
       },
       (problemDetails) => {
         boxError.problemDetails = problemDetails;
+        boxError.show = true;
       });
   }
 

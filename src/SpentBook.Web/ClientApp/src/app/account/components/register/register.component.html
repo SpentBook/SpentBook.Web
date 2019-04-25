@@ -9,36 +9,29 @@
       <img src="assets/logo-white.png">
     </div>
 
-    <div class="box-register" [hidden]="showError || loading">
+    <div class="box-register" [hidden]="boxError.show || loading">
       <app-input-name></app-input-name>
       <app-input-name></app-input-name>
       <app-input-password></app-input-password>
       <app-input-date></app-input-date>
       <app-input-button></app-input-button>
 
-      <app-input-email [formControl]="email2">
-        <input matInput placeholder="E-mail" formControlName="email2" minlength="5" maxlength="100"
+      <app-input-email [formControl]="email">
+        <input matInput placeholder="E-mail" formControlName="email" minlength="5" maxlength="100"
           autocomplete="off" />
-
-        <mat-error *ngIf="hasError(email2, 'email')">E-mail inválido</mat-error>
-        <mat-error *ngIf="hasError(email2, 'email')">E-mail inválid 2 </mat-error>
-        <mat-error *ngIf="hasError(email2, 'email')">E-mail inválid 2 3</mat-error>
       </app-input-email>
 
-      <div class="form-field">
+      <!-- <div class="form-field">
         <mat-form-field color="accent">
           <input matInput placeholder="E-mail" formControlName="email" minlength="5" maxlength="100" autocomplete="off">
           <mat-error *ngIf="hasError(email, 'required')">E-mail é obrigatório</mat-error>
-          <!-- <mat-error *ngIf="hasError(email, 'invalid')">E-mail inválido</mat-error> -->
-          <!-- <mat-error *ngIf="hasError(email, 'minlength')">E-mail muito curto</mat-error>
-          <mat-error *ngIf="hasError(email, 'maxlength')">E-mail muito longo</mat-error> -->
           <mat-error *ngIf="hasError(email, 'unknown')">Ocorreu um erro desconhecido ao cadastrar</mat-error>
 
           <mat-error *ngIf="hasError(email, 'email')">E-mail inválido</mat-error>
           <mat-error *ngIf="hasError(email, 'duplicateUserName')">Usuário já cadastrado</mat-error>
           <mat-error *ngIf="hasError(email, 'jwtError')">Ocorreu um erro ao tentar o logar o usuário</mat-error>
         </mat-form-field>
-      </div>
+      </div> -->
 
       <div class="form-field">
         <mat-form-field color="accent">
@@ -154,7 +147,7 @@
 
     <app-loading class="box-loading" [hidden]="!loading"></app-loading>
 
-    <div class="box-error" [hidden]="!showError">
+    <div class="box-error" [hidden]="!boxError.show">
       <app-box-error></app-box-error>
 
       <div class="form-field">

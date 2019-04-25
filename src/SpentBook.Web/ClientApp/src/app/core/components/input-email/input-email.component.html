@@ -2,21 +2,27 @@
   <mat-form-field color="accent">
     <ng-content></ng-content>
 
-    <mat-error *ngIf="hasError('required')">E-mail é obrigatório</mat-error>
-    <!-- <mat-error *ngIf="hasError('invalid')">E-mail inválido</mat-error> -->
-    <!-- <mat-error *ngIf="hasError('minlength')">E-mail muito curto</mat-error>
-          <mat-error *ngIf="hasError('maxlength')">E-mail muito longo</mat-error> -->
-    <mat-error *ngIf="hasError('unknown')">Ocorreu um erro desconhecido ao cadastrar</mat-error>
+    <mat-error *ngIf="hasErr('required')">E-mail é obrigatório</mat-error>
+    <mat-error *ngIf="hasErr('unknown')">Ocorreu um erro desconhecido ao cadastrar</mat-error>
+    <mat-error *ngIf="hasErr('email')">E-mail inválido</mat-error>
+    <mat-error *ngIf="hasErr('duplicateUserName')">Usuário já cadastrado</mat-error>
+    <mat-error *ngIf="hasErr('jwtError')">Ocorreu um erro ao tentar o logar o usuário</mat-error>
 
-    <!-- <mat-error *ngIf="hasError('email')">E-mail inválido</mat-error> -->
-    <mat-error *ngIf="hasError('duplicateUserName')">Usuário já cadastrado</mat-error>
-    <mat-error *ngIf="hasError('jwtError')">Ocorreu um erro ao tentar o logar o usuário</mat-error>
+    <!-- 
+      1) Esse mecanismo não funciona e não entendo o motivo, talvez seja pq o angular precisa de tudo  
+      no mesmo local físico para poder compilar corretamente e usando projeções isso deve ocorrer
+      em outro momento que pode ser tarde demais.
+      2) Acompanhar as próximas versões do angular
+    -->
+    <!-- <ng-content select="mat-error"></ng-content> -->
 
+    <!--      
+      Essa foi uma solução alternativa para renderizar mat-errors via ng-content
+      1) Através do ng-content eu pego apenas os 'mat-error', porém deixo eles fora do DOM 
+      2) Faço um ngFor para exibi-los, pois assim funciona. Isso reforça a ideia da minha suspeita acima,
+         uma vez que agora eles estão no mesmo local físico, embora sejam dinâmicos (ngFor)
+    -->
     <ng-content select="mat-error" *ngIf="false"></ng-content>
     <mat-error *ngFor="let _matError of _matErrors">{{_matError.nativeElement.innerText}}</mat-error>
-
-    <!-- <ng-container *ngFor="let _matError of _matErrors">
-      <mat-error>Ocorreu um erro ao tentar o logar o usuário</mat-error>
-    </ng-container> -->
   </mat-form-field>
 </div>

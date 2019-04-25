@@ -15,7 +15,7 @@ import { AuthService } from '../../services/auth.service';
 import { Token } from 'src/app/core/models/token.model';
 import { UserRegister } from 'src/app/core/models/user.register.model';
 import { CustomValidations } from 'src/app/core/validations/custom-validations';
-import { ServerSideValidationService, UnknownFieldError } from 'src/app/core/services/server-side-validation.service';
+import { ServerSideValidationService, FieldError } from 'src/app/core/services/server-side-validation.service';
 import { ProblemDetails } from 'src/app/core/models/problem-details.model';
 import { BoxErrorComponent } from 'src/app/core/components/box-error/box-error.component';
 
@@ -60,7 +60,6 @@ export class RegisterComponent implements OnInit {
   boxError: BoxErrorComponent;
 
   form: FormGroup;
-  showError: boolean = false;
   loading: boolean = false;
   register$: Observable<Token>;
   returnUrl: string;
@@ -131,7 +130,6 @@ export class RegisterComponent implements OnInit {
         },
         error => {
           this.loading = false;
-          this.showError = true;
           this.serverSideValidate.validateWithBoxError(this, error, this.boxError);
         }
       );
@@ -139,6 +137,6 @@ export class RegisterComponent implements OnInit {
   }
 
   backRegister() {
-    this.showError = false;
+    this.boxError.show = false;
   }
 }
