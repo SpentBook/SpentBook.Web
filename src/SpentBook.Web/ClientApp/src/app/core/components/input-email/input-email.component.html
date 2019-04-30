@@ -2,11 +2,17 @@
   <mat-form-field color="accent">
     <ng-content></ng-content>
 
-    <mat-error *ngIf="hasErr('required')">E-mail é obrigatório</mat-error>
-    <mat-error *ngIf="hasErr('unknown')">Ocorreu um erro desconhecido ao cadastrar</mat-error>
-    <mat-error *ngIf="hasErr('email')">E-mail inválido</mat-error>
-    <mat-error *ngIf="hasErr('duplicateUserName')">Usuário já cadastrado</mat-error>
-    <mat-error *ngIf="hasErr('jwtError')">Ocorreu um erro ao tentar o logar o usuário</mat-error>
+    <!-- 
+      1) Não é possível utilizar ngIf, por algum motivo o angular emite um erro conhecido
+         "ExpressionChangedAfterItHasBeenCheckedError".
+         Mudei para hidden e funcionou.
+     -->
+    <mat-error [hidden]="hiddenError('required')">E-mail é obrigatório</mat-error>
+    <mat-error [hidden]="hiddenError('unknown')">Ocorreu um erro desconhecido ao cadastrar</mat-error>
+    <mat-error [hidden]="hiddenError('email')">E-mail inválido</mat-error>
+    <mat-error [hidden]="hiddenError('maxlength')">E-mail muito longo</mat-error>
+    <mat-error [hidden]="hiddenError('duplicateUserName')">Usuário já cadastrado</mat-error>
+    <mat-error [hidden]="hiddenError('jwtError')">Ocorreu um erro ao tentar o logar o usuário</mat-error>
 
     <!-- 
       1) Esse mecanismo não funciona e não entendo o motivo, talvez seja pq o angular precisa de tudo  

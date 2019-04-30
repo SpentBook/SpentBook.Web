@@ -10,30 +10,20 @@
     </div>
 
     <div class="box-register" [hidden]="boxError.show || loading">
-      <app-input-name></app-input-name>
-      <app-input-name></app-input-name>
       <app-input-password></app-input-password>
       <app-input-date></app-input-date>
       <app-input-button></app-input-button>
 
-      <app-input-email [formControl]="email">
-        <input matInput placeholder="E-mail" formControlName="email" minlength="5" maxlength="100"
-          autocomplete="off" />
+      <app-input-email #inEmail [formControlRef]="email">
+        <input matInput formControlName="email" placeholder="E-mail" />
+        <!-- <mat-error [hidden]="hiddenError(email, 'email')">E-mail inválido</mat-error> -->
       </app-input-email>
 
+      <app-input-name #inName [formControlRef]="firstName">
+        <input matInput formControlName="firstName" placeholder="Nome" />
+      </app-input-name>
+
       <!-- <div class="form-field">
-        <mat-form-field color="accent">
-          <input matInput placeholder="E-mail" formControlName="email" minlength="5" maxlength="100" autocomplete="off">
-          <mat-error *ngIf="hasError(email, 'required')">E-mail é obrigatório</mat-error>
-          <mat-error *ngIf="hasError(email, 'unknown')">Ocorreu um erro desconhecido ao cadastrar</mat-error>
-
-          <mat-error *ngIf="hasError(email, 'email')">E-mail inválido</mat-error>
-          <mat-error *ngIf="hasError(email, 'duplicateUserName')">Usuário já cadastrado</mat-error>
-          <mat-error *ngIf="hasError(email, 'jwtError')">Ocorreu um erro ao tentar o logar o usuário</mat-error>
-        </mat-form-field>
-      </div> -->
-
-      <div class="form-field">
         <mat-form-field color="accent">
           <input matInput placeholder="Nome" formControlName="firstName" maxlength="50" autocomplete="off">
           <mat-error *ngIf="hasError(firstName, 'required')">Nome é obrigatório</mat-error>
@@ -42,7 +32,7 @@
           <mat-error *ngIf="hasError(firstName, 'maxlength')">Nome muito longo</mat-error>
           <mat-error *ngIf="hasError(firstName, 'unknown')">Ocorreu um erro desconhecido ao cadastrar</mat-error>
         </mat-form-field>
-      </div>
+      </div> -->
 
       <div class="form-field">
         <mat-form-field color="accent">

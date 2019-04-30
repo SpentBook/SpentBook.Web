@@ -49,7 +49,7 @@ import { BoxErrorComponent } from 'src/app/core/components/box-error/box-error.c
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.styl'],  
+  styleUrls: ['./register.component.styl'],
   // providers: [
   //   { provide: DateAdapter, useClass: CustomMomentDateAdapter  },
   //   { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }
@@ -65,7 +65,6 @@ export class RegisterComponent implements OnInit {
   returnUrl: string;
 
   get email(): any { return this.form.get('email'); }
-  get email2(): any { return this.form.get('email2'); }
   get firstName(): any { return this.form.get('firstName'); }
   get lastName(): any { return this.form.get('lastName'); }
   get password(): any { return this.form.get('passwordGroup').get('password'); }
@@ -80,6 +79,7 @@ export class RegisterComponent implements OnInit {
   ) {
     this.createForm();
     this.returnUrl = 'home';
+
   }
 
   ngOnInit() {
@@ -88,9 +88,8 @@ export class RegisterComponent implements OnInit {
 
   private createForm() {
     this.form = this.fb.group({
-      'email': ['', Validators.compose([Validators.required, Validators.email])],
-      'email2': ['', Validators.compose([Validators.required, Validators.email])],
-      'firstName': ['', Validators.compose([Validators.required, Validators.minLength(2)])],
+      'email': [''],
+      'firstName': [''],
       'lastName': ['', Validators.compose([Validators.required, Validators.minLength(2)])],
       'dateOfBirth': ['', Validators.compose([Validators.required, Validators.minLength(10)])],
       'passwordGroup': this.fb.group({
@@ -104,6 +103,10 @@ export class RegisterComponent implements OnInit {
 
   hasError(control: FormControl, errorName: string) {
     return this.serverSideValidate.hasError(control, errorName);
+  }
+  
+  hiddenError(control: FormControl, errorName: string) {
+    return this.serverSideValidate.hiddenError(control, errorName);
   }
 
   submitForm() {

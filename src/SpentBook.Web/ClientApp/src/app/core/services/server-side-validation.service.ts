@@ -105,6 +105,10 @@ export class ServerSideValidationService {
     return false;
   }
 
+  public hiddenError(control: FormControl, errorName: string) {
+    return !this.hasError(control, errorName);
+  }
+
   private toLowerCaseFirstLetter(value: string): string {
     return value.charAt(0).toLowerCase() + value.slice(1);
   }
