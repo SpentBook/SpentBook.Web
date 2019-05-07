@@ -71,6 +71,9 @@ export class RegisterComponent implements OnInit {
   get passwordConfirm(): any { return this.form.get('passwordGroup').get('passwordConfirm'); }
   get dateOfBirth(): any { return this.form.get('dateOfBirth'); }
 
+  teste: string;
+  disabled: boolean = true;
+
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
@@ -90,10 +93,10 @@ export class RegisterComponent implements OnInit {
     this.form = this.fb.group({
       'email': [''],
       'firstName': [''],
-      'lastName': ['', Validators.compose([Validators.required, Validators.minLength(2)])],
+      'lastName': [''],
       'dateOfBirth': ['', Validators.compose([Validators.required, Validators.minLength(10)])],
       'passwordGroup': this.fb.group({
-        'password': ['', Validators.compose([Validators.required, Validators.minLength(3)])],
+        'password': new FormControl({value: '', disabled: false}, Validators.compose([Validators.required, Validators.minLength(2)])),
         'passwordConfirm': ['', Validators.compose([Validators.required])]
       }, {
           validator: CustomValidations.passwordMatchValidator('passwordConfirm', 'password')
@@ -104,7 +107,7 @@ export class RegisterComponent implements OnInit {
   hasError(control: FormControl, errorName: string) {
     return this.serverSideValidate.hasError(control, errorName);
   }
-  
+
   hiddenError(control: FormControl, errorName: string) {
     return this.serverSideValidate.hiddenError(control, errorName);
   }
@@ -137,6 +140,10 @@ export class RegisterComponent implements OnInit {
         }
       );
     });
+
+
+    var seconds = new Date().getTime() / 1000;
+    this.teste = seconds.toString();
   }
 
   backRegister() {

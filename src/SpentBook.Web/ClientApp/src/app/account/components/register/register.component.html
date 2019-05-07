@@ -10,7 +10,6 @@
     </div>
 
     <div class="box-register" [hidden]="boxError.show || loading">
-      <app-input-password></app-input-password>
       <app-input-date></app-input-date>
       <app-input-button></app-input-button>
 
@@ -23,37 +22,14 @@
         <input matInput formControlName="firstName" placeholder="Nome" />
       </app-input-name>
 
-      <!-- <div class="form-field">
-        <mat-form-field color="accent">
-          <input matInput placeholder="Nome" formControlName="firstName" maxlength="50" autocomplete="off">
-          <mat-error *ngIf="hasError(firstName, 'required')">Nome é obrigatório</mat-error>
-          <mat-error *ngIf="hasError(firstName, 'invalid')">Nome inválido</mat-error>
-          <mat-error *ngIf="hasError(firstName, 'minlength')">Nome muito curto</mat-error>
-          <mat-error *ngIf="hasError(firstName, 'maxlength')">Nome muito longo</mat-error>
-          <mat-error *ngIf="hasError(firstName, 'unknown')">Ocorreu um erro desconhecido ao cadastrar</mat-error>
-        </mat-form-field>
-      </div> -->
-
-      <div class="form-field">
-        <mat-form-field color="accent">
-          <input matInput placeholder="Sobrenome" formControlName="lastName" maxlength="50" autocomplete="off">
-          <mat-error *ngIf="hasError(lastName, 'required')">Sobrenome é obrigatório</mat-error>
-          <mat-error *ngIf="hasError(lastName, 'invalid')">Sobrenome inválido</mat-error>
-          <mat-error *ngIf="hasError(lastName, 'minlength')">Sobrenome muito curto</mat-error>
-          <mat-error *ngIf="hasError(lastName, 'maxlength')">Sobrenome muito longo</mat-error>
-          <mat-error *ngIf="hasError(lastName, 'unknown')">Ocorreu um erro desconhecido ao cadastrar</mat-error>
-        </mat-form-field>
-      </div>
-
-      <!-- <div class="form-field">
-        <mat-form-field>
-          <input matInput placeholder="Celular" formControlName="celphone">
-          <mat-error *ngIf="celphone?.invalid">ERRO</mat-error>
-        </mat-form-field>
-      </div> -->
+      <app-input-name #inLastName [formControlRef]="lastName">
+        <input matInput formControlName="lastName" placeholder="Sobrenome" />
+      </app-input-name>
 
       <div class="form-field form-pwd" formGroupName="passwordGroup">
-        <mat-form-field color="accent">
+        <app-input-password [formControlRef]="password"></app-input-password>
+        
+        <!-- <mat-form-field color="accent">
           <input [type]="showPwd ? 'text' : 'password'" matInput placeholder="Senha" formControlName="password"
             maxlength="20">
           <mat-icon matSuffix (click)="showPwd = !showPwd">{{showPwd ? 'visibility' : 'visibility_off'}}</mat-icon>
@@ -70,7 +46,7 @@
           </mat-error>
           <mat-error *ngIf="hasError(password, 'passwordRequiresNonAlphanumeric')">É necessário ao menos um caractere
             alfanumérico</mat-error>
-        </mat-form-field>
+        </mat-form-field> -->
       </div>
 
       <div class="form-field form-pwd" formGroupName="passwordGroup">

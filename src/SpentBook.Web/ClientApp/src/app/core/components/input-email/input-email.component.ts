@@ -39,9 +39,8 @@ export class InputEmailComponent implements OnInit, AfterContentInit {
   @Input()
   maxLength: number = 100;
 
-  // Devido a limitações do angular, o nome padrão do componente deve ser definido aqui
-  // mas deve ser usado no placeholder de quem usa o componente
-  public placeholder: string = "E-mail";
+  // Recupera o nome do campo
+  placeholder: string;
 
   constructor(private serverSideValidate: ServerSideValidationService) { }
 
@@ -63,6 +62,7 @@ export class InputEmailComponent implements OnInit, AfterContentInit {
     // change native input
     this._input.nativeElement.setAttribute('maxlength', this.maxLength);
     this._input.nativeElement.setAttribute('autocomplete', 'off');
+    this.placeholder = this._input.nativeElement.getAttribute('placeholder');
     // this._input.nativeElement.setAttribute('placeholder', this.placeholder);
     // this._input.nativeElement.placeholder = this.placeholder;
   }

@@ -12,7 +12,7 @@ import { InputPasswordComponent } from './components/input-password/input-passwo
 import { InputDateComponent } from './components/input-date/input-date.component';
 import { InputButtonComponent } from './components/input-button/input-button.component';
 import { MatButtonModule, MatFormFieldModule, MatCardModule, MatToolbarModule, MatInputModule, MatSelectModule, MatTableModule, MatIconModule, MatGridListModule, MatMenuModule, MatOptionModule, MatRadioModule, MatDatepickerModule, MatNativeDateModule } from '@angular/material';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { LayoutModule } from '@angular/cdk/layout';
 
 @NgModule({
@@ -21,6 +21,7 @@ import { LayoutModule } from '@angular/cdk/layout';
   imports: [
     CommonModule,
     HttpClientModule,
+    FormsModule,
     
     // Material
     MatButtonModule,

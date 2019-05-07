@@ -9,11 +9,11 @@ import 'hammerjs';
 import { MatFormFieldControl, MatFormField, MatError } from '@angular/material';
 
 @Component({
-  selector: 'app-input-name',
-  templateUrl: './input-name.component.html',
-  styleUrls: ['./input-name.component.styl']
+  selector: 'app-input-password',
+  templateUrl: './input-password.component.html',
+  styleUrls: ['./input-password.component.styl']
 })
-export class InputNameComponent implements OnInit, AfterContentInit {
+export class InputPasswordComponent implements OnInit {
 
   @ViewChild(MatFormField)
   _matFormField: MatFormField;
@@ -34,10 +34,10 @@ export class InputNameComponent implements OnInit, AfterContentInit {
   required: boolean = true;
 
   @Input()
-  minLength: number = 2;
+  minLength: number = 3;
 
   @Input()
-  maxLength: number = 50;
+  maxLength: number = 20;
 
   // Recupera o nome do campo
   placeholder: string;
@@ -72,3 +72,4 @@ export class InputNameComponent implements OnInit, AfterContentInit {
     return this.serverSideValidate.hiddenError(this.formControlRef, errorName);
   }
 }
+
