@@ -14,21 +14,24 @@ import { MatError } from '@angular/material';
 export class InputPasswordComponent implements OnInit {
   @ContentChildren(MatError, { read: ElementRef })
   private _matErrors: QueryList<ElementRef>;
-  
+
   @Input()
   required: boolean = true;
-  
+
   @Input()
   minLength: number = 3;
 
   @Input()
-  maxLength: number = 20;
+  maxLength: number = 30;
 
   @Input()
   placeholder: String = "Senha";
 
   @Input()
   formControlRef: FormControl;
+
+  @Input()
+  isConfirmation: boolean = false;
 
   constructor(private serverSideValidate: ServerSideValidationService) {
 
@@ -39,8 +42,11 @@ export class InputPasswordComponent implements OnInit {
     if (this.required)
       validations.push(Validators.required);
 
-    validations.push(Validators.minLength(this.minLength));
-    validations.push(Validators.maxLength(this.maxLength));
+    if (!this.isConfirmation) {
+      validations.push(Validators.minLength(this.minLength));
+      validations.push(Validators.maxLength(this.maxLength));
+    }
+
     this.formControlRef.setValidators(validations);
   }
 
@@ -48,4 +54,3 @@ export class InputPasswordComponent implements OnInit {
     return this.serverSideValidate.hasError(this.formControlRef, errorName);
   }
 }
-

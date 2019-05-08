@@ -31,6 +31,9 @@ namespace SpentBook.Web.Services.Error
             {
                 switch (e.Code)
                 {
+                    case "PasswordTooShort":
+                        this.SetFieldError(expression, ProblemDetailsFieldType.PasswordTooShort, e.Description);
+                        break;
                     case "PasswordRequiresLower":
                         this.SetFieldError(expression, ProblemDetailsFieldType.PasswordRequiresLower, e.Description);
                         break;

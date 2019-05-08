@@ -11,6 +11,7 @@
         UserNotFound,
         MinLength,
         MaxLength,
+        PasswordTooShort,
         PasswordNotMatch,
         PasswordRequiresLower,
         PasswordRequiresUpper,

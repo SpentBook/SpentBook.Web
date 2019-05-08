@@ -1,18 +1,14 @@
 <div class="form-field">
   <mat-form-field color="accent">
-    <ng-content></ng-content>
+    <input matInput [formControl]="formControlRef" [type]="text" [placeholder]="placeholder" autocomplete="off"
+      [maxlength]="maxLength" />
 
-    <!-- 
-      1) Não é possível utilizar ngIf, por algum motivo o angular emite um erro conhecido
-         "ExpressionChangedAfterItHasBeenCheckedError".
-         Mudei para hidden e funcionou.
-     -->
-    <mat-error [hidden]="hiddenError('required')">{{placeholder}} é obrigatório</mat-error>
-    <mat-error [hidden]="hiddenError('unknown')">Ocorreu um erro desconhecido ao cadastrar</mat-error>
-    <mat-error [hidden]="hiddenError('email')">{{placeholder}} inválido</mat-error>
-    <mat-error [hidden]="hiddenError('maxlength')">{{placeholder}} muito longo</mat-error>
-    <mat-error [hidden]="hiddenError('duplicateUserName')">Usuário já cadastrado</mat-error>
-    <mat-error [hidden]="hiddenError('jwtError')">Ocorreu um erro ao tentar o logar o usuário</mat-error>
+    <mat-error *ngIf="hasError('required')">{{placeholder}} é obrigatório</mat-error>
+    <mat-error *ngIf="!hasError('required') && (hasError('invalid') || hasError('email'))">{{placeholder}} inválido</mat-error>
+    <mat-error *ngIf="hasError('maxlength')">{{placeholder}} muito longo</mat-error>
+    <mat-error *ngIf="hasError('duplicateUserName')">Usuário já cadastrado</mat-error>
+    <mat-error *ngIf="hasError('unknown')">Ocorreu um erro desconhecido ao cadastrar</mat-error>
+    <mat-error *ngIf="hasError('jwtError')">Ocorreu um erro ao tentar o logar o usuário</mat-error>
 
     <!-- 
       1) Esse mecanismo não funciona e não entendo o motivo, talvez seja pq o angular precisa de tudo  

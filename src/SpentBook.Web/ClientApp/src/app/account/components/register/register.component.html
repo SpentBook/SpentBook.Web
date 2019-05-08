@@ -10,76 +10,17 @@
     </div>
 
     <div class="box-register" [hidden]="boxError.show || loading">
-      <app-input-date></app-input-date>
-      <app-input-button></app-input-button>
+      <app-input-email [formControlRef]="email"></app-input-email>
+      <app-input-name [formControlRef]="firstName"></app-input-name>
+      <app-input-name [formControlRef]="lastName" placeholder="Sobrenome" ></app-input-name>
 
-      <app-input-email #inEmail [formControlRef]="email">
-        <input matInput formControlName="email" placeholder="E-mail" />
-        <!-- <mat-error [hidden]="hiddenError(email, 'email')">E-mail inválido</mat-error> -->
-      </app-input-email>
+      <!-- <div formGroupName="passwordGroup"> -->
+      <app-input-password [formControlRef]="password"></app-input-password>
+      <app-input-password [formControlRef]="passwordConfirm" placeholder="Confirme sua senha" [isConfirmation]="true"></app-input-password>
+      <!-- </div> -->
 
-      <app-input-name #inName [formControlRef]="firstName">
-        <input matInput formControlName="firstName" placeholder="Nome" />
-      </app-input-name>
-
-      <app-input-name #inLastName [formControlRef]="lastName">
-        <input matInput formControlName="lastName" placeholder="Sobrenome" />
-      </app-input-name>
-
-      <div class="form-field form-pwd" formGroupName="passwordGroup">
-        <app-input-password [formControlRef]="password"></app-input-password>
-        
-        <!-- <mat-form-field color="accent">
-          <input [type]="showPwd ? 'text' : 'password'" matInput placeholder="Senha" formControlName="password"
-            maxlength="20">
-          <mat-icon matSuffix (click)="showPwd = !showPwd">{{showPwd ? 'visibility' : 'visibility_off'}}</mat-icon>
-
-          <mat-error *ngIf="hasError(password, 'required')">Senha é obrigatório</mat-error>
-          <mat-error *ngIf="hasError(password, 'invalid')">Senha inválida</mat-error>
-          <mat-error *ngIf="hasError(password, 'minlength')">Senha muito curta</mat-error>
-          <mat-error *ngIf="hasError(password, 'maxlength')">Senha muito longa</mat-error>
-          <mat-error *ngIf="hasError(password, 'unknown')">Ocorreu um erro desconhecido ao cadastrar</mat-error>
-
-          <mat-error *ngIf="hasError(password, 'passwordRequiresLower')">É necessário ao menos um caractere minusculo
-          </mat-error>
-          <mat-error *ngIf="hasError(password, 'passwordRequiresUpper')">É necessário ao menos um caractere maiúsculo
-          </mat-error>
-          <mat-error *ngIf="hasError(password, 'passwordRequiresNonAlphanumeric')">É necessário ao menos um caractere
-            alfanumérico</mat-error>
-        </mat-form-field> -->
-      </div>
-
-      <div class="form-field form-pwd" formGroupName="passwordGroup">
-        <mat-form-field color="accent">
-          <input [type]="showPwdConf ? 'text' : 'password'" matInput placeholder="Confirmar senha"
-            formControlName="passwordConfirm" maxlength="20">
-          <mat-icon matSuffix (click)="showPwdConf = !showPwdConf">{{showPwdConf ? 'visibility' : 'visibility_off'}}
-          </mat-icon>
-
-          <mat-error *ngIf="hasError(passwordConfirm, 'required')">Confirmação de senha é obrigatória</mat-error>
-          <mat-error *ngIf="hasError(passwordConfirm, 'invalid')">Confirmação de senha inválida</mat-error>
-          <mat-error *ngIf="hasError(passwordConfirm, 'minlength')">Confirmação de senha muito curta</mat-error>
-          <mat-error *ngIf="hasError(passwordConfirm, 'maxlength')">Confirmação de senha muito longa</mat-error>
-          <mat-error *ngIf="hasError(passwordConfirm, 'unknown')">Ocorreu um erro desconhecido ao cadastrar</mat-error>
-          <mat-error *ngIf="hasError(passwordConfirm, 'passwordNotMatch')">As senhas devem ser iguais</mat-error>
-        </mat-form-field>
-      </div>
-
-      <div class="form-field">
-        <mat-form-field color="accent">
-          <input matInput [matDatepicker]="picker" placeholder="Data de nascimento" formControlName="dateOfBirth"
-            maxlength="10" autocomplete="off">
-          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker touchUi #picker></mat-datepicker>
-
-          <mat-error *ngIf="dateOfBirth?.invalid">Data de nascimento inválida</mat-error>
-          <!-- <mat-error *ngIf="hasError(dateOfBirth, 'required')">Data de nascimento é obrigatória</mat-error> -->
-          <!-- <mat-error *ngIf="hasError(dateOfBirth, 'invalid')">Data de nascimento inválida</mat-error> -->
-          <mat-error *ngIf="hasError(dateOfBirth, 'minlength')">Data de nascimento muito curta</mat-error>
-          <mat-error *ngIf="hasError(dateOfBirth, 'maxlength')">Data de nascimento muito longa</mat-error>
-          <mat-error *ngIf="hasError(dateOfBirth, 'unknown')">Ocorreu um erro desconhecido ao cadastrar</mat-error>
-        </mat-form-field>
-      </div>
+      <app-input-date [formControlRef]="dateOfBirth"></app-input-date>
+      <app-input-button placeholder="Cadastrar"></app-input-button>
 
       <!-- <div class="form-field">
         <mat-radio-group>
@@ -88,37 +29,17 @@
         </mat-radio-group>
       </div> -->
 
-      <div class="form-field">
+      <!-- <div class="form-field"> -->
         <!-- <button mat-button [disabled]="form.invalid">Cadastrar</button> -->
-        <button mat-button>Cadastrar</button>
-      </div>
-
-
-      <!-- <div class="form-input"> -->
-      <!-- <mat-form-field class="example-full-width">
-          <input matInput placeholder="Email" [formControl]="emailFormControl" [errorStateMatcher]="matcher">
-          <mat-hint>Errors appear instantly!</mat-hint>
-          <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
-            Please enter a valid email address
-          </mat-error>
-          <mat-error *ngIf="emailFormControl.hasError('required')">
-            Email is <strong>required</strong>
-          </mat-error>
-        </mat-form-field> -->
-
-
-      <!-- </div> -->
-
+        <!-- <button mat-button>Cadastrar</button>
+      </div> -->
     </div>
 
     <app-loading class="box-loading" [hidden]="!loading"></app-loading>
 
     <div class="box-error" [hidden]="!boxError.show">
       <app-box-error></app-box-error>
-
-      <div class="form-field">
-        <button mat-button (click)="backRegister()" type="button">Ok</button>
-      </div>
+      <app-input-button placeholder="Ok" (clicked)="backRegister()"></app-input-button>
     </div>
 
   </fieldset>

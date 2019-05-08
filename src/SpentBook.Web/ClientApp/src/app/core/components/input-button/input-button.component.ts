@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-input-button',
@@ -6,10 +6,18 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./input-button.component.styl']
 })
 export class InputButtonComponent implements OnInit {
+  @Input()
+  placeholder: string;
+
+  @Output()
+  clicked: EventEmitter<any> = new EventEmitter();
 
   constructor() { }
 
   ngOnInit() {
   }
 
+  onClick() {
+    this.clicked.emit(); // Pass any payload as argument
+  }
 }

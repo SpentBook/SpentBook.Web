@@ -90,14 +90,32 @@ export class RegisterComponent implements OnInit {
   }
 
   private createForm() {
+    // 'dateOfBirth': ['', Validators.compose([Validators.required, Validators.minLength(10)])],
+    // email: new FormControl({ value: '', disabled: false }),
+
+    // this.form = this.fb.group({
+    //   email: new FormControl(),
+    //   firstName: new FormControl(),
+    //   lastName: new FormControl(),
+    //   dateOfBirth: new FormControl(),
+    //   passwordGroup: this.fb.group({
+    //     password: new FormControl(),
+    //     passwordConfirm: new FormControl()
+    //   }, {
+    //       validator: CustomValidations.passwordMatchValidator('passwordConfirm', 'password')
+    //     }),
+    // });
+    // return;
+
+
     this.form = this.fb.group({
       'email': [''],
       'firstName': [''],
       'lastName': [''],
       'dateOfBirth': ['', Validators.compose([Validators.required, Validators.minLength(10)])],
       'passwordGroup': this.fb.group({
-        'password': new FormControl({value: '', disabled: false}, Validators.compose([Validators.required, Validators.minLength(2)])),
-        'passwordConfirm': ['', Validators.compose([Validators.required])]
+        'password': [''],
+        'passwordConfirm': ['']
       }, {
           validator: CustomValidations.passwordMatchValidator('passwordConfirm', 'password')
         }),

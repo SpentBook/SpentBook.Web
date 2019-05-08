@@ -1,56 +1,41 @@
-import { Component, OnInit, ContentChild, ViewChild, AfterContentInit, Input, ContentChildren, QueryList, ElementRef } from '@angular/core';
-import { FormControl, Validators, ValidatorFn } from '@angular/forms';
+import { Component, Input, OnInit, ContentChildren, ElementRef, QueryList } from '@angular/core';
+import { FormControl, ValidatorFn, Validators } from '@angular/forms';
 import { ServerSideValidationService } from '../../services/server-side-validation.service';
 
 // touch
 import 'hammerjs';
-
-// Material
-import { MatFormFieldControl, MatFormField, MatError } from '@angular/material';
+import { MatError } from '@angular/material';
 
 @Component({
   selector: 'app-input-email',
   templateUrl: './input-email.component.html',
   styleUrls: ['./input-email.component.styl']
 })
-export class InputEmailComponent implements OnInit, AfterContentInit {
-
-  @ViewChild(MatFormField)
-  _matFormField: MatFormField;
-
-  @ContentChild(MatFormFieldControl)
-  _control: MatFormFieldControl<any>;
-
-    @ContentChild(MatFormFieldControl, { read: ElementRef } )
-  _input: ElementRef;
-
+export class InputEmailComponent implements OnInit {
   @ContentChildren(MatError, { read: ElementRef })
-  _matErrors: QueryList<ElementRef>;
-
-  @Input()
-  formControlRef: FormControl;
-
+  private _matErrors: QueryList<ElementRef>;
+  
   @Input()
   required: boolean = true;
-
+  
   @Input()
   minLength: number = 5;
 
   @Input()
   maxLength: number = 100;
 
-  // Recupera o nome do campo
-  placeholder: string;
+  @Input()
+  placeholder: String = "E-mail";
 
-  constructor(private serverSideValidate: ServerSideValidationService) { }
+  @Input()
+  formControlRef: FormControl;
 
-  ngOnInit() {
-    // Por algum motivo, projetar apenas input para dentro do mat-input não funciona
-    // É necessário esse fix para forçar o mat-input a conhecer o elemento externo.
-    this._matFormField._control = this._control;
-    let validations : ValidatorFn[] = [];
+  constructor(private serverSideValidate: ServerSideValidationService) {
 
-    // add validations
+  }
+
+  ngOnInit(): void {
+    let validations: ValidatorFn[] = [];
     if (this.required)
       validations.push(Validators.required);
 
@@ -58,19 +43,9 @@ export class InputEmailComponent implements OnInit, AfterContentInit {
     validations.push(Validators.minLength(this.minLength));
     validations.push(Validators.maxLength(this.maxLength));
     this.formControlRef.setValidators(validations);
-    
-    // change native input
-    this._input.nativeElement.setAttribute('maxlength', this.maxLength);
-    this._input.nativeElement.setAttribute('autocomplete', 'off');
-    this.placeholder = this._input.nativeElement.getAttribute('placeholder');
-    // this._input.nativeElement.setAttribute('placeholder', this.placeholder);
-    // this._input.nativeElement.placeholder = this.placeholder;
   }
 
-  ngAfterContentInit(): void {
-  }
-
-  hiddenError(errorName: string) {
-    return this.serverSideValidate.hiddenError(this.formControlRef, errorName);
+  hasError(errorName: string) {
+    return this.serverSideValidate.hasError(this.formControlRef, errorName);
   }
 }
