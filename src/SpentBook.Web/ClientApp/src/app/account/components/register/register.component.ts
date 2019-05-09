@@ -1,5 +1,5 @@
 // angular
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef, AfterViewChecked } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -19,19 +19,6 @@ import { ServerSideValidationService, FieldError } from 'src/app/core/services/s
 import { ProblemDetails } from 'src/app/core/models/problem-details.model';
 import { BoxErrorComponent } from 'src/app/core/components/box-error/box-error.component';
 
-// // date
-// import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
-// import { Moment } from 'moment';
-// import { MomentDateAdapter } from '@angular/material-moment-adapter';
-
-/** Error when invalid control is dirty, touched, or submitted. */
-// export class MyErrorStateMatcher implements ErrorStateMatcher {
-//   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
-//     const isSubmitted = form && form.submitted;
-//     return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
-//   }
-// }
-
 /*
 1) Criar "Declaro estar ciente" e salvar termo assinado (ler mais sobre)
 2) Apagar imports não usados
@@ -47,6 +34,7 @@ import { BoxErrorComponent } from 'src/app/core/components/box-error/box-error.c
 */
 
 @Component({
+  // changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.styl'],
@@ -55,7 +43,7 @@ import { BoxErrorComponent } from 'src/app/core/components/box-error/box-error.c
   //   { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }
   // ]
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent implements OnInit, AfterViewChecked {
   @ViewChild(BoxErrorComponent)
   boxError: BoxErrorComponent;
 
@@ -71,51 +59,38 @@ export class RegisterComponent implements OnInit {
   get passwordConfirm(): any { return this.form.get('passwordGroup').get('passwordConfirm'); }
   get dateOfBirth(): any { return this.form.get('dateOfBirth'); }
 
-  teste: string;
-  disabled: boolean = true;
-
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
     private serverSideValidate: ServerSideValidationService,
-    private router: Router
+    private router: Router,
+    private cdRef: ChangeDetectorRef
   ) {
     this.createForm();
     this.returnUrl = 'home';
-
   }
 
   ngOnInit() {
 
   }
 
+  ngAfterViewChecked() {
+    // Resolve o bug: ExpressionChangedAfterItHasBeenCheckedError: Expression has changed after it was checked.
+    this.cdRef.detectChanges();
+  }
+
   private createForm() {
     // 'dateOfBirth': ['', Validators.compose([Validators.required, Validators.minLength(10)])],
     // email: new FormControl({ value: '', disabled: false }),
 
-    // this.form = this.fb.group({
-    //   email: new FormControl(),
-    //   firstName: new FormControl(),
-    //   lastName: new FormControl(),
-    //   dateOfBirth: new FormControl(),
-    //   passwordGroup: this.fb.group({
-    //     password: new FormControl(),
-    //     passwordConfirm: new FormControl()
-    //   }, {
-    //       validator: CustomValidations.passwordMatchValidator('passwordConfirm', 'password')
-    //     }),
-    // });
-    // return;
-
-
     this.form = this.fb.group({
-      'email': [''],
-      'firstName': [''],
-      'lastName': [''],
-      'dateOfBirth': ['', Validators.compose([Validators.required, Validators.minLength(10)])],
-      'passwordGroup': this.fb.group({
-        'password': [''],
-        'passwordConfirm': ['']
+      email: new FormControl(),
+      firstName: new FormControl(),
+      lastName: new FormControl(),
+      dateOfBirth: new FormControl(),
+      passwordGroup: this.fb.group({
+        password: new FormControl(),
+        passwordConfirm: new FormControl()
       }, {
           validator: CustomValidations.passwordMatchValidator('passwordConfirm', 'password')
         }),
@@ -158,10 +133,6 @@ export class RegisterComponent implements OnInit {
         }
       );
     });
-
-
-    var seconds = new Date().getTime() / 1000;
-    this.teste = seconds.toString();
   }
 
   backRegister() {
