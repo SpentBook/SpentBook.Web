@@ -1,4 +1,4 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AccountRoutingModule } from './account-routing.module';
 import { PageLoginComponent } from './pages/page-login/page-login.component';
@@ -15,8 +15,6 @@ import {
   MatCardModule, MatMenuModule, MatFormFieldModule, MatOptionModule, MatRadioModule, MatDatepickerModule, MatNativeDateModule
 } from '@angular/material';
 import { LayoutModule } from '@angular/cdk/layout';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { BoxErrorComponent } from '../core/components/box-error/box-error.component';
 
 @NgModule({
   // schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],

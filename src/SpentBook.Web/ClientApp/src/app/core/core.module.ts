@@ -11,23 +11,31 @@ import { InputNameComponent } from './components/input-name/input-name.component
 import { InputPasswordComponent } from './components/input-password/input-password.component';
 import { InputDateComponent } from './components/input-date/input-date.component';
 import { InputButtonComponent } from './components/input-button/input-button.component';
-import { MatButtonModule, MatFormFieldModule, MatCardModule, MatToolbarModule, MatInputModule, MatSelectModule, MatTableModule, MatIconModule, MatGridListModule, MatMenuModule, MatOptionModule, MatRadioModule, MatDatepickerModule, MatNativeDateModule } from '@angular/material';
+import { MatButtonModule, MatFormFieldModule, MatCardModule, MatToolbarModule, MatInputModule, MatSelectModule, MatTableModule, MatIconModule, MatGridListModule, MatMenuModule, MatOptionModule, MatRadioModule, MatDatepickerModule, MatNativeDateModule, MatToolbarRow } from '@angular/material';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { LayoutModule } from '@angular/cdk/layout';
 
 @NgModule({
   providers: [ApiService, AuthService],
-  declarations: [TruncatePipe, BoxErrorComponent, LoadingComponent, InputEmailComponent, InputNameComponent, InputPasswordComponent, InputDateComponent, InputButtonComponent],
+  declarations: [
+    TruncatePipe,
+    BoxErrorComponent,
+    LoadingComponent,
+    InputEmailComponent,
+    InputNameComponent,
+    InputPasswordComponent,
+    InputDateComponent,
+    InputButtonComponent
+  ],
   imports: [
     CommonModule,
     HttpClientModule,
     FormsModule,
-    
+
     // Material
     MatButtonModule,
     MatFormFieldModule,
     MatCardModule,
-    MatToolbarModule,
     MatButtonModule,
     MatInputModule,
     MatSelectModule,
@@ -41,10 +49,13 @@ import { LayoutModule } from '@angular/cdk/layout';
     LayoutModule,
     MatOptionModule,
     MatRadioModule,
-    
+
     // DatePicker
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+
+    // Navigation
+    MatToolbarModule,
   ],
   exports: [
     TruncatePipe,
