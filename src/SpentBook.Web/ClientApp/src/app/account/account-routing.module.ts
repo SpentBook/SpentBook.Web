@@ -1,8 +1,10 @@
+// Angular
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { PageLoginComponent }  from './pages/page-login/page-login.component';
-import { PageRegisterComponent }  from './pages/page-register/page-register.component';
+// Module
+import { PageLoginComponent } from './pages/page-login/page-login.component';
+import { PageRegisterComponent } from './pages/page-register/page-register.component';
 
 const appRoutes: Routes = [
   { path: 'login', component: PageLoginComponent },

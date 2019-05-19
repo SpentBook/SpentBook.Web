@@ -1,23 +1,18 @@
-// angular
+// Angular
 import { Component, OnInit, ViewChild, ChangeDetectorRef, AfterViewChecked } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
-// touch
+// Touch
 import 'hammerjs';
 
-// reactive
+// Reactive
 import { timer, Observable } from 'rxjs';
 
-// models
-import { AuthService } from '../../services/auth.service';
-import { Token } from 'src/app/core/models/token.model';
-import { UserRegister } from 'src/app/core/models/user.register.model';
-import { CustomValidations } from 'src/app/core/validations/custom-validations';
-import { ServerSideValidationService, FieldError } from 'src/app/core/services/server-side-validation.service';
-import { ProblemDetails } from 'src/app/core/models/problem-details.model';
-import { BoxErrorComponent } from 'src/app/core/components/box-error/box-error.component';
+// Models
+import { AuthService, Token, UserRegister } from '@app/core';
+import { BoxErrorComponent, ServerSideValidationService, CustomValidations } from '@app/shared';
 
 /*
 1) Criar "Declaro estar ciente" e salvar termo assinado (ler mais sobre)

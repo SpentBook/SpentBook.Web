@@ -1,70 +1,41 @@
-import { NgModule, LOCALE_ID } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+// Angular
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { AppRoutingModule } from './app-routing.module';
-import { AccountModule } from './account/account.module';
-import { DashboardModule } from './dashboard/dashboard.module';
+// App
+import { AccountModule } from '@app/account';
+import { CultureInfoModule } from '@app/culture-info';
+import { DashboardModule } from '@app/dashboard';
 
+// Module
 import { AppComponent } from './app.component';
-import { HeaderComponent } from './header/header.component';
-import { FooterComponent } from './footer/footer.component';
-import { CoreModule } from './core/core.module';
-import { CultureInfoModule } from './culture-info/culture-info.module';
-import { CommonModule } from '@angular/common';
-import { AccountRoutingModule } from './account/account-routing.module';
-import { ReactiveFormsModule } from '@angular/forms';
-import { MatButtonModule, MatFormFieldModule, MatCardModule, MatToolbarModule, MatInputModule, MatSelectModule, MatTableModule, MatIconModule, MatGridListModule, MatMenuModule, MatOptionModule, MatRadioModule, MatDatepickerModule, MatNativeDateModule } from '@angular/material';
-import { LayoutModule } from '@angular/cdk/layout';
+import { AppRoutingModule } from './app-routing.module';
+import { SharedModule } from './shared';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    HeaderComponent,
-    FooterComponent,
-    // FieldMatchValidatorDirective
+    AppComponent
   ],
   imports: [
-    BrowserModule,
-    CoreModule,
+    // App modules - Routes
     AppRoutingModule,
-    HttpClientModule,
+    // AccountRoutingModule,
+
+    // App modules    
     AccountModule,
     DashboardModule,
+    CultureInfoModule, // Adiciona o formato pt-br para o em campos de datas (material e outros)
+    SharedModule,
+
+    // Others
+    BrowserModule,
+    // HttpClientModule,
     BrowserAnimationsModule,
-    CultureInfoModule,
-
-    CommonModule,
-    AccountRoutingModule,
-    ReactiveFormsModule,
-
-    // Material
-    MatButtonModule,
-    MatFormFieldModule,
-    MatCardModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatInputModule,
-    MatSelectModule,
-    MatTableModule,
-    MatIconModule,
-    MatFormFieldModule,
-    ReactiveFormsModule,
-    MatGridListModule,
-    MatCardModule,
-    MatMenuModule,
-    LayoutModule,
-    MatOptionModule,
-    MatRadioModule,
-
-    // DatePicker
-    MatDatepickerModule,
-    MatNativeDateModule
+    // CommonModule,
   ],
   exports: [
-    HeaderComponent
+    
   ],
   providers: [
 

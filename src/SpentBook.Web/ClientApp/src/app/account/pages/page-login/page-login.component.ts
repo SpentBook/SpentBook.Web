@@ -1,4 +1,5 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+// Angular
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-page-login',

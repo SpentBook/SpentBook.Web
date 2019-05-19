@@ -1,9 +1,11 @@
+// Angular/Core
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../../services/auth.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ProblemDetails, ProblemDetailsItem, ProblemDetailsFieldType } from 'src/app/core/models/problem-details.model';
 import { timer } from 'rxjs';
+
+// App
+import { AuthService, ProblemDetails } from '@app/core';
 
 /*
 TODO:

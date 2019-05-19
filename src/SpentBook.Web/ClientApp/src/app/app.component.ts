@@ -1,7 +1,10 @@
+// Angular
 import { Component, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { RouterOutlet } from '@angular/router';
-import { fadeAnimation } from './animations/animations';
+
+// App
+import { fadeAnimation } from '@app/animations';
 
 @Component({
   selector: 'body',

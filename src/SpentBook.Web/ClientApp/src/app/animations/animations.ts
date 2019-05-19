@@ -1,5 +1,5 @@
-
-import { trigger, transition, query, style, animateChild, group, animate } from "@angular/animations";
+// Angular
+import { trigger, transition, query, style, animate } from "@angular/animations";
 
 export const fadeAnimation = trigger('fadeAnimation', [
   // The '* => *' will trigger the animation to change between any two states

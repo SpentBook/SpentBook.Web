@@ -1,6 +1,9 @@
+// Angular
 import { NgModule, LOCALE_ID } from '@angular/core';
-import { CustomMomentDateAdapter } from './custom-moment-date-adapter';
 import { MAT_DATE_FORMATS, DateAdapter } from '@angular/material';
+
+// Module
+import { CustomMomentDateAdapter } from './custom-moment-date-adapter';
 
 // See the Moment.js docs for the meaning of these formats:
 // https://momentjs.com/docs/#/displaying/format/
