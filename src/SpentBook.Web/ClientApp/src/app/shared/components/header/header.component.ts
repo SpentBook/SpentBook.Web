@@ -11,6 +11,9 @@ export class HeaderComponent implements OnInit {
   @Output()
   backClick = new EventEmitter<void>();
 
+  @Output()
+  settingClick = new EventEmitter<void>();
+
   constructor(private _location: Location) { }
 
   ngOnInit() {
@@ -19,5 +22,9 @@ export class HeaderComponent implements OnInit {
 
   back() {
     this._location.back();
+  }
+
+  settings() {
+    this.settingClick.emit();
   }
 }

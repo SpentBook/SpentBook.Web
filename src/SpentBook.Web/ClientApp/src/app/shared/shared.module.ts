@@ -1,11 +1,11 @@
 // Angular
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Material
-import { MatButtonModule, MatFormFieldModule, MatCardModule, MatInputModule, MatSelectModule, MatTableModule, MatIconModule, MatGridListModule, MatMenuModule, MatOptionModule, MatRadioModule, MatDatepickerModule, MatNativeDateModule, MatToolbarModule, MatSidenavModule } from '@angular/material';
+import { MatButtonModule, MatFormFieldModule, MatCardModule, MatInputModule, MatSelectModule, MatTableModule, MatIconModule, MatGridListModule, MatMenuModule, MatOptionModule, MatRadioModule, MatDatepickerModule, MatNativeDateModule, MatToolbarModule, MatSidenavModule, MatDividerModule, MatNavList, MatListModule } from '@angular/material';
 
 // App 
 import { AuthService } from '@app/core';
@@ -40,6 +40,8 @@ import { HeaderComponent } from './components/header/header.component';
     // Others
     CommonModule,
     ReactiveFormsModule,
+    FormsModule,
+
     // LayoutModule,
     // HttpClientModule,
     // FormsModule,
@@ -69,9 +71,15 @@ import { HeaderComponent } from './components/header/header.component';
     MatIconModule,
     MatSidenavModule,
     MatMenuModule,
+    MatDividerModule,
+    MatListModule,
+
+    // Others
     FlexLayoutModule
   ],
   exports: [
+    FormsModule,
+    
     // Pipes
     TruncatePipe,
 
@@ -90,8 +98,12 @@ import { HeaderComponent } from './components/header/header.component';
     MatIconModule,
     MatSidenavModule,
     MatMenuModule,
+    MatButtonModule,
+    MatDividerModule,
+    MatListModule,
+    
+    // Others
     FlexLayoutModule,
-    MatButtonModule
   ]
 })
 export class SharedModule { }

@@ -1,25 +1,38 @@
-<app-header></app-header>
+<mat-sidenav-container>
+  <!-- <mat-toolbar>
+    <mat-toolbar-row>
+      <h2 class="toolbar-title"> 123 </h2>
+    </mat-toolbar-row>    
+  </mat-toolbar> -->
 
-<!-- <router-outlet #o="outlet"></router-outlet> -->
+  <mat-sidenav #sidenav mode="over">
+    <mat-nav-list>
+      <h2 matSubheader> Minhas contas </h2>
+      <a mat-list-item routerLink="/" style="height: 0;"></a>
 
-<div [@fadeAnimation]="prepareRoute(o)">
-  <router-outlet #o="outlet"></router-outlet>
-</div>
+      <a *ngFor="let item of myWorkRoutes" mat-list-item (click)="sidenav.close()" [routerLink]="[item.route]"
+        routerLinkActive="list-item-active">
+        <mat-icon matListIcon class="app-nav-list-icon"> {{ item.icon }} </mat-icon>
+        {{item.title}}
+      </a>
 
+      <mat-divider></mat-divider>
 
+      <h2 matSubheader> Minhas despesas </h2>
 
-<!-- <mat-sidenav-container>
-  <mat-toolbar color="accent">
-    <button mat-icon-button>
-      <mat-icon *ngIf="true">chevron_left</mat-icon> -->
-<!-- <mat-icon *ngIf="true">menu</mat-icon> -->
-<!-- </button>
-    AA
-    <span fxFlex></span>
-    OI
-    <button mat-icon-button >
-      <mat-icon>more_vert</mat-icon>
-    </button>
-  </mat-toolbar>
-  <router-outlet #o="outlet"></router-outlet>
-</mat-sidenav-container> -->
+      <a *ngFor="let item of customerRoutes" mat-list-item (click)="sidenav.close()" [routerLink]="[item.route]"
+        routerLinkActive="list-item-active">
+        <mat-icon matListIcon class="app-nav-list-icon"> {{ item.icon }} </mat-icon>
+        {{item.title}}
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <app-header (settingClick)="sidenav.toggle()"></app-header>
+    
+    <div class="content" [@fadeAnimation]="componentEventActive">
+      <router-outlet #o="outlet" (activate)="onRouterOutletActivate($event)"></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
