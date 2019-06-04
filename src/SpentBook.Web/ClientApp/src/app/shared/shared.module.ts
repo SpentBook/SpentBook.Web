@@ -5,7 +5,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Material
-import { MatButtonModule, MatFormFieldModule, MatCardModule, MatInputModule, MatSelectModule, MatTableModule, MatIconModule, MatGridListModule, MatMenuModule, MatOptionModule, MatRadioModule, MatDatepickerModule, MatNativeDateModule, MatToolbarModule, MatSidenavModule, MatDividerModule, MatNavList, MatListModule } from '@angular/material';
+import { MatButtonModule, MatFormFieldModule, MatCardModule, MatInputModule, MatSelectModule, MatTableModule, MatIconModule, MatGridListModule, MatMenuModule, MatOptionModule, MatRadioModule, MatDatepickerModule, MatNativeDateModule, MatToolbarModule, MatSidenavModule, MatDividerModule, MatNavList, MatListModule, MatSidenav, MatListItem } from '@angular/material';
 
 // App 
 import { AuthService } from '@app/core';
@@ -19,10 +19,13 @@ import { InputNameComponent } from './components/input-name/input-name.component
 import { InputPasswordComponent } from './components/input-password/input-password.component';
 import { InputDateComponent } from './components/input-date/input-date.component';
 import { InputButtonComponent } from './components/input-button/input-button.component';
-import { HeaderComponent } from './components/header/header.component';
+import { ToolbarComponent } from './components/toolbar/toolbar.component';
+import { SidenavComponent } from "./components/sidenav/sidenav.component";
+import { RouterModule } from '@angular/router';
+import { ToolbarService } from './services/toolbar.service';
 
 @NgModule({
-  providers: [AuthService],
+  providers: [AuthService, ToolbarService],
   declarations: [
     TruncatePipe,
     BoxErrorComponent,
@@ -32,7 +35,8 @@ import { HeaderComponent } from './components/header/header.component';
     InputPasswordComponent,
     InputDateComponent,
     InputButtonComponent,
-    HeaderComponent
+    ToolbarComponent,
+    SidenavComponent
   ],
   imports: [
     // App modules
@@ -41,6 +45,7 @@ import { HeaderComponent } from './components/header/header.component';
     CommonModule,
     ReactiveFormsModule,
     FormsModule,
+    RouterModule,
 
     // LayoutModule,
     // HttpClientModule,
@@ -79,6 +84,7 @@ import { HeaderComponent } from './components/header/header.component';
   ],
   exports: [
     FormsModule,
+    RouterModule,
     
     // Pipes
     TruncatePipe,
@@ -91,8 +97,9 @@ import { HeaderComponent } from './components/header/header.component';
     InputNameComponent,
     InputPasswordComponent,
     InputButtonComponent,
-    HeaderComponent,
-
+    ToolbarComponent,
+    SidenavComponent,
+  
     // Material Navigation
     MatToolbarModule,
     MatIconModule,
@@ -104,6 +111,7 @@ import { HeaderComponent } from './components/header/header.component';
     
     // Others
     FlexLayoutModule,
+    MatSidenav
   ]
 })
 export class SharedModule { }

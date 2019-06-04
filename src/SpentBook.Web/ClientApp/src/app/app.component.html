@@ -6,32 +6,13 @@
   </mat-toolbar> -->
 
   <mat-sidenav #sidenav mode="over">
-    <mat-nav-list>
-      <h2 matSubheader> Minhas contas </h2>
-      <a mat-list-item routerLink="/" style="height: 0;"></a>
-
-      <a *ngFor="let item of myWorkRoutes" mat-list-item (click)="sidenav.close()" [routerLink]="[item.route]"
-        routerLinkActive="list-item-active">
-        <mat-icon matListIcon class="app-nav-list-icon"> {{ item.icon }} </mat-icon>
-        {{item.title}}
-      </a>
-
-      <mat-divider></mat-divider>
-
-      <h2 matSubheader> Minhas despesas </h2>
-
-      <a *ngFor="let item of customerRoutes" mat-list-item (click)="sidenav.close()" [routerLink]="[item.route]"
-        routerLinkActive="list-item-active">
-        <mat-icon matListIcon class="app-nav-list-icon"> {{ item.icon }} </mat-icon>
-        {{item.title}}
-      </a>
-    </mat-nav-list>
+    <app-sidenav [sidenavComponent]="sidenav"></app-sidenav>
   </mat-sidenav>
 
   <mat-sidenav-content>
-    <app-header (settingClick)="sidenav.toggle()"></app-header>
-    
-    <div class="content" [@fadeAnimation]="componentEventActive">
+    <app-toolbar (backClick)="back()" (settingClick)="sidenavService.open()"></app-toolbar>
+
+    <div class="content" [@fadeAnimation]="prepareRoute(o)">
       <router-outlet #o="outlet" (activate)="onRouterOutletActivate($event)"></router-outlet>
     </div>
   </mat-sidenav-content>
