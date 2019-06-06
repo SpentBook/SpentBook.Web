@@ -10,7 +10,7 @@
   </mat-sidenav>
 
   <mat-sidenav-content>
-    <app-toolbar (backClick)="back()" (settingClick)="sidenavService.open()"></app-toolbar>
+    <app-toolbar></app-toolbar>
 
     <div class="content" [@fadeAnimation]="prepareRoute(o)">
       <router-outlet #o="outlet" (activate)="onRouterOutletActivate($event)"></router-outlet>

@@ -1,8 +1,8 @@
 <form [formGroup]="form" (ngSubmit)="submitForm()">
   <fieldset [disabled]="loading">
-    <div class="box-logo">
+    <!-- <div class="box-logo">
       <img src="assets/logo-white.png">
-    </div>
+    </div> -->
 
     <div class="box-register" [hidden]="boxError.show || loading">
       <app-input-email [formControlRef]="email"></app-input-email>

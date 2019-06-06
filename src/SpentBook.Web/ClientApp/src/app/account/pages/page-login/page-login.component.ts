@@ -1,22 +1,20 @@
 // Angular
 import { Component, OnInit } from '@angular/core';
-import { PageInterface, ToolbarComponent } from '@app/shared';
+import { ToolbarComponent, ToolbarService, ToolbarMode } from '@app/shared';
 
 @Component({
   selector: 'app-page-login',
   templateUrl: './page-login.component.html',
   styleUrls: ['./page-login.component.styl'],
 })
-export class PageLoginComponent extends PageInterface implements OnInit {
-  constructor() {
-    super();
-  }
+export class PageLoginComponent implements OnInit {
+
+  constructor(private toolbarService: ToolbarService) { }
 
   ngOnInit() {
-    
-  }
-
-  setToolBar(header: ToolbarComponent): void {
-    // header.backClick.
+    this.toolbarService.toolbarMode = ToolbarMode.BACK_BAR;
+    this.toolbarService.showLogo = true;
+    this.toolbarService.showBackButton = false;
+    this.toolbarService.title = "Login";
   }
 }

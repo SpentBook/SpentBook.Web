@@ -1,8 +1,10 @@
 // Angular
-import { OnInit, Output, EventEmitter, Component, Input } from "@angular/core";
+import { OnInit, Component } from "@angular/core";
 
 // Module
-import { PageInterface } from "../..";
+import { SidenavService } from "../../services/sidenav.service";
+import { ToolbarService, ToolbarMode } from "../../services/toolbar.service";
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'app-toolbar',
@@ -10,41 +12,38 @@ import { PageInterface } from "../..";
   styleUrls: ['./toolbar.component.styl']
 })
 export class ToolbarComponent implements OnInit {
-  private _currentPage: any;
+  ToolbarModeEnum = ToolbarMode;
 
-  @Output()
-  backClick = new EventEmitter<void>();
-
-  @Output()
-  settingClick = new EventEmitter<void>();
-
-  get currentPage(): any {
-    return this._currentPage;
+  constructor(
+    private sidenavService: SidenavService,
+    private toolbarService: ToolbarService,
+    private router: Router
+  ) {
+    // this.toolbarService.toolbarMode$.subscribe((mode: ToolbarMode) => {
+    //   if (mode == this.ToolbarModeEnum.FULL) {
+    //   }
+    //   else {
+    //   }
+    // });
   }
-
-  @Input()
-  set currentPage(value: any) {
-    this._currentPage = value;
-    this.setToolBar();
-  }
-
-  constructor() { }
 
   ngOnInit() {
 
   }
 
-  setToolBar() {
-    if (this._currentPage && this._currentPage instanceof PageInterface) {
-      (this._currentPage as PageInterface).setToolBar(this);
-    }
+  back() {
+    //this.backClick.emit();
   }
 
-  back() {
-    this.backClick.emit();
+  openHome() {
+    this.router.navigate(["/"]);
+  }
+
+  openMenu() {
+    this.sidenavService.open();
   }
 
   settings() {
-    this.settingClick.emit();
+    this.sidenavService.open();
   }
 }

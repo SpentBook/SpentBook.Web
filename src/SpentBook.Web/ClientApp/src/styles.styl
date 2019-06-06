@@ -11,11 +11,6 @@
 /*
  * Animations
  */
-// router-outlet ~ * {
-//     position: absolute;
-//     width: 100%;
-// }
-
 /*
  * Fix [hidden] attribute error
  * https://www.talkingdotnet.com/dont-use-hidden-attribute-angularjs-2/
@@ -41,5 +36,10 @@ body {
     -khtml-user-select: none; /* Konqueror HTML */
     -moz-user-select: none; /* Firefox */
     -ms-user-select: none; /* Internet Explorer/Edge */
-    user-select: none;     /* Non-prefixed version, currently supported by Chrome and Opera */
+    user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
+}
+
+/* FIX Calendar Scroll */
+.mat-datepicker-content {
+    overflow: hidden !important;
 }

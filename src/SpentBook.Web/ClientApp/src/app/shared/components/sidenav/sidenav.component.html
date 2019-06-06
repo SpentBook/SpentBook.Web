@@ -2,7 +2,7 @@
   <h2 matSubheader> Minhas contas </h2>
   <a mat-list-item routerLink="/" style="height: 0px;"></a>
 
-  <a *ngFor="let item of sidenavService.myWorkRoutes" mat-list-item (click)="sidenav.close()" [routerLink]="[item.route]"
+  <a *ngFor="let item of menuService.myWorkRoutes" mat-list-item (click)="sidenavService.close()" [routerLink]="[item.route]"
     routerLinkActive="list-item-active">
     <mat-icon matListIcon class="app-nav-list-icon"> {{ item.icon }} </mat-icon>
     {{item.title}}
@@ -12,7 +12,7 @@
 
   <h2 matSubheader> Minhas despesas </h2>
 
-  <a *ngFor="let item of sidenavService.customerRoutes" mat-list-item (click)="sidenav.close()" [routerLink]="[item.route]"
+  <a *ngFor="let item of menuService.customerRoutes" mat-list-item (click)="sidenavService.close()" [routerLink]="[item.route]"
     routerLinkActive="list-item-active">
     <mat-icon matListIcon class="app-nav-list-icon"> {{ item.icon }} </mat-icon>
     {{item.title}}
