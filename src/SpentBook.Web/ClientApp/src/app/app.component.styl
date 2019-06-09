@@ -1,13 +1,28 @@
-app-toolbar {
+mat-sidenav-container {
+  height: 100%;
+}
+
+.toolbar {
   position: fixed;
   width: 100%;
   z-index: 999;
 }
 
-mat-sidenav-container {
-  height: 100%;
+.main {
+  // display: flex;
+  // flex-direction: column;
 }
 
-.content {
-  margin-top: 56px;
+.router {
+  height: 100%;
+  // flex-grow: 1;
+  // background-color blue;
 }
+
+// Não funciona aqui, não sei o pq, apenas no style.css
+// router-outlet ~ * {
+//   padding-top: 56px;
+//   box-sizing: border-box;
+//   background-color: yellow;
+//   display: block;
+// }

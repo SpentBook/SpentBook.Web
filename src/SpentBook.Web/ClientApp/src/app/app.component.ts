@@ -5,8 +5,6 @@ import { RouterOutlet } from '@angular/router';
 
 // App
 import { fadeAnimation } from '@app/animations';
-import { SidenavService } from '@app/shared';
-import { AuthService } from '@app/core';
 
 @Component({
   selector: 'body',
@@ -23,27 +21,14 @@ export class AppComponent {
 
   constructor(
     http: HttpClient,
-    @Inject('BASE_URL') baseUrl: string,
-    private sidenavService: SidenavService,
-    private authService: AuthService
+    @Inject('BASE_URL') baseUrl: string
   ) {
     http.get<boolean>(baseUrl + 'api/Post/Add').subscribe(result => {
       this.resultado = result;
     }, error => console.error(error));
   }
 
-  back() {
-    // this.sidenavService.setMenu([
-    //   {
-    //     icon: 'contacts',
-    //     route: 'sales/accounts',
-    //     title: 'Accounts',
-    //   }
-    // ]);
-  }
-
   prepareRoute(outlet: RouterOutlet) {
-    // console.log(outlet.isActivated ? outlet.activatedRoute : '');
     return outlet.isActivated ? outlet.activatedRoute : '';
   }
 

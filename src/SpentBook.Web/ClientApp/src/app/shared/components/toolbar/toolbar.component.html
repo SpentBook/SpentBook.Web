@@ -7,6 +7,10 @@
       <mat-divider class="style-fix" [vertical]="true"></mat-divider>
     </ng-template>
 
+    <button mat-icon-button (click)="openMenu()">
+      <mat-icon>menu</mat-icon>
+    </button>
+    
     <ng-template [ngIf]="toolbarService?.showBackButton">
       <button mat-icon-button (click)="back()">
         <mat-icon>arrow_back</mat-icon>
@@ -14,6 +18,7 @@
     </ng-template>
 
     <span class="toolbar-title">{{toolbarService?.title}}</span>
+
   </mat-toolbar-row>
 
   <mat-toolbar-row *ngIf="toolbarService?.toolbarMode == ToolbarModeEnum.FULL">

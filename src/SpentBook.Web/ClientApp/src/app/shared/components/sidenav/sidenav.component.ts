@@ -1,7 +1,6 @@
 // Angular/Core
 import { Component, OnInit, Input } from '@angular/core';
 import { SidenavService } from '../../services/sidenav.service';
-import { Observable } from 'rxjs';
 import { MatSidenav } from '@angular/material';
 import { MenuService } from '../../services/menu.service';
 

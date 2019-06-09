@@ -10,6 +10,12 @@ export class InputButtonComponent implements OnInit {
   @Input()
   placeholder: string;
 
+  @Input()
+  icon: string;
+
+  @Input()
+  disabled: boolean;
+
   @Output()
   clicked: EventEmitter<any> = new EventEmitter();
 

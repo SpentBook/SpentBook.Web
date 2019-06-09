@@ -18,13 +18,15 @@ namespace SpentBook.Web.Services.Error
     {
         private readonly ControllerBase _controller;
         private readonly IdentityResult _identityResult;
-
-        public ModelStateBuilder(ControllerBase controller, IdentityResult identityResult = null)
+        public ModelStateBuilder(ControllerBase controller)
+        {
+            this._controller = controller;
+        }
+        public ModelStateBuilder(ControllerBase controller, IdentityResult identityResult)
         {
             this._controller = controller;
             this._identityResult = identityResult;
         }
-
         public ModelStateBuilder<T> SetIdentityErrorPassword(Expression<Func<T, object>> expression)
         {
             foreach (var e in this._identityResult.Errors)
@@ -78,7 +80,7 @@ namespace SpentBook.Web.Services.Error
             return false;
         }
 
-        private ModelStateBuilder<T> SetFieldError(Expression<Func<T, object>> expression, ProblemDetailsFieldType errorType, string message = null)
+        public ModelStateBuilder<T> SetFieldError(Expression<Func<T, object>> expression, ProblemDetailsFieldType errorType, string message = null)
         {
             var fieldName = GetFieldName(expression);
             this._controller.ModelState.TryAddModelError(fieldName, ProblemDetailsFactory.GetComposeTypeAndErrorMessage(errorType, message));

@@ -7,6 +7,9 @@
     <mat-error *ngIf="!hasError('required') && (hasError('invalid') || hasError('email'))">{{placeholder}} inválido</mat-error>
     <mat-error *ngIf="hasError('maxlength')">{{placeholder}} muito longo</mat-error>
     <mat-error *ngIf="hasError('duplicateUserName')">Usuário já cadastrado</mat-error>
+    <mat-error *ngIf="hasError('userNotFound')">Usuário ou senha inválido</mat-error>
+    <mat-error *ngIf="hasError('isNotAllowed')">Usuário ou senha inválido</mat-error>
+    <mat-error *ngIf="hasError('isLockedOut')">Usuário está bloqueado</mat-error>
     <mat-error *ngIf="hasError('unknown')">Ocorreu um erro desconhecido ao cadastrar</mat-error>
     <mat-error *ngIf="hasError('jwtError')">Ocorreu um erro ao tentar o logar o usuário</mat-error>
 

@@ -1,113 +1,90 @@
+fieldset {
+    border: none;
+    text-align: center;
+    // background-color red;
+
+    app-input-email ::ng-deep, app-input-name ::ng-deep, app-input-password ::ng-deep, app-input-date ::ng-deep {
+        mat-icon {
+            cursor: pointer;
+        }
+
+        mat-error {
+            font-size: 10px;
+        }
+
+        .mat-form-field {
+            width: 50%;
+            margin-bottom: 10px;
+        }
+
+        @media only screen and (max-width: 768px) {
+            .mat-form-field {
+                width: 100%;
+            }
+        }
+
+        .mat-radio-button ~ .mat-radio-button {
+            margin-left: 50px;
+        }
+    }
+}
+
 $loginWidth = 300px;
 $inputPadding = 8px;
 
-:host
-    color #ffffff
-
 fieldset {
-    border none
-    text-align: center
-    
-    input {
-        width $loginWidth - ($inputPadding * 2)
-        padding $inputPadding
-    }   
-
-    button {
-        min-width 80px
-        border-radius 19px
-    }
-    
-    .line-middle {
-        height 200px;
-    }
-
     .box-error {
-        font-size 13px
+        font-size: 13px;
     }
 
     .btn-login {
-        margin-top 20px
+        margin-top: 20px;
     }
 
     .profile-image {
-        width 100px
-        height 100px
-        display inline-block
-        overflow hidden
-        border-radius 50%
-        background-color #4D7B9D
+        width: 100px;
+        height: 100px;
+        display: inline-block;
+        overflow: hidden;
+        border-radius: 50%;
+        background-color: #4D7B9D;
     }
 
     .profile-welcome {
-        display inline-block
-        width $loginWidth
-        height 20px;
-        margin-top 10px
-        margin-bottom 20px
-        font-size 20px
-        word-wrap break-word
-        vertical-align top
-    }
-
-    .box-facebook {
-        &:hover {
-            opacity 0.8
-            cursor pointer
-        }
-
-        &:active {
-            opacity 0.7
-        }
-
-        display inline-block
-        width 250px
-        height 30px
-        background-color #38538A
-
-        .img {
-            float left
-            height 100%
-            width 30px
-        }
-
-        .text {
-            padding-left 10px
-            padding-top 5px
-            float left
-            height 100%
-        }       
-    }
-
-    .box-division {
-        margin-top: 30px;
-        width $loginWidth
         display: inline-block;
-
-        .hr-sect {
-            display: flex;
-            flex-basis: 100%;
-            align-items: center;
-            color: #ffffff
-            font-size: 12px;
-            margin: 8px 0px;
-        }
-        .hr-sect::before,
-        .hr-sect::after {
-            content: "";
-            flex-grow: 1;
-            background: #ffffff
-            height: 1px;
-            font-size: 0px;
-            line-height: 0px;
-            margin: 0px 16px;
-        }
+        width: $loginWidth;
+        height: 20px;
+        margin-top: 10px;
+        margin-bottom: 20px;
+        font-size: 20px;
+        word-wrap: break-word;
+        vertical-align: top;
     }
 
-    .box-others {
-        margin-top 40px
-        .form-button {
-            margin-bottom 7px
-        }
-    }
+
+    // .box-division {
+    //     margin-top: 30px;
+    //     width: $loginWidth;
+    //     display: inline-block;
+
+    //     .hr-sect {
+    //         display: flex;
+    //         flex-basis: 100%;
+    //         align-items: center;
+    //         color: #ffffff;
+    //         font-size: 12px;
+    //         margin: 8px 0px;
+    //     }
+
+    //     .hr-sect::before, .hr-sect::after {
+    //         content: '';
+    //         flex-grow: 1;
+    //         background: #ffffff;
+    //         height: 1px;
+    //         font-size: 0px;
+    //         line-height: 0px;
+    //         margin: 0px 16px;
+    //     }
+    // }
+
 }

@@ -47,33 +47,46 @@ namespace SpentBook.Web
         // POST api/auth/login
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody]LoginViewModel loginModel)
-        {            
+        {
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-            var result = await _signInManager.PasswordSignInAsync(loginModel.UserName, loginModel.Password, false, lockoutOnFailure: true);
+            var identityResult = await _signInManager.PasswordSignInAsync(loginModel.UserName, loginModel.Password, false, lockoutOnFailure: true);
 
             // if (result.RequiresTwoFactor)
             // {
             //     return Ok();
             // }
 
-            if (!result.Succeeded)
+            if (!identityResult.Succeeded)
             {
-                // if (result.IsLockedOut)
-                //     return BadRequest(new ErrorModel(this, ErrorType.IsLockedOut));
+                var problemDetailsBuilder = new ModelStateBuilder<LoginViewModel>(this);
 
-                // if (result.IsNotAllowed)
-                //     return BadRequest(new ErrorModel(this, ErrorType.IsNotAllowed));
-                // //return BadRequest(new ErrorViewModel(this, "User account is not allowed, confirm your email!"));
-
-                // return BadRequest(new ErrorModel(this, ErrorType.UserNotFound));
+                if (identityResult.IsLockedOut)
+                {
+                    problemDetailsBuilder.SetFieldError(f => f.UserName, ProblemDetailsFieldType.IsLockedOut);
+                    return new StatusCodeResult((int)System.Net.HttpStatusCode.Locked);
+                }
+                else if (identityResult.IsNotAllowed)
+                {
+                    problemDetailsBuilder.SetFieldError(f => f.UserName, ProblemDetailsFieldType.IsNotAllowed);
+                    return Unauthorized();
+                }
+                else
+                {
+                    problemDetailsBuilder.SetFieldError(f => f.UserName, ProblemDetailsFieldType.UserNotFound);
+                    return NotFound();
+                }
             }
 
             var user = await _userManager.FindByNameAsync(loginModel.UserName);
             var token = await TokenViewModel.GenerateAsync(_jwtFactory, _appConfig, user.Id, loginModel.UserName);
 
-            // if (token == null)
-            //     return BadRequest(new ErrorModel(this, ErrorType.JwtError));
+            if (token == null)
+            {
+                var problemDetailsBuilder = new ModelStateBuilder<LoginViewModel>(this);
+                problemDetailsBuilder.SetFieldError(f => f.UserName, ProblemDetailsFieldType.JwtError);
+                return BadRequest();
+            }
 
             return new OkObjectResult(token);
         }
@@ -143,7 +156,7 @@ namespace SpentBook.Web
             //     return BadRequest(new ErrorModel(this, ErrorType.UserNotFound));
 
             var identityResult = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
-            
+
             // if (!identityResult.Succeeded)
             //     return BadRequest(new ErrorModel(this, identityResult, ErrorType.ChangePasswordError));
 

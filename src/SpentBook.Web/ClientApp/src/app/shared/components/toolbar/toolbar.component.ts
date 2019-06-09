@@ -3,7 +3,7 @@ import { OnInit, Component } from "@angular/core";
 
 // Module
 import { SidenavService } from "../../services/sidenav.service";
-import { ToolbarService, ToolbarMode } from "../../services/toolbar.service";
+import { ToolbarMode, ToolbarService } from "../../services/toolbar.service";
 import { Router } from "@angular/router";
 
 @Component({
@@ -16,8 +16,8 @@ export class ToolbarComponent implements OnInit {
 
   constructor(
     private sidenavService: SidenavService,
-    private toolbarService: ToolbarService,
-    private router: Router
+    private router: Router,
+    private toolbarService: ToolbarService
   ) {
     // this.toolbarService.toolbarMode$.subscribe((mode: ToolbarMode) => {
     //   if (mode == this.ToolbarModeEnum.FULL) {

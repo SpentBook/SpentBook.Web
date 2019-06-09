@@ -46,7 +46,6 @@ export class MenuService {
   ];
 
   public setMenu(menu: ROUTE[]) {
-    //this.customerRoutes = menu;
-    this.customerRoutes[0].title = "ALTERADO";
+    this.customerRoutes = menu;    
   }
 }

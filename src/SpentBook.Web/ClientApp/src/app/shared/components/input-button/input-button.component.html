@@ -1,3 +1,5 @@
-<div class="form-field">
-  <button mat-button (click)="onClick()" [type]="clicked.observers.length > 0 ? 'button' : 'submit'">{{placeholder}}</button>
-</div>
+<button mat-flat-button (click)="onClick()" [type]="clicked.observers.length > 0 ? 'button' : 'submit'"
+  [disabled]="disabled">
+  <mat-icon *ngIf="icon">{{icon}}</mat-icon>
+  {{placeholder}}
+</button>

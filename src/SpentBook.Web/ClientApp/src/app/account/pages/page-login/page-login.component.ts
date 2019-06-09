@@ -1,6 +1,6 @@
 // Angular
 import { Component, OnInit } from '@angular/core';
-import { ToolbarComponent, ToolbarService, ToolbarMode } from '@app/shared';
+import { ToolbarService, ToolbarMode } from '@app/shared';
 
 @Component({
   selector: 'app-page-login',

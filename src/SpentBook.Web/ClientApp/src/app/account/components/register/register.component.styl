@@ -1,35 +1,9 @@
-$loginWidth = 500px;
-
-// .header {
-//     width: 100%;
-//     height: 30px;
-//     background-color: black;
-
-//     .btn {
-//         display: inline-block;
-//         width: 30px;
-//         background-color: red;
-//     }
-
-//     .title {
-//         background-color: blue;
-//     }
-// }
-
 fieldset {
     border: none;
     text-align: center;
-
-    // .box-logo {
-    //     height: 100px;
-
-    //     img {
-    //         width: 100px;
-    //     }
-    // }
-
+  
     app-input-email ::ng-deep, app-input-name ::ng-deep, app-input-password ::ng-deep, app-input-date ::ng-deep {
-        .form-pwd mat-icon {
+        mat-icon {
             cursor: pointer;
         }
 
@@ -37,12 +11,9 @@ fieldset {
             font-size: 10px;
         }
 
-        .form-field {
-            margin-bottom: 10px;
-        }
-
         .mat-form-field {
             width: 50%;
+            margin-bottom: 10px;
         }
 
         @media only screen and (max-width: 768px) {
@@ -55,15 +26,16 @@ fieldset {
             margin-left: 50px;
         }
     }
+}
 
-    app-input-button ::ng-deep {
-        button {
-            margin-top: 15px;
-            min-width: 200px;
-            border-radius: 19px;
-            background-color: #336890;
-        }
-    }
+fieldset {
+    // .box-logo {
+    // height: 100px;
+
+    // img {
+    // width: 100px;
+    // }
+    // }
 
     .box-loading {
         margin-top: 30px;
@@ -71,12 +43,5 @@ fieldset {
 
     .box-error {
         margin-top: 30px;
-
-        // button {
-        //     margin-top: 15px;
-        //     min-width: 200px;
-        //     border-radius: 19px;
-        //     background-color: #336890;
-        // }
     }
 }

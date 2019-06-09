@@ -70,7 +70,8 @@ export class RegisterComponent implements OnInit, AfterViewChecked {
   }
 
   ngAfterViewChecked() {
-    // Resolve o bug: ExpressionChangedAfterItHasBeenCheckedError: Expression has changed after it was checked.
+    // Resolve o bug: ExpressionChangedAfterItHasBeenCheckedError: 
+    // Expression has changed after it was checked.
     this.cdRef.detectChanges();
   }
 
@@ -92,13 +93,13 @@ export class RegisterComponent implements OnInit, AfterViewChecked {
     });
   }
 
-  hasError(control: FormControl, errorName: string) {
-    return this.serverSideValidate.hasError(control, errorName);
-  }
+  // hasError(control: FormControl, errorName: string) {
+  //   return this.serverSideValidate.hasError(control, errorName);
+  // }
 
-  hiddenError(control: FormControl, errorName: string) {
-    return this.serverSideValidate.hiddenError(control, errorName);
-  }
+  // hiddenError(control: FormControl, errorName: string) {
+  //   return this.serverSideValidate.hiddenError(control, errorName);
+  // }
 
   submitForm() {
     if (!this.form.valid) {

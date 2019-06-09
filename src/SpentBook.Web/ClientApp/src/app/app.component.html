@@ -9,10 +9,12 @@
     <app-sidenav [sidenavComponent]="sidenav"></app-sidenav>
   </mat-sidenav>
 
-  <mat-sidenav-content>
-    <app-toolbar></app-toolbar>
-
-    <div class="content" [@fadeAnimation]="prepareRoute(o)">
+  <mat-sidenav-content class="main">
+    <div class="toolbar">
+      <app-toolbar></app-toolbar>
+    </div>
+    
+    <div class="router" [@fadeAnimation]="prepareRoute(o)">
       <router-outlet #o="outlet" (activate)="onRouterOutletActivate($event)"></router-outlet>
     </div>
   </mat-sidenav-content>

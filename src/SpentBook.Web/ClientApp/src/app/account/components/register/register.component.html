@@ -15,7 +15,7 @@
       <!-- </div> -->
 
       <app-input-date [formControlRef]="dateOfBirth"></app-input-date>
-      <app-input-button placeholder="Cadastrar"></app-input-button>
+      <app-input-button placeholder="Cadastrar" icon="person_add"></app-input-button>
 
       <!-- <div class="form-field">
         <mat-radio-group>
@@ -34,7 +34,7 @@
 
     <div class="box-error" [hidden]="!boxError.show">
       <app-box-error></app-box-error>
-      <app-input-button placeholder="Ok" (clicked)="backRegister()"></app-input-button>
+      <app-input-button placeholder="Ok" (clicked)="backRegister()" icon="cancel"></app-input-button>
     </div>
 
   </fieldset>

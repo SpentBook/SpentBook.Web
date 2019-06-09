@@ -1,14 +1,64 @@
-// div#wrapper
-//     display table
-//     width 100%
-//     height 100%
-//     background-color #00223B
+:host {
+    height: 100%;
+}
 
-div#cell 
-    // display table-cell
-    // vertical-align middle
-    padding-top 20px
+.content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 
-app-login    
-    display: block;
-    margin: auto;
+    .box-options {
+        background-color: #212121;
+        text-align: center;
+        padding-top: 20px;
+        padding-bottom: 100px;
+        margin-top: auto;
+
+        .facebook-button {
+            button {
+                background-color: #4067B3;
+            }
+
+            img {
+                margin-left: -14px;
+                margin-right: 10px;
+                margin-top: -6px;
+            }
+
+            &:hover {
+                opacity: 0.8;
+                cursor: pointer;
+            }
+
+            &:active {
+                opacity: 0.7;
+            }
+
+            display: inline-block;
+            width: 250px;
+            height: 30px;
+
+            .img {
+                float: left;
+                height: 100%;
+                width: 30px;
+            }
+
+            .text {
+                padding-left: 10px;
+                padding-top: 5px;
+                float: left;
+                height: 100%;
+            }
+        }
+
+        .box-links {
+            margin-bottom: 20px;
+
+            app-input-button ::ng-deep button {
+                margin-left: 7px;
+                margin-top: 7px;
+            }
+        }
+    }
+}

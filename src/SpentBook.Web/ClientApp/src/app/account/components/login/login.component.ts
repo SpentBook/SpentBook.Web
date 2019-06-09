@@ -1,11 +1,12 @@
 // Angular/Core
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, ViewChild, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { timer } from 'rxjs';
+import { timer, Observable } from 'rxjs';
 
 // App
-import { AuthService, ProblemDetails } from '@app/core';
+import { AuthService, ProblemDetails, Token } from '@app/core';
+import { BoxErrorComponent, ServerSideValidationService } from '@app/shared';
 
 /*
 TODO:
@@ -25,27 +26,33 @@ TODO:
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.styl']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, AfterViewChecked {
+
+  @ViewChild(BoxErrorComponent)
+  boxError: BoxErrorComponent;
+
   form: FormGroup;
   isSubmitting = false;
   returnUrl: string;
   showError: boolean;
   errorMessage: string;
   loading: boolean;
+  login$: Observable<Token>;
 
-  get email(): any { return this.form.get('email'); }
+  get userName(): any { return this.form.get('userName'); }
   get password(): any { return this.form.get('password'); }
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private authService: AuthService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private serverSideValidate: ServerSideValidationService,
+    private cdRef: ChangeDetectorRef
   ) {
-    // use FormBuilder to create a form group
     this.form = this.fb.group({
-      'email': ['', Validators.required],
-      'password': ['', Validators.required]
+      userName: new FormControl(),
+      password: new FormControl(),
     });
 
     // get return url from route parameters or default to '/'
@@ -55,45 +62,35 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
   }
 
+  ngAfterViewChecked(): void {
+    // Resolve o bug: ExpressionChangedAfterItHasBeenCheckedError: 
+    // Expression has changed after it was checked.
+    this.cdRef.detectChanges();
+  }
+
   submitForm() {
+    if (!this.form.valid) {
+      //return;
+    }
+
     this.loading = true;
-    timer(2000)
-      .subscribe(i => {
-        var login$ = this.authService.login(this.email.value, this.password.value)
-          .subscribe(
-            data => {
-              this.loading = false;
-              this.router.navigateByUrl(this.returnUrl);
-            },
-            error => {
-              this.loading = false;
-              var problemDetails = <ProblemDetails>error.error;
-              this.showError = true;
 
-              // for (let key in problemDetails.errors) {
-              //   var e = problemDetails.errors[key];
-              //   switch (e.type) {
-              //     case ProblemDetailsFieldType.UserNotFound:
-              //     case ProblemDetailsFieldType.InvalidForm:
-              //       this.errorMessage = "Usuário ou senha inválida";
-              //       break;
-              //     case ProblemDetailsFieldType.IsLockedOut:
-              //       this.errorMessage = "Usuário bloqueado";
-              //       break;
-              //     case ProblemDetailsFieldType.IsNotAllowed:
-              //       this.errorMessage = "Confirme seu e-mail para continuar";
-              //       break;
-              //     default:
-              //       this.errorMessage = "Ocorreu um erro inesperado, tente novamente mais tarde";
-              //   }
-              // }
-
-            }
-          );
-      });
+    timer(2000).subscribe(() => {
+      this.login$ = this.authService.login(this.userName.value, this.password.value)
+      this.login$.subscribe(
+        () => {
+          this.loading = false;
+          this.router.navigateByUrl(this.returnUrl);
+        },
+        error => {
+          this.loading = false;
+          this.serverSideValidate.validateWithBoxError(this, error, this.boxError);
+        }
+      );
+    });
   }
 
   backLogin() {
-    this.showError = false;
+    this.boxError.show = false;
   }
 }

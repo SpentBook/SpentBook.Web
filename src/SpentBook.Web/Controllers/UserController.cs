@@ -95,8 +95,12 @@ namespace SpentBook.Web.Controllers
 
             // Return token to auto login
             var token = await TokenViewModel.GenerateAsync(_jwtFactory, _appConfig, user.Id, user.UserName);
-            // if (token == null)
-            //     return BadRequest(new ErrorModel(this, ErrorType.JwtError));
+            if (token == null)
+            {
+                var problemDetailsBuilder = new ModelStateBuilder<LoginViewModel>(this);
+                problemDetailsBuilder.SetFieldError(f => f.UserName, ProblemDetailsFieldType.JwtError);
+                return BadRequest();
+            }
             return new OkObjectResult(token);
         }
 
