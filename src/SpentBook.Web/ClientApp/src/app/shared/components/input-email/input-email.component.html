@@ -4,7 +4,8 @@
       [maxlength]="maxLength" />
 
     <mat-error *ngIf="hasError('required')">{{placeholder}} é obrigatório</mat-error>
-    <mat-error *ngIf="!hasError('required') && (hasError('invalid') || hasError('email'))">{{placeholder}} inválido</mat-error>
+    <mat-error *ngIf="!hasError('required') && (hasError('invalid') || hasError('email'))">{{placeholder}} inválido
+    </mat-error>
     <mat-error *ngIf="hasError('maxlength')">{{placeholder}} muito longo</mat-error>
     <mat-error *ngIf="hasError('duplicateUserName')">Usuário já cadastrado</mat-error>
     <mat-error *ngIf="hasError('userNotFound')">Usuário ou senha inválido</mat-error>

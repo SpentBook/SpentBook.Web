@@ -1,4 +1,9 @@
 /*
+ * Variables
+ */
+$invalidColor = #F443F6;
+
+/*
  * Fonts
  */
 @import '~@angular/material/prebuilt-themes/purple-green.css';
@@ -8,23 +13,9 @@
     src: url('/assets/fonts/Roboto/Roboto-Regular.ttf') format('truetype');
 }
 
-/*
- * Animations
- */
-router-outlet ~ * {
-    // position: absolute;
-    // width: 100%;
-    padding-top: 56px;
-    box-sizing: border-box;
-    display: block;
-}
-
-/*
- * Fix [hidden] attribute error
- * https://www.talkingdotnet.com/dont-use-hidden-attribute-angularjs-2/
- */
-[hidden] {
-    display: none !important;
+@font-face {
+    font-family: 'RobotoBold';
+    src: url('/assets/fonts/Roboto/Roboto-Bold.ttf') format('truetype');
 }
 
 /*
@@ -36,6 +27,29 @@ body {
     color: #ffffff;
     // background-color: #00223B;
     font-size: 14px;
+}
+
+/*
+ * Style to router component
+ */
+router-outlet ~ * {
+    position: absolute;
+    width: 100%;
+    padding-top: 56px;
+    box-sizing: border-box;
+    display: block;
+}
+
+router-outlet ~ * .content {
+    padding-top: 20px;
+}
+
+/*
+ * Fix [hidden] attribute error
+ * https://www.talkingdotnet.com/dont-use-hidden-attribute-angularjs-2/
+ */
+[hidden] {
+    display: none !important;
 }
 
 .noselect {
@@ -50,4 +64,58 @@ body {
 /* FIX Calendar Scroll */
 .mat-datepicker-content {
     overflow: hidden !important;
+}
+
+/* Inputs */
+.mat-form-field {
+    min-height: 70px;
+
+    /* label */
+    .mat-form-field-label-wrapper label {
+        font-family: 'RobotoBold', 'Helvetica Neue', 'sans-serif';
+    }
+
+    /* icon */
+    mat-icon {
+        cursor: pointer;
+    }
+
+    &.mat-form-field-invalid {
+        .mat-form-field-label.mat-accent {
+            color: $invalidColor;
+        }
+
+        mat-icon {
+            color: $invalidColor;
+        }
+
+        .mat-form-field-ripple, .mat-form-field-ripple.mat-accent {
+            background-color: $invalidColor;
+        }
+
+        /* error */
+        mat-error {
+            margin-bottom: 2px;
+            color: $invalidColor;
+        }
+
+        .mat-input-element {
+            caret-color: $invalidColor;
+        }
+    }
+
+    /* start fix: Workaround for https://github.com/angular/material2/issues/4580. */
+    .mat-form-field-underline {
+        position: static;
+    }
+
+    .mat-form-field-subscript-wrapper {
+        position: static;
+    }
+
+    .mat-form-field-wrapper {
+        padding-bottom: 0;
+    }
+
+    /* end fix */
 }

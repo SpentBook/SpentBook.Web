@@ -1,18 +1,21 @@
 :host {
     height: 100%;
+    box-sizing: border-box;
 }
 
 .content {
     height: 100%;
-    display: flex;
-    flex-direction: column;
+    box-sizing: border-box;
 
     .box-options {
-        background-color: #212121;
-        text-align: center;
+        position: absolute;
+        width: 100%;
+        margin-top: auto;
+        bottom: 0;
         padding-top: 20px;
         padding-bottom: 100px;
-        margin-top: auto;
+        background-color: #212121;
+        text-align: center;
 
         .facebook-button {
             button {
