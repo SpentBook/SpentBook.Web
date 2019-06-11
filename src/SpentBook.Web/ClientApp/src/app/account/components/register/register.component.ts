@@ -2,7 +2,7 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef, AfterViewChecked } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { FormControl, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 // Touch
 import 'hammerjs';
@@ -13,6 +13,7 @@ import { timer, Observable } from 'rxjs';
 // Models
 import { AuthService, Token, UserRegister } from '@app/core';
 import { BoxErrorComponent, ServerSideValidationService, CustomValidations } from '@app/shared';
+import { PlatformLocation } from '@angular/common';
 
 /*
 1) Criar "Declaro estar ciente" e salvar termo assinado (ler mais sobre)
@@ -46,6 +47,7 @@ export class RegisterComponent implements OnInit, AfterViewChecked {
   loading: boolean = false;
   register$: Observable<Token>;
   returnUrl: string;
+  baseUrl: string;
 
   get email(): any { return this.form.get('email'); }
   get firstName(): any { return this.form.get('firstName'); }
@@ -58,11 +60,14 @@ export class RegisterComponent implements OnInit, AfterViewChecked {
     private fb: FormBuilder,
     private authService: AuthService,
     private serverSideValidate: ServerSideValidationService,
+    private route: ActivatedRoute,
     private router: Router,
-    private cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef,
+    private platformLocation: PlatformLocation
   ) {
     this.createForm();
-    this.returnUrl = 'home';
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+    this.baseUrl = (platformLocation as any).location.origin;
   }
 
   ngOnInit() {
@@ -103,7 +108,7 @@ export class RegisterComponent implements OnInit, AfterViewChecked {
 
   submitForm() {
     if (!this.form.valid) {
-      //return;
+      return;
     }
 
     this.loading = true;
@@ -116,6 +121,7 @@ export class RegisterComponent implements OnInit, AfterViewChecked {
       user.password = this.password.value;
       user.passwordConfirm = this.passwordConfirm.value;
       user.dateOfBirth = this.dateOfBirth.value;
+      user.urlCallbackConfirmation = `${this.baseUrl}/register-confirmation?userId={user-id}&code={code}&returnUrl=${this.returnUrl}`;
 
       this.register$ = this.authService.register(user);
       this.register$.subscribe(

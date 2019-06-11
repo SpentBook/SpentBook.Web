@@ -13,8 +13,7 @@
         <div class="box-login" [hidden]="boxError.show || loading">
             <app-input-email [formControlRef]="userName"></app-input-email>
             <app-input-password [formControlRef]="password"></app-input-password>
-            <!-- <app-input-button placeholder="Entrar" [disabled]="!form.valid"></app-input-button> -->
-            <app-input-button placeholder="Entrar" icon="launch"></app-input-button>
+            <app-input-button placeholder="Entrar" icon="launch" [disabled]="form.invalid"></app-input-button>
         </div>
 
         <app-loading class="box-loading" [hidden]="!loading"></app-loading>

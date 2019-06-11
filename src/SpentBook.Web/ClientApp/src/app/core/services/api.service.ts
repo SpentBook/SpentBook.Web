@@ -20,18 +20,19 @@ import { User } from '../models/user.model';
 export class ApiService {
   constructor(
     private http: HttpClient
-  ) {}
+  ) { }
 
   login(request: LoginRequest): Observable<Token> {
     return this.http.post<Token>(`${environment.apiUrl}/Auth/login`, request);
   }
 
-  addUser(request: UserRegister): Observable<Token> {
-    return this.http.post<Token>(`${environment.apiUrl}/User`, request );
-  }
-
-  confirmEmail(request: ConfirmEmail): Observable<Token> {
-    return this.http.post<Token>(`${environment.apiUrl}/Auth/ConfirmEmail`, { request });
+  confirmEmail(userId: string, code: string): Observable<Token> {
+    return this.http.get<Token>(`${environment.apiUrl}/Auth/ConfirmEmail`, {
+      params: {
+        userId: userId,
+        code: code
+      }
+    });
   }
 
   confirmEmailResend(request: ConfirmEmailResend): Observable<Object> {
@@ -46,8 +47,12 @@ export class ApiService {
     return this.http.post(`${environment.apiUrl}/Auth/ChangePassword`, { request });
   }
 
+  addUser(request: UserRegister): Observable<Token> {
+    return this.http.post<Token>(`${environment.apiUrl}/User`, request);
+  }
+
   getUser(id: string): Observable<User> {
-    return this.http.get<User>(`${environment.apiUrl}/User`, { });
+    return this.http.get<User>(`${environment.apiUrl}/User`, {});
   }
 
   updateUser(request: User): Observable<Object> {

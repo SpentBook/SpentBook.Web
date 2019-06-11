@@ -1,33 +1,19 @@
 <form [formGroup]="form" (ngSubmit)="submitForm()">
   <fieldset [disabled]="loading">
-    <!-- <div class="box-logo">
-      <img src="assets/logo-white.png">
-    </div> -->
 
     <div class="box-register" [hidden]="boxError.show || loading">
       <app-input-email [formControlRef]="email"></app-input-email>
       <app-input-name [formControlRef]="firstName"></app-input-name>
-      <app-input-name [formControlRef]="lastName" placeholder="Sobrenome" ></app-input-name>
+      <app-input-name [formControlRef]="lastName" placeholder="Sobrenome"></app-input-name>
 
       <!-- <div formGroupName="passwordGroup"> -->
       <app-input-password [formControlRef]="password"></app-input-password>
-      <app-input-password [formControlRef]="passwordConfirm" placeholder="Confirme sua senha" [isConfirmation]="true"></app-input-password>
+      <app-input-password [formControlRef]="passwordConfirm" placeholder="Confirme sua senha" [isConfirmation]="true">
+      </app-input-password>
       <!-- </div> -->
 
       <app-input-date [formControlRef]="dateOfBirth"></app-input-date>
-      <app-input-button placeholder="Cadastrar" icon="person_add"></app-input-button>
-
-      <!-- <div class="form-field">
-        <mat-radio-group>
-          <mat-radio-button value="M">Masculino</mat-radio-button>
-          <mat-radio-button value="F">Feminino</mat-radio-button>
-        </mat-radio-group>
-      </div> -->
-
-      <!-- <div class="form-field"> -->
-        <!-- <button mat-button [disabled]="form.invalid">Cadastrar</button> -->
-        <!-- <button mat-button>Cadastrar</button>
-      </div> -->
+      <app-input-button placeholder="Cadastrar" icon="person_add" [disabled]="form.invalid"></app-input-button>
     </div>
 
     <app-loading class="box-loading" [hidden]="!loading"></app-loading>

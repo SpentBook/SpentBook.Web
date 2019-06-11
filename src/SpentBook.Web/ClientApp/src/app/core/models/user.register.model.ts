@@ -5,4 +5,5 @@ export class UserRegister {
   password: string;
   passwordConfirm: string;
   dateOfBirth: Date;
+  urlCallbackConfirmation: string;
 }

@@ -14,6 +14,7 @@ import { PageLogoutComponent } from './pages/page-logout/page-logout.component';
 import { PageRegisterComponent } from './pages/page-register/page-register.component';
 import { RegisterComponent } from './components/register/register.component';
 import { AccountRoutingModule } from './account-routing.module';
+import { PageRegisterConfirmationComponent } from './pages/page-register-confirmation/page-register-confirmation.component';
 
 @NgModule({
   // schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
@@ -22,7 +23,8 @@ import { AccountRoutingModule } from './account-routing.module';
     LoginComponent,
     PageLogoutComponent,
     PageRegisterComponent,
-    RegisterComponent
+    RegisterComponent,
+    PageRegisterConfirmationComponent
   ],
   imports: [
     // App modules - Routes

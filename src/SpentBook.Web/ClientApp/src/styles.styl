@@ -66,9 +66,9 @@ router-outlet ~ * .content {
     overflow: hidden !important;
 }
 
-/* Inputs */
+/* theme and fixes: mat-form-field */
 .mat-form-field {
-    min-height: 70px;
+    min-height: 75px;
 
     /* label */
     .mat-form-field-label-wrapper label {
@@ -101,6 +101,7 @@ router-outlet ~ * .content {
 
         .mat-input-element {
             caret-color: $invalidColor;
+            color: $invalidColor;
         }
     }
 

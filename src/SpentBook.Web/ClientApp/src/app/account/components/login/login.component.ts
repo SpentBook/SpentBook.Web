@@ -48,7 +48,7 @@ export class LoginComponent implements OnInit, AfterViewChecked {
     private authService: AuthService,
     private fb: FormBuilder,
     private serverSideValidate: ServerSideValidationService,
-    private cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef,
   ) {
     this.form = this.fb.group({
       userName: new FormControl(),
@@ -70,7 +70,7 @@ export class LoginComponent implements OnInit, AfterViewChecked {
 
   submitForm() {
     if (!this.form.valid) {
-      //return;
+      return;
     }
 
     this.loading = true;
