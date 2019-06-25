@@ -84,7 +84,7 @@ namespace SpentBook.Web
             // Get/Set JwtIssuerOptions from configuration
             var appConfig = new AppConfig();
             Configuration.GetSection(nameof(AppConfig)).Bind(appConfig);
-            appConfig.Jwt.ValidFor = TimeSpan.FromMinutes(appConfig.TimeoutTokenLogin);
+            appConfig.Jwt.ValidFor = TimeSpan.FromMinutes(appConfig.TimeoutTokenLogin);             
             services.AddSingleton(appConfig);
 
             // JWT
@@ -144,8 +144,7 @@ namespace SpentBook.Web
                 // Quando true, os usuarios só vão logar quando aprovarem via e-mail
                 // a parte ruim é que se eu quiser ligar depois de já existir usuário na base, esses usuários não
                 // vão mais conseguir logar até aprovarem
-                o.SignIn.RequireConfirmedEmail = true;
-
+                o.SignIn.RequireConfirmedEmail = appConfig.RequireConfirmedEmail;
                 o.Lockout = new LockoutOptions()
                 {
                     MaxFailedAccessAttempts = appConfig.MaxFailedAccessAttempts,

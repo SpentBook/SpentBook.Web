@@ -1,3 +1,9 @@
 <div class="content">
-    <app-register></app-register>
+    <app-register *ngIf="showRegister" [urlCallbackConfirmation]="urlCallbackConfirmation"
+        (finish)="registerFinish($event)">
+    </app-register>
+
+    <app-register-finish *ngIf="showFinish" [email]="email" [urlCallbackConfirmation]="urlCallbackConfirmation"
+        (login)="login()">
+    </app-register-finish>
 </div>

@@ -5,6 +5,7 @@ import { OnInit, Component } from "@angular/core";
 import { SidenavService } from "../../services/sidenav.service";
 import { ToolbarMode, ToolbarService } from "../../services/toolbar.service";
 import { Router } from "@angular/router";
+import { AuthService } from "@app/core";
 
 @Component({
   selector: 'app-toolbar',
@@ -17,7 +18,8 @@ export class ToolbarComponent implements OnInit {
   constructor(
     private sidenavService: SidenavService,
     private router: Router,
-    private toolbarService: ToolbarService
+    private toolbarService: ToolbarService,
+    private authService: AuthService
   ) {
     // this.toolbarService.toolbarMode$.subscribe((mode: ToolbarMode) => {
     //   if (mode == this.ToolbarModeEnum.FULL) {
@@ -45,5 +47,10 @@ export class ToolbarComponent implements OnInit {
 
   settings() {
     this.sidenavService.open();
+  }
+
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['login']);
   }
 }

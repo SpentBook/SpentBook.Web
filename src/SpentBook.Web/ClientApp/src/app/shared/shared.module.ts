@@ -5,7 +5,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Material
-import { MatButtonModule, MatFormFieldModule, MatCardModule, MatInputModule, MatSelectModule, MatTableModule, MatIconModule, MatGridListModule, MatMenuModule, MatOptionModule, MatRadioModule, MatDatepickerModule, MatNativeDateModule, MatToolbarModule, MatSidenavModule, MatDividerModule, MatNavList, MatListModule, MatSidenav, MatListItem } from '@angular/material';
+import { MatButtonModule, MatFormFieldModule, MatCardModule, MatInputModule, MatSelectModule, MatTableModule, MatIconModule, MatGridListModule, MatMenuModule, MatOptionModule, MatRadioModule, MatDatepickerModule, MatNativeDateModule, MatToolbarModule, MatSidenavModule, MatDividerModule, MatNavList, MatListModule, MatSidenav, MatListItem, MatSnackBarModule } from '@angular/material';
 
 // App 
 import { AuthService } from '@app/core';
@@ -23,9 +23,11 @@ import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { SidenavComponent } from "./components/sidenav/sidenav.component";
 import { RouterModule } from '@angular/router';
 import { ToolbarService } from './services/toolbar.service';
+import { SnackbarComponent } from './components/snackbar/snackbar.component';
 
 @NgModule({
   providers: [AuthService, ToolbarService],
+  entryComponents: [SnackbarComponent],
   declarations: [
     TruncatePipe,
     BoxErrorComponent,
@@ -36,7 +38,8 @@ import { ToolbarService } from './services/toolbar.service';
     InputDateComponent,
     InputButtonComponent,
     ToolbarComponent,
-    SidenavComponent
+    SidenavComponent,
+    SnackbarComponent
   ],
   imports: [
     // App modules
@@ -80,12 +83,15 @@ import { ToolbarService } from './services/toolbar.service';
     MatListModule,
 
     // Others
-    FlexLayoutModule
+    FlexLayoutModule,
+
+    //Alerts
+    MatSnackBarModule
   ],
   exports: [
     FormsModule,
     RouterModule,
-    
+
     // Pipes
     TruncatePipe,
 
@@ -99,7 +105,7 @@ import { ToolbarService } from './services/toolbar.service';
     InputButtonComponent,
     ToolbarComponent,
     SidenavComponent,
-  
+
     // Material Navigation
     MatToolbarModule,
     MatIconModule,
@@ -108,10 +114,13 @@ import { ToolbarService } from './services/toolbar.service';
     MatButtonModule,
     MatDividerModule,
     MatListModule,
-    
+
     // Others
     FlexLayoutModule,
-    MatSidenav
+    MatSidenav,
+
+    //Alerts
+    MatSnackBarModule
   ]
 })
 export class SharedModule { }

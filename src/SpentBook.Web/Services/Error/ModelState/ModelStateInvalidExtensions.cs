@@ -26,7 +26,7 @@ namespace SpentBook.Web.Services.Error
     /// </summary>
     public static partial class ModelStateInvalidExtensions
     {
-        private static MediaTypeCollection _mediaTypeError = new MediaTypeCollection() { "application/problem+json", "application/problem+xml" };
+        private static MediaTypeCollection _mediaTypeError = new MediaTypeCollection() { Constants.CONTENT_TYPE_JSON, Constants.CONTENT_TYPE_XML };
         private static bool UseCustomErrorLinks { get; set; } = true;
 
         public static IServiceCollection AddProblemDetailsForInvalidModelState(this IServiceCollection services)

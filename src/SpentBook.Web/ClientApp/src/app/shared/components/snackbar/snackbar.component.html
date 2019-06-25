@@ -1,0 +1,5 @@
+<div class="snackbar" [ngClass]="[snackClass]">
+  <div class="message">{{data.message}}</div>
+  <button mat-button *ngIf="data.okAction" type="button" class="ok" (click)="ok()">{{data.okAction?.label}}</button>
+  <button mat-button *ngIf="data.cancelAction" type="submit" class="cancel" (click)="cancel()">{{data.cancelAction.label}}</button>
+</div>

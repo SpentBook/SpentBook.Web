@@ -10,7 +10,7 @@
     <!-- <button mat-icon-button (click)="openMenu()">
       <mat-icon>menu</mat-icon>
     </button> -->
-    
+
     <ng-template [ngIf]="toolbarService?.showBackButton">
       <button mat-icon-button (click)="back()">
         <mat-icon>arrow_back</mat-icon>
@@ -22,18 +22,20 @@
   </mat-toolbar-row>
 
   <mat-toolbar-row *ngIf="toolbarService?.toolbarMode == ToolbarModeEnum.FULL">
-    <div>
-      <button mat-icon-button (click)="openMenu()">
-        <mat-icon>menu</mat-icon>
-      </button>
-      <img src="assets/logo-toolbar.png" alt="Profile image">
+    <div class="menu-item">
+      <ng-template [ngIf]="toolbarService?.showLogo">
+        <button mat-flat-button class="logo" (click)="openHome()">
+          <img src="assets/logo-toolbar-named.png" alt="Profile image">
+        </button>
+        <mat-divider class="style-fix" [vertical]="true"></mat-divider>
+      </ng-template>
     </div>
 
-    <div>
-      <span class="toolbar-title">Registrar</span>
+    <div class="menu-item">
+      <span class="toolbar-title">{{toolbarService?.title}}</span>
     </div>
 
-    <div fxShow="true" fxHide.lt-md="true">
+    <div fxHide.xs class="menu-item">
       <a href="#" mat-button>Menu Item 1</a>
       <a href="#" mat-button>Menu Item 2</a>
       <a href="#" mat-button>Menu Item 3</a>
@@ -42,15 +44,14 @@
       <a href="#" mat-button>Menu Item 6</a>
     </div>
 
-    <div fxFlex fxLayout fxLayoutAlign="flex-end">
+    <div fxFlex fxLayout fxLayoutAlign="flex-end" class="menu-item">
       <ul fxLayout fxLayoutGap="20px" class="navigation-items">
-        <!-- <li fxHide.xs> -->
-        <li>
+        <!-- <li>
           <button mat-icon-button (click)="settings()">
             <mat-icon>settings</mat-icon>
           </button>
-        </li>
-        <!-- <li fxHide.xs>
+        </li> -->
+        <!-- <li fxHide fxShow.xs>
           <button mat-icon-button>
             <mat-icon>help_outline</mat-icon>
           </button>
@@ -65,6 +66,11 @@
               <span>Sign out</span>
             </button>
           </mat-menu>
+        </li>
+        <li fxHide fxShow.xs>
+          <button mat-icon-button>
+            <mat-icon>menu</mat-icon>
+          </button>
         </li>
       </ul>
     </div>

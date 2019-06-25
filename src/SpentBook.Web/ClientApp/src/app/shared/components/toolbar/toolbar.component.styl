@@ -1,5 +1,14 @@
 $toolbar-title-padding = 16px;
 
+mat-toolbar {
+  min-height: 56px !important;
+  height: 56px !important;
+}
+
+mat-divider.style-fix {
+  height: 36px;
+}
+
 .logo {
   background-color: transparent;
 }
@@ -15,11 +24,6 @@ $toolbar-title-padding = 16px;
   cursor: pointer;
 }
 
-mat-toolbar {
-  min-height: 56px !important;
-  height: 56px !important;
-}
-
-mat-divider.style-fix {
-  height: 36px;
+.menu-item {
+  display: flex;
 }

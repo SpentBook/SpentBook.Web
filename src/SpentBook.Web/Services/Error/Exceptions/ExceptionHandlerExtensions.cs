@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.DependencyInjection;
@@ -50,8 +52,10 @@ namespace SpentBook.Web.Services.Error
                     UseExceptionCustomMiddleware(app);
                     break;
             }
-        }
 
+            UseProblemDetailsFor405(app);
+        }
+        
         /// <summary>
         /// UseExceptionHandlerWithProblemDetails
         /// </summary>
@@ -77,7 +81,7 @@ namespace SpentBook.Web.Services.Error
 
                         var problemDetails = new ProblemDetailsFactory(context.Request.Path, context.TraceIdentifier).GetInternalServerError(exception);
                         context.Response.StatusCode = problemDetails.Status.Value;
-                        context.Response.ContentType = "application/problem+json";
+                        context.Response.ContentType = Constants.CONTENT_TYPE_JSON;
                         var json = JsonConvert.SerializeObject(problemDetails);
                         await context.Response.WriteAsync(json);
                     }
@@ -113,6 +117,30 @@ namespace SpentBook.Web.Services.Error
                     context.Features.Set<IExceptionHandlerPathFeature>(exceptionHandlerFeature);
                     context.Request.Path = ACTION_NAME;
                     await next();
+                }
+            });
+        }
+
+        /// <summary>
+        /// UseProblemDetailsFor405
+        /// </summary>
+        /// <param name="app"></param>
+        /// <returns></returns>
+        private static void UseProblemDetailsFor405(IApplicationBuilder app)
+        {
+            app.Use(async (context, next) =>
+            {
+                await next();
+
+                if (context.Response.StatusCode == (int)HttpStatusCode.MethodNotAllowed)
+                {
+                    var pd = new ProblemDetails();
+                    var pdf = new ProblemDetailsFactory(context.Request.Path, context.TraceIdentifier);
+                    pdf.SetProblemDetail(pd, (int)HttpStatusCode.MethodNotAllowed);
+
+                    context.Response.ContentType = Constants.CONTENT_TYPE_JSON;
+                    var json = JsonConvert.SerializeObject(pd);
+                    await context.Response.WriteAsync(json);
                 }
             });
         }

@@ -1,9 +1,8 @@
 <h2>Alguns erros inesperados foram identificados:</h2>
-
 <div *ngIf="!unknownFieldsErrors">
   <ul>
-    <li>
-      <span>{{problemDetails?.detail}}</span>
+    <li>      
+      <span>{{problemDetails?.detail ? problemDetails?.detail : problemDetails?.title}}</span>
     </li>
   </ul>
 </div>

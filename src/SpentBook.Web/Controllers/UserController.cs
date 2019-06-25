@@ -54,56 +54,6 @@ namespace SpentBook.Web.Controllers
             _emailService = emailService;
         }
 
-        // POST api/user
-        [HttpPost]
-        [ProducesResponseType(typeof(TokenViewModel), StatusCodes.Status201Created)]
-        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status409Conflict)]
-        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<TokenViewModel>> Post([FromBody]RegistrationViewModel model)
-        {
-            var user = new ApplicationUser();
-            user.UserName = model.Email;
-            user.Email = model.Email;
-            user.FirstName = model.FirstName;
-            user.LastName = model.LastName;
-
-            var identityResult = await _signInManager.UserManager.CreateAsync(user, model.Password);
-
-            if (!identityResult.Succeeded)
-            {
-                var problemDetailsBuilder = new ModelStateBuilder<RegistrationViewModel>(this, identityResult)
-                    .SetIdentityErrorEmail(e => e.Email)
-                    .SetIdentityErrorPassword(e => e.Password);
-
-                if (problemDetailsBuilder.HasProblem(e => e.Email, ProblemDetailsFieldType.DuplicateUserName))
-                    return Conflict();
-
-                return BadRequest();
-            }
-
-            // Register as locked if enabled
-            // if (_appConfig.NewUserAsLocked)
-
-            if (_signInManager.Options.SignIn.RequireConfirmedEmail)
-            {
-                // var lockoutEndDate = new DateTime(2999,01,01);
-                // await _userManager.SetLockoutEnabledAsync(userIdentity, true);
-                // await  _userManager.SetLockoutEndDateAsync(userIdentity, lockoutEndDate);
-
-                _emailService.ConfirmRegister(model.UrlCallbackConfirmation, user);
-            }
-
-            // Return token to auto login
-            var token = await TokenViewModel.GenerateAsync(_jwtFactory, _appConfig, user.Id, user.UserName);
-            if (token == null)
-            {
-                var problemDetailsBuilder = new ModelStateBuilder<LoginViewModel>(this);
-                problemDetailsBuilder.SetFieldError(f => f.UserName, ProblemDetailsFieldType.JwtError);
-                return BadRequest();
-            }
-            return new OkObjectResult(token);
-        }
-
         // PUT api/user
         [HttpPut]
         [Authorize]

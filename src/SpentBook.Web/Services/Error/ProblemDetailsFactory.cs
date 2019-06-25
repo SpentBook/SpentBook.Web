@@ -1,24 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Linq.Expressions;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Formatters;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 
 namespace SpentBook.Web.Services.Error
 {
     public class ProblemDetailsFactory
     {
-        protected const string CLIENT_VALIDATIN_ERROR_DETAIL = "One or more validation errors occurred. Please refer to the errors property for additional details";
+        protected const string CLIENT_VALIDATION_ERROR_DETAIL = "One or more validation errors occurred. Please refer to the errors property for additional details";
         private const string STATUS_CODE_TYPE_URI = "https://httpstatuses.com/{0}";
         private const string TRACE_IDENTIFIER_KEY = "traceId";
 
@@ -61,14 +53,14 @@ namespace SpentBook.Web.Services.Error
         {
             var problemDetails = new ModelStateProblemDetails(modelState)
             {
-                Detail = modelState.Count > 0 ? CLIENT_VALIDATIN_ERROR_DETAIL : null
+                Detail = modelState.Count > 0 ? CLIENT_VALIDATION_ERROR_DETAIL : null
             };
 
             this.SetProblemDetail(problemDetails, statusCode);
             return problemDetails;
         }
 
-        private void SetProblemDetail(ProblemDetails problemDetails, int statusCode)
+        public void SetProblemDetail(ProblemDetails problemDetails, int statusCode)
         {
             problemDetails.Instance = this._requestPath;
             problemDetails.Status = statusCode;

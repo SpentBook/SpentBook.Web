@@ -1,19 +1,16 @@
-﻿using System;
-using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.V3.Pages.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
-using SpentBook.Web.Extensions;
-using SpentBook.Web.ViewsModels;
+using Microsoft.AspNetCore.Http;
+using AutoMapper;
 
 using SpentBook.Web.Services.Error;
 using SpentBook.Web.Services.Jwt;
 using SpentBook.Web.Services.Config;
 using SpentBook.Web.Services.Email;
+using SpentBook.Web.ViewsModels;
+using SpentBook.Web.Extensions;
 
 namespace SpentBook.Web
 {
@@ -26,6 +23,7 @@ namespace SpentBook.Web
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger _logger;
         private readonly EmailService _emailService;
+        private readonly IMapper _mapper;
 
         public AuthController(
             UserManager<ApplicationUser> userManager,
@@ -33,7 +31,8 @@ namespace SpentBook.Web
             AppConfig appConfig,
             SignInManager<ApplicationUser> signInManager,
             ILoggerFactory loggerFactory,
-            EmailService emailService
+            EmailService emailService,
+            IMapper mapper
         )
         {
             _userManager = userManager;
@@ -42,10 +41,70 @@ namespace SpentBook.Web
             _signInManager = signInManager;
             _logger = loggerFactory.CreateLogger<ApplicationUser>();
             _emailService = emailService;
+            _mapper = mapper;
+        }
+
+        // POST api/auth/register
+        [HttpPost("Register")]
+        [ProducesResponseType(typeof(LoginResultViewModel), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<LoginResultViewModel>> Register([FromBody]RegistrationViewModel model)
+        {
+            var user = new ApplicationUser();
+            user.UserName = model.Email;
+            user.Email = model.Email;
+            user.FirstName = model.FirstName;
+            user.LastName = model.LastName;
+
+            var identityResult = await _signInManager.UserManager.CreateAsync(user, model.Password);
+
+            if (!identityResult.Succeeded)
+            {
+                var pb = new ModelStateBuilder<RegistrationViewModel>(this, identityResult)
+                    .SetIdentityErrorEmail(e => e.Email)
+                    .SetIdentityErrorPassword(e => e.Password);
+
+                if (pb.HasProblem(e => e.Email, ProblemDetailsFieldType.DuplicateUserName))
+                    return this.Conflict();
+
+                return this.BadRequest();
+            }
+
+            // Register as locked if enabled
+            // if (_appConfig.NewUserAsLocked)
+
+            if (_signInManager.Options.SignIn.RequireConfirmedEmail)
+            {
+                // var lockoutEndDate = new DateTime(2999,01,01);
+                // await _userManager.SetLockoutEnabledAsync(userIdentity, true);
+                // await  _userManager.SetLockoutEndDateAsync(userIdentity, lockoutEndDate);
+
+                _emailService.ConfirmRegister(model.UrlCallbackConfirmation, user);
+                var authModel = LoginResultViewModel.Generate(_signInManager.Options.SignIn);
+                return this.OkCreated(authModel);
+            }
+            else
+            {
+                var authModel = await LoginResultViewModel.GenerateWithTokenAsync(_jwtFactory, _appConfig, user.Id, user.UserName);
+                if (authModel == null)
+                {
+                    var pb = new ModelStateBuilder<RegistrationViewModel>(this);
+                    pb.SetFieldError(f => f.Email, ProblemDetailsFieldType.JwtError);
+                    return this.BadRequest();
+                }
+
+                return this.OkCreated(authModel);
+            }
         }
 
         // POST api/auth/login
-        [HttpPost("login")]
+        [HttpPost("Login")]
+        [ProducesResponseType(typeof(LoginResultViewModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status423Locked)]
         public async Task<IActionResult> Login([FromBody]LoginViewModel loginModel)
         {
             // This doesn't count login failures towards account lockout
@@ -59,74 +118,84 @@ namespace SpentBook.Web
 
             if (!identityResult.Succeeded)
             {
-                var problemDetailsBuilder = new ModelStateBuilder<LoginViewModel>(this);
+                var pb = new ModelStateBuilder<LoginViewModel>(this);
 
                 if (identityResult.IsLockedOut)
                 {
-                    problemDetailsBuilder.SetFieldError(f => f.UserName, ProblemDetailsFieldType.IsLockedOut);
-                    return new StatusCodeResult((int)System.Net.HttpStatusCode.Locked);
+                    pb.SetFieldError(f => f.UserName, ProblemDetailsFieldType.IsLockedOut);
+                    return this.Locked();
                 }
                 else if (identityResult.IsNotAllowed)
                 {
-                    problemDetailsBuilder.SetFieldError(f => f.UserName, ProblemDetailsFieldType.IsNotAllowed);
-                    return Unauthorized();
+                    pb.SetFieldError(f => f.UserName, ProblemDetailsFieldType.IsNotAllowed);
+                    return this.Unauthorized();
                 }
                 else
                 {
-                    problemDetailsBuilder.SetFieldError(f => f.UserName, ProblemDetailsFieldType.UserNotFound);
-                    return NotFound();
+                    pb.SetFieldError(f => f.UserName, ProblemDetailsFieldType.UserNotFound);
+                    return this.NotFound();
                 }
             }
 
             var user = await _userManager.FindByNameAsync(loginModel.UserName);
-            var token = await TokenViewModel.GenerateAsync(_jwtFactory, _appConfig, user.Id, loginModel.UserName);
-
+            var token = await LoginResultViewModel.GenerateWithTokenAsync(_jwtFactory, _appConfig, user.Id, loginModel.UserName);
             if (token == null)
             {
-                var problemDetailsBuilder = new ModelStateBuilder<LoginViewModel>(this);
-                problemDetailsBuilder.SetFieldError(f => f.UserName, ProblemDetailsFieldType.JwtError);
-                return BadRequest();
+                var pb = new ModelStateBuilder<LoginViewModel>(this);
+                pb.SetFieldError(f => f.UserName, ProblemDetailsFieldType.JwtError);
+                return this.BadRequest();
             }
-
-            return new OkObjectResult(token);
+            else
+            {
+                token.RequiresTwoFactor = identityResult.RequiresTwoFactor;
+                return this.Ok(token);
+            }
         }
 
         // POST: /Auth/ConfirmEmailResend
         [HttpPost("ConfirmEmailResend")]
-        public async Task<IActionResult> ConfirmEmailResend([FromBody]ConfirmEmailResendViewModel model)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> ConfirmEmailResend([FromBody]UserCodeViewModel model)
         {
-            // if (!ModelState.IsValid)
-            //     return BadRequest(new ErrorModel(this));
-
             var user = await _userManager.FindByEmailAsync(model.Email);
-            // if (user == null)
-            //     return BadRequest(new ErrorModel(this, ErrorType.UserNotFound));
+            if (user == null)
+            {
+                var pb = new ModelStateBuilder<UserCodeViewModel>(this);
+                pb.SetFieldError(f => f.Email, ProblemDetailsFieldType.UserNotFound);
+                return this.NotFound();
+            }
 
             _emailService.ConfirmRegister(model.UrlCallbackConfirmation, user);
-            return new EmptyResult();
+            return this.Ok();
         }
 
         // GET: /Auth/ConfirmEmail
-        [HttpGet("ConfirmEmail")]
-        public async Task<IActionResult> ConfirmEmail(string userId, string code)
+        [HttpPost("ConfirmEmail")]
+        public async Task<IActionResult> ConfirmEmail([FromBody]UserCodeViewModel model)
         {
-            // if (!ModelState.IsValid || userId == null || code == null)
-            //     return BadRequest(new ErrorModel(this));
+            var user = await _userManager.FindByIdAsync(model.UserId);
+            if (user == null)
+            {
+                var pb = new ModelStateBuilder<object>(this);
+                pb.SetFieldError(nameof(model.UserId), ProblemDetailsFieldType.UserNotFound);
+                return this.NotFound();
+            }
 
-            var user = await _userManager.FindByIdAsync(userId);
-            // if (user == null)
-            //     return BadRequest(new ErrorModel(this, ErrorType.UserNotFound));
+            var identityResult = await _userManager.ConfirmEmailAsync(user, model.Code);
 
-            var identityResult = await _userManager.ConfirmEmailAsync(user, code);
+            if (!identityResult.Succeeded)
+            {
+                var pb = new ModelStateBuilder<object>(this);
+                pb.SetFieldError(nameof(model.Code), ProblemDetailsFieldType.Invalid, "Invalid token.");
+                return this.BadRequest();
+            }
 
-            // if (!identityResult.Succeeded)
-            //     return BadRequest(new ErrorModel(this, identityResult, ErrorType.ConfirmEmailError));
-
-            return new EmptyResult();
+            return Ok();
         }
 
         [HttpPost("ResetPassword")]
-        public async Task<IActionResult> ResetPassword([FromBody]ConfirmEmailResendViewModel model)
+        public async Task<IActionResult> ResetPassword([FromBody]UserCodeViewModel model)
         {
             // if (!ModelState.IsValid)
             //     return BadRequest(new ErrorModel(this));
@@ -151,7 +220,7 @@ namespace SpentBook.Web
             //     return BadRequest(new ErrorViewModel(this, ErrorType.PasswordNotMatch));
 
             /// TODO: VER FORMA DE FAZER VIA FILTRO NO PARAMETRO
-            var user = await _userManager.FindByIdAsync(model.UserId);
+            var user = await _userManager.FindByEmailAsync(model.Email);
             // if (user == null)
             //     return BadRequest(new ErrorModel(this, ErrorType.UserNotFound));
 

@@ -6,6 +6,7 @@ namespace SpentBook.Web.Services.Config
 {
     public class AppConfig
     {
+        public bool RequireConfirmedEmail { get; set; }
         public int MaxFailedAccessAttempts { get; set; }
         public int TimeoutUserBlocked { get; set; }
         public int TimeoutTokenLogin { get; set; }

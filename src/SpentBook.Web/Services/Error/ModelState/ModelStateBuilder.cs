@@ -83,6 +83,11 @@ namespace SpentBook.Web.Services.Error
         public ModelStateBuilder<T> SetFieldError(Expression<Func<T, object>> expression, ProblemDetailsFieldType errorType, string message = null)
         {
             var fieldName = GetFieldName(expression);
+            return SetFieldError(fieldName, errorType, message);
+        }
+
+        public ModelStateBuilder<T> SetFieldError(string fieldName, ProblemDetailsFieldType errorType, string message = null)
+        {
             this._controller.ModelState.TryAddModelError(fieldName, ProblemDetailsFactory.GetComposeTypeAndErrorMessage(errorType, message));
             return this;
         }

@@ -8,11 +8,9 @@ import { environment } from '@src/environments/environment';
 
 // Module
 import { LoginRequest } from '../models/login-request.model';
-import { Token } from '../models/token.model';
+import { LoginResult } from '../models/login-result.model';
 import { UserRegister } from '../models/user.register.model';
-import { ConfirmEmail } from '../models/confirm-email.model';
-import { ConfirmEmailResend } from '../models/confirm-email-resend.model';
-import { ResetPassword } from '../models/reset-password.model';
+import { UserCode } from '../models/user-code.model';
 import { ChangePassword } from '../models/change-password.model';
 import { User } from '../models/user.model';
 
@@ -22,33 +20,28 @@ export class ApiService {
     private http: HttpClient
   ) { }
 
-  login(request: LoginRequest): Observable<Token> {
-    return this.http.post<Token>(`${environment.apiUrl}/Auth/login`, request);
+  register(request: UserRegister): Observable<LoginResult> {
+    return this.http.post<LoginResult>(`${environment.apiUrl}/Auth/Register`, request);
   }
 
-  confirmEmail(userId: string, code: string): Observable<Token> {
-    return this.http.get<Token>(`${environment.apiUrl}/Auth/ConfirmEmail`, {
-      params: {
-        userId: userId,
-        code: code
-      }
-    });
+  login(request: LoginRequest): Observable<LoginResult> {
+    return this.http.post<LoginResult>(`${environment.apiUrl}/Auth/Login`, request);
   }
 
-  confirmEmailResend(request: ConfirmEmailResend): Observable<Object> {
-    return this.http.post(`${environment.apiUrl}/Auth/ConfirmEmailResend`, { request });
+  confirmEmail(request: UserCode): Observable<LoginResult> {
+    return this.http.post<LoginResult>(`${environment.apiUrl}/Auth/ConfirmEmail`, request);
   }
 
-  resetPassword(request: ResetPassword): Observable<Object> {
-    return this.http.post(`${environment.apiUrl}/Auth/ResetPassword`, { request });
+  confirmEmailResend(request: UserCode): Observable<Object> {
+    return this.http.post(`${environment.apiUrl}/Auth/ConfirmEmailResend`, request);
+  }
+
+  resetPassword(request: UserCode): Observable<Object> {
+    return this.http.post(`${environment.apiUrl}/Auth/ResetPassword`, request );
   }
 
   changePassword(request: ChangePassword): Observable<Object> {
-    return this.http.post(`${environment.apiUrl}/Auth/ChangePassword`, { request });
-  }
-
-  addUser(request: UserRegister): Observable<Token> {
-    return this.http.post<Token>(`${environment.apiUrl}/User`, request);
+    return this.http.post(`${environment.apiUrl}/Auth/ChangePassword`, request);
   }
 
   getUser(id: string): Observable<User> {

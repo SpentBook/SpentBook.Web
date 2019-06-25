@@ -5,7 +5,7 @@ import { tap } from 'rxjs/operators';
 
 // Module
 import { ApiService } from './api.service';
-import { Token } from '../models/token.model';
+import { LoginResult } from '../models/login-result.model';
 import { LoginRequest } from '../models/login-request.model';
 import { UserRegister } from '../models/user.register.model';
 
@@ -15,7 +15,7 @@ export class AuthService {
     private apiService: ApiService
   ) {}
 
-  public login(login: string, password: string) : Observable<Token> {
+  public login(login: string, password: string) : Observable<LoginResult> {
     var request = new LoginRequest();
     request.userName = login;
     request.password = password;
@@ -28,10 +28,11 @@ export class AuthService {
     );
   }
 
-  public register(user: UserRegister) : Observable<Token> {
-    return this.apiService.addUser(user).pipe(
+  public register(user: UserRegister) : Observable<LoginResult> {
+    return this.apiService.register(user).pipe(
       tap(
-        token =>  {},
+        token =>  {
+        },
         () => {}
       )
     );
@@ -41,8 +42,11 @@ export class AuthService {
     return window.localStorage['token'] != null;
   }
 
-
-  private saveToken(token: Token) {
+  public saveToken(token: LoginResult) {
     window.localStorage['token'] = JSON.stringify(token);
+  }
+
+  public logout() {
+    window.localStorage.removeItem('token');
   }
 }

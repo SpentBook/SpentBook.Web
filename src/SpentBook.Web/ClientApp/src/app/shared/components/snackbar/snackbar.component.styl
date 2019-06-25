@@ -1,0 +1,60 @@
+.snackbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 50px;
+    padding: 10px 20px;
+
+    .message {
+        flex: 1;
+        color: white;
+    }
+
+    button {
+        margin-left: 5px;
+    }
+
+    &.success {
+        background-color: #303030;
+
+        button.cancel {
+            color: #FFF;
+        }
+
+        button.ok {
+            color: white;
+        }
+    }
+
+    &.warning {
+        background-color: #303030;
+
+        .message {
+            color: yellow;
+        }
+
+        button.cancel {
+            color: yellow;
+        }
+
+        button.ok {
+            color: yellow;
+        }
+    }
+
+    &.error {
+        background-color: #303030;
+
+        .message {
+            color: #F443F6;
+        }
+
+        button.cancel {
+            color: #F443F6;
+        }
+
+        button.ok {
+            color: #F443F6;
+        }
+    }
+}

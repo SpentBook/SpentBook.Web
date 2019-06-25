@@ -5,7 +5,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { timer, Observable } from 'rxjs';
 
 // App
-import { AuthService, ProblemDetails, Token } from '@app/core';
+import { AuthService, LoginResult } from '@app/core';
 import { BoxErrorComponent, ServerSideValidationService } from '@app/shared';
 
 /*
@@ -32,12 +32,12 @@ export class LoginComponent implements OnInit, AfterViewChecked {
   boxError: BoxErrorComponent;
 
   form: FormGroup;
-  isSubmitting = false;
+  isSubmitted = false;
   returnUrl: string;
   showError: boolean;
   errorMessage: string;
   loading: boolean;
-  login$: Observable<Token>;
+  login$: Observable<LoginResult>;
 
   get userName(): any { return this.form.get('userName'); }
   get password(): any { return this.form.get('password'); }
@@ -69,11 +69,12 @@ export class LoginComponent implements OnInit, AfterViewChecked {
   }
 
   submitForm() {
-    if (!this.form.valid) {
+    if (!this.form.valid && !this.isSubmitted) {
       return;
     }
 
     this.loading = true;
+    this.isSubmitted = true;
 
     timer(2000).subscribe(() => {
       this.login$ = this.authService.login(this.userName.value, this.password.value)
