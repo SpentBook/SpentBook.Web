@@ -20,7 +20,7 @@
 
         <div class="box-error" [hidden]="!boxError.show">
             <app-box-error></app-box-error>
-            <app-input-button placeholder="ok" (clicked)="backLogin()"></app-input-button>
+            <app-input-button placeholder="ok" (clicked)="hideBoxError()"></app-input-button>
         </div>
     </fieldset>
 </form>

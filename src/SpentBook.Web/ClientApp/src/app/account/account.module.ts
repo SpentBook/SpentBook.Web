@@ -16,6 +16,8 @@ import { RegisterComponent } from './components/register/register.component';
 import { AccountRoutingModule } from './account-routing.module';
 import { PageRegisterConfirmationComponent } from './pages/page-register-confirmation/page-register-confirmation.component';
 import { RegisterFinishComponent } from './components/register-finish/register-finish.component';
+import { PageForgotPasswordComponent } from './pages/page-forgot-password/page-forgot-password.component';
+import { PageChangePasswordComponent } from "./pages/page-change-password/page-change-password.component";
 
 @NgModule({
   // schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
@@ -26,7 +28,9 @@ import { RegisterFinishComponent } from './components/register-finish/register-f
     PageRegisterComponent,
     RegisterComponent,
     PageRegisterConfirmationComponent,
-    RegisterFinishComponent
+    RegisterFinishComponent,
+    PageForgotPasswordComponent,
+    PageChangePasswordComponent
   ],
   imports: [
     // App modules - Routes

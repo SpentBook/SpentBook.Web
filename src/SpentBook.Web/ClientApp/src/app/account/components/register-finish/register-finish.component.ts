@@ -4,7 +4,7 @@ import { timer, Observable } from 'rxjs';
 
 // App
 import { BoxErrorComponent, ServerSideValidationService, ToolbarService, ToolbarMode } from '@app/shared';
-import { ApiService, UserCode } from '@app/core';
+import { ApiSpentBookService, ConfirmEmailResendRequest } from '@app/core';
 
 @Component({
   selector: 'app-register-finish',
@@ -28,7 +28,7 @@ export class RegisterFinishComponent implements OnInit {
   observable$: Observable<Object>;
 
   constructor(
-    private apiService: ApiService,
+    private apiService: ApiSpentBookService,
     private serverSideValidate: ServerSideValidationService,
     private toolbarService: ToolbarService
   ) { }
@@ -44,10 +44,10 @@ export class RegisterFinishComponent implements OnInit {
     this.loading = true;
 
     timer(2000).subscribe(() => {
-      var userCode = new UserCode();
-      userCode.email = this.email;
-      userCode.urlCallbackConfirmation = this.urlCallbackConfirmation;
-      this.observable$ = this.apiService.confirmEmailResend(userCode)
+      var request = new ConfirmEmailResendRequest();
+      request.email = this.email;
+      request.urlCallbackConfirmation = this.urlCallbackConfirmation;
+      this.observable$ = this.apiService.confirmEmailResend(request)
       this.observable$.subscribe(
         () => {
           this.loading = false;

@@ -46,10 +46,10 @@ namespace SpentBook.Web
 
         // POST api/auth/register
         [HttpPost("Register")]
-        [ProducesResponseType(typeof(LoginResultViewModel), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(LoginResponse), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status409Conflict)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<LoginResultViewModel>> Register([FromBody]RegistrationViewModel model)
+        public async Task<ActionResult<LoginResponse>> Register([FromBody]RegistrationRequest model)
         {
             var user = new ApplicationUser();
             user.UserName = model.Email;
@@ -61,7 +61,7 @@ namespace SpentBook.Web
 
             if (!identityResult.Succeeded)
             {
-                var pb = new ModelStateBuilder<RegistrationViewModel>(this, identityResult)
+                var pb = new ModelStateBuilder<RegistrationRequest>(this, identityResult)
                     .SetIdentityErrorEmail(e => e.Email)
                     .SetIdentityErrorPassword(e => e.Password);
 
@@ -81,15 +81,15 @@ namespace SpentBook.Web
                 // await  _userManager.SetLockoutEndDateAsync(userIdentity, lockoutEndDate);
 
                 _emailService.ConfirmRegister(model.UrlCallbackConfirmation, user);
-                var authModel = LoginResultViewModel.Generate(_signInManager.Options.SignIn);
+                var authModel = LoginResponse.Generate(_signInManager.Options.SignIn);
                 return this.OkCreated(authModel);
             }
             else
             {
-                var authModel = await LoginResultViewModel.GenerateWithTokenAsync(_jwtFactory, _appConfig, user.Id, user.UserName);
+                var authModel = await LoginResponse.GenerateWithTokenAsync(_jwtFactory, _appConfig, user.Id, user.UserName);
                 if (authModel == null)
                 {
-                    var pb = new ModelStateBuilder<RegistrationViewModel>(this);
+                    var pb = new ModelStateBuilder<RegistrationRequest>(this);
                     pb.SetFieldError(f => f.Email, ProblemDetailsFieldType.JwtError);
                     return this.BadRequest();
                 }
@@ -100,12 +100,12 @@ namespace SpentBook.Web
 
         // POST api/auth/login
         [HttpPost("Login")]
-        [ProducesResponseType(typeof(LoginResultViewModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(LoginResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status423Locked)]
-        public async Task<IActionResult> Login([FromBody]LoginViewModel loginModel)
+        public async Task<IActionResult> Login([FromBody]LoginRequest loginModel)
         {
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, set lockoutOnFailure: true
@@ -118,7 +118,7 @@ namespace SpentBook.Web
 
             if (!identityResult.Succeeded)
             {
-                var pb = new ModelStateBuilder<LoginViewModel>(this);
+                var pb = new ModelStateBuilder<LoginRequest>(this);
 
                 if (identityResult.IsLockedOut)
                 {
@@ -138,10 +138,10 @@ namespace SpentBook.Web
             }
 
             var user = await _userManager.FindByNameAsync(loginModel.UserName);
-            var token = await LoginResultViewModel.GenerateWithTokenAsync(_jwtFactory, _appConfig, user.Id, loginModel.UserName);
+            var token = await LoginResponse.GenerateWithTokenAsync(_jwtFactory, _appConfig, user.Id, loginModel.UserName);
             if (token == null)
             {
-                var pb = new ModelStateBuilder<LoginViewModel>(this);
+                var pb = new ModelStateBuilder<LoginRequest>(this);
                 pb.SetFieldError(f => f.UserName, ProblemDetailsFieldType.JwtError);
                 return this.BadRequest();
             }
@@ -156,12 +156,12 @@ namespace SpentBook.Web
         [HttpPost("ConfirmEmailResend")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> ConfirmEmailResend([FromBody]UserCodeViewModel model)
+        public async Task<IActionResult> ConfirmEmailResend([FromBody]ConfirmEmailResendRequest model)
         {
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null)
             {
-                var pb = new ModelStateBuilder<UserCodeViewModel>(this);
+                var pb = new ModelStateBuilder<ConfirmEmailResendRequest>(this);
                 pb.SetFieldError(f => f.Email, ProblemDetailsFieldType.UserNotFound);
                 return this.NotFound();
             }
@@ -172,7 +172,7 @@ namespace SpentBook.Web
 
         // GET: /Auth/ConfirmEmail
         [HttpPost("ConfirmEmail")]
-        public async Task<IActionResult> ConfirmEmail([FromBody]UserCodeViewModel model)
+        public async Task<IActionResult> ConfirmEmail([FromBody]CodeConfirmationRequest model)
         {
             var user = await _userManager.FindByIdAsync(model.UserId);
             if (user == null)
@@ -195,41 +195,49 @@ namespace SpentBook.Web
         }
 
         [HttpPost("ResetPassword")]
-        public async Task<IActionResult> ResetPassword([FromBody]UserCodeViewModel model)
+        public async Task<IActionResult> ResetPassword([FromBody]ResetEmailRequest model)
         {
-            // if (!ModelState.IsValid)
-            //     return BadRequest(new ErrorModel(this));
-
             var user = await _userManager.FindByEmailAsync(model.Email);
-            // if (user == null)
-            //     return BadRequest(new ErrorModel(this, ErrorType.UserNotFound));
+            if (user == null)
+            {
+                var pb = new ModelStateBuilder<ResetEmailRequest>(this);
+                pb.SetFieldError(f => f.Email, ProblemDetailsFieldType.UserNotFound);
+                return this.NotFound();
+            }
 
             _emailService.ResetPassword(model.UrlCallbackConfirmation, user);
-            return new EmptyResult();
+            return Ok();
         }
 
         [HttpPost("ChangePassword")]
-        public async Task<IActionResult> ChangePassword([FromBody]ChangePasswordViewModel model)
+        public async Task<IActionResult> ChangePassword([FromBody]ChangePasswordRequest model)
         {
-            /// TODO: CRIAR FILTRO
-            if (!ModelState.IsValid)
-                return BadRequest();
+            var user = await _userManager.FindByIdAsync(model.UserId);
+            if (user == null)
+            {
+                var pb = new ModelStateBuilder<object>(this);
+                pb.SetFieldError(nameof(model.UserId), ProblemDetailsFieldType.UserNotFound);
+                return this.NotFound();
+            }
 
-            /// TODO: MOVER PARA VALIDATION
-            // if (model.Password != model.ConfirmPassword)
-            //     return BadRequest(new ErrorViewModel(this, ErrorType.PasswordNotMatch));
-
-            /// TODO: VER FORMA DE FAZER VIA FILTRO NO PARAMETRO
-            var user = await _userManager.FindByEmailAsync(model.Email);
-            // if (user == null)
-            //     return BadRequest(new ErrorModel(this, ErrorType.UserNotFound));
+            // Força a confirmação do email pois o usuário pode ter acabado de criar a conta
+            // mas não ter recebido o email de confirmação, sendo assim, ele nunca poderá logar,
+            // ele, naturalmente, usará o "esqueci minha senha".
+            if (_signInManager.Options.SignIn.RequireConfirmedEmail && !user.EmailConfirmed)
+                user.EmailConfirmed = true;
 
             var identityResult = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
 
-            // if (!identityResult.Succeeded)
-            //     return BadRequest(new ErrorModel(this, identityResult, ErrorType.ChangePasswordError));
+            if (!identityResult.Succeeded)
+            {
+                var pb = new ModelStateBuilder<ChangePasswordRequest>(this, identityResult)
+                    .SetIdentityErrorPassword(e => e.Password)
+                    .SetIdentityErrorCode(e => e.Code);
 
-            return new EmptyResult();
+                return this.BadRequest();
+            }
+
+            return Ok();
         }
     }
 }

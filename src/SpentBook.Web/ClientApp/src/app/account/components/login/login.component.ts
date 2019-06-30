@@ -5,7 +5,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { timer, Observable } from 'rxjs';
 
 // App
-import { AuthService, LoginResult } from '@app/core';
+import { AuthService, LoginRequest, ApiSpentBookService, LoginResponse } from '@app/core';
 import { BoxErrorComponent, ServerSideValidationService } from '@app/shared';
 
 /*
@@ -37,7 +37,7 @@ export class LoginComponent implements OnInit, AfterViewChecked {
   showError: boolean;
   errorMessage: string;
   loading: boolean;
-  login$: Observable<LoginResult>;
+  observable$: Observable<LoginResponse>;
 
   get userName(): any { return this.form.get('userName'); }
   get password(): any { return this.form.get('password'); }
@@ -45,6 +45,7 @@ export class LoginComponent implements OnInit, AfterViewChecked {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
+    private apiSpentBookService: ApiSpentBookService,
     private authService: AuthService,
     private fb: FormBuilder,
     private serverSideValidate: ServerSideValidationService,
@@ -77,10 +78,14 @@ export class LoginComponent implements OnInit, AfterViewChecked {
     this.isSubmitted = true;
 
     timer(2000).subscribe(() => {
-      this.login$ = this.authService.login(this.userName.value, this.password.value)
-      this.login$.subscribe(
-        () => {
+      var request = new LoginRequest();
+      request.userName = this.userName.value;
+      request.password = this.password.value;
+      this.observable$ = this.apiSpentBookService.login(request);
+      this.observable$.subscribe(
+        (response) => {
           this.loading = false;
+          this.authService.login(response);
           this.router.navigateByUrl(this.returnUrl);
         },
         error => {
@@ -91,7 +96,7 @@ export class LoginComponent implements OnInit, AfterViewChecked {
     });
   }
 
-  backLogin() {
+  hideBoxError() {
     this.boxError.show = false;
   }
 }

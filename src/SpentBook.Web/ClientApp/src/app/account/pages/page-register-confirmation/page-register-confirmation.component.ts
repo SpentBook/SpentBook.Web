@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { timer, Observable } from 'rxjs';
 
 // App
-import { ApiService, LoginResult, UserCode } from '@app/core';
+import { ApiSpentBookService, LoginResponse, CodeConfirmationRequest } from '@app/core';
 import { ServerSideValidationService, BoxErrorComponent, ToolbarService, ToolbarMode } from '@app/shared';
 import { SnackBarService } from '@src/app/shared/services/snack-bar.service';
 
@@ -17,12 +17,12 @@ export class PageRegisterConfirmationComponent implements OnInit {
   boxError: BoxErrorComponent;
 
   loading: boolean;
-  observable$: Observable<LoginResult>;
+  observable$: Observable<LoginResponse>;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private apiService: ApiService,
+    private apiService: ApiSpentBookService,
     private serverSideValidate: ServerSideValidationService,
     private toolbarService: ToolbarService,
     private snackBarService: SnackBarService
@@ -41,11 +41,11 @@ export class PageRegisterConfirmationComponent implements OnInit {
     this.loading = true;
 
     timer(2000).subscribe(() => {
-      var userCode = new UserCode();
-      userCode.userId = userId;
-      userCode.code = code;
+      var request = new CodeConfirmationRequest();
+      request.userId = userId;
+      request.code = code;
 
-      this.observable$ = this.apiService.confirmEmail(userCode);
+      this.observable$ = this.apiService.confirmEmail(request);
       this.observable$.subscribe(
         () => {
           this.loading = false;

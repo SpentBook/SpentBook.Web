@@ -4,7 +4,7 @@ using SpentBook.Web.Services.Error;
 
 namespace SpentBook.Web.ViewsModels
 {
-    public class RegistrationViewModel
+    public class RegistrationRequest
     {
         public string UserId { get; set; }
         public string Email { get; set; }
@@ -17,9 +17,9 @@ namespace SpentBook.Web.ViewsModels
         public string UrlCallbackConfirmation { get; set; }
     }
 
-    public class RegistrationViewModelValidator : AbstractValidator<RegistrationViewModel>
+    public class RegistrationRequestValidator : AbstractValidator<RegistrationRequest>
     {
-        public RegistrationViewModelValidator()
+        public RegistrationRequestValidator()
         {
             RuleFor(vm => vm.Email)
                 .NotEmpty().WithMessage(ProblemDetailsFieldType.Required, "E-mail cannot be empty")

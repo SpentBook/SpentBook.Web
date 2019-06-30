@@ -4,45 +4,22 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 // Module
-import { ApiService } from './api.service';
-import { LoginResult } from '../models/login-result.model';
-import { LoginRequest } from '../models/login-request.model';
-import { UserRegister } from '../models/user.register.model';
+import { ApiSpentBookService } from '../webservices/spentbook/api-spentbook.service';
+import { LoginResponse } from '../webservices/spentbook/response/login-response.model';
+import { LoginRequest } from '../webservices/spentbook/request/login-request.model';
+import { RegistrationRequest } from '../webservices/spentbook/request/registration-request.model';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private apiService: ApiService
+    private apiService: ApiSpentBookService
   ) {}
-
-  public login(login: string, password: string) : Observable<LoginResult> {
-    var request = new LoginRequest();
-    request.userName = login;
-    request.password = password;
-    
-    return this.apiService.login(request).pipe(
-      tap(
-        token => this.saveToken(token),
-        () => {}
-      )
-    );
-  }
-
-  public register(user: UserRegister) : Observable<LoginResult> {
-    return this.apiService.register(user).pipe(
-      tap(
-        token =>  {
-        },
-        () => {}
-      )
-    );
-  }
 
   public isLogged() : boolean {
     return window.localStorage['token'] != null;
   }
 
-  public saveToken(token: LoginResult) {
+  public login(token: LoginResponse) {
     window.localStorage['token'] = JSON.stringify(token);
   }
 

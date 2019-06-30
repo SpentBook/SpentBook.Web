@@ -1,11 +1,19 @@
 export * from './core.module';
-export * from './services/api.service';
+
+// Services
+export * from './webservices/spentbook/api-spentbook.service';
 export * from './services/auth.service';
 export * from './services/auth-guard.service';
-export * from './models/change-password.model';
-export * from './models/user-code.model';
-export * from './models/login-request.model';
-export * from './models/login-result.model';
+
+// Webservices: SpentBook
+export * from './webservices/spentbook/request/change-password-request.model';
+export * from './webservices/spentbook/request/code-confirmation-request.model';
+export * from './webservices/spentbook/request/confirm-email-resend-request.model';
+export * from './webservices/spentbook/request/login-request.model';
+export * from './webservices/spentbook/request/registration-request.model';
+export * from './webservices/spentbook/request/reset-email-request.model';
+export * from './webservices/spentbook/response/login-response.model';
+
+// Models
 export * from './models/problem-details.model';
 export * from './models/user.model';
-export * from './models/user.register.model';

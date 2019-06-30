@@ -6,7 +6,7 @@ using SpentBook.Web.Services.Jwt;
 
 namespace SpentBook.Web.ViewsModels
 {
-    public class LoginResultViewModel
+    public class LoginResponse
     {
         public string UserId { get; set; }
         public string Token { get; set; }
@@ -15,16 +15,16 @@ namespace SpentBook.Web.ViewsModels
         public bool RequiresTwoFactor { get; set; }
         public bool RequireConfirmedPhoneNumber { get; set; }
 
-        public static LoginResultViewModel Generate(SignInOptions signInOptions)
+        public static LoginResponse Generate(SignInOptions signInOptions)
         {
-            return new LoginResultViewModel
+            return new LoginResponse
             {
                 RequireConfirmedEmail = signInOptions.RequireConfirmedEmail,
                 RequireConfirmedPhoneNumber = signInOptions.RequireConfirmedPhoneNumber,
             };
         }
 
-        public static async Task<LoginResultViewModel> GenerateWithTokenAsync(IJwtFactory _jwtFactory, AppConfig _appConfig, string userId, string userName)
+        public static async Task<LoginResponse> GenerateWithTokenAsync(IJwtFactory _jwtFactory, AppConfig _appConfig, string userId, string userName)
         {
             var identity = _jwtFactory.GenerateClaimsIdentity(userName, userId);
 
@@ -32,7 +32,7 @@ namespace SpentBook.Web.ViewsModels
                 return null;
 
             var jwt = await _jwtFactory.GenerateJwt(identity, _jwtFactory, userName, _appConfig.Jwt, new JsonSerializerSettings { Formatting = Formatting.Indented });
-            return new LoginResultViewModel
+            return new LoginResponse
             {
                 UserId = jwt.UserId,
                 Token = jwt.Token,

@@ -19,7 +19,6 @@ export class PageLoginComponent implements OnInit {
     this.toolbarService.toolbarMode = ToolbarMode.BACK_BAR;
     this.toolbarService.showLogo = true;
     this.toolbarService.showBackButton = false;
-    this.toolbarService.title = "Login";    
-    //this.snackBarService.success("shgiwasd");
+    this.toolbarService.title = "Login";
   }
 }

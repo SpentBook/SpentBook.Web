@@ -1,8 +1,7 @@
 // Angular
 import { Component, OnInit, ViewChild, ChangeDetectorRef, AfterViewChecked, Output, EventEmitter, Input } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { FormControl, Validators } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { FormControl } from '@angular/forms';
 
 // Touch
 import 'hammerjs';
@@ -11,9 +10,8 @@ import 'hammerjs';
 import { timer, Observable } from 'rxjs';
 
 // Models
-import { AuthService, LoginResult, UserRegister, LoginRequest } from '@app/core';
+import { LoginResponse, RegistrationRequest, ApiSpentBookService } from '@app/core';
 import { BoxErrorComponent, ServerSideValidationService, CustomValidations } from '@app/shared';
-import { PlatformLocation } from '@angular/common';
 
 /*
 1) Criar "Declaro estar ciente" e salvar termo assinado (ler mais sobre)
@@ -45,8 +43,9 @@ export class RegisterComponent implements OnInit, AfterViewChecked {
   urlCallbackConfirmation: string;
 
   form: FormGroup;
+  isSubmitted = false;
   loading: boolean = false;
-  register$: Observable<LoginResult>;
+  observable$: Observable<LoginResponse>;
 
   get email(): any { return this.form.get('email'); }
   get firstName(): any { return this.form.get('firstName'); }
@@ -57,7 +56,7 @@ export class RegisterComponent implements OnInit, AfterViewChecked {
 
   constructor(
     private fb: FormBuilder,
-    private authService: AuthService,
+    private apiSpentBookService: ApiSpentBookService,
     private serverSideValidate: ServerSideValidationService,
     private cdRef: ChangeDetectorRef
   ) {
@@ -94,10 +93,11 @@ export class RegisterComponent implements OnInit, AfterViewChecked {
       return;
     }
 
+    this.isSubmitted = true;
     this.loading = true;
-
+    
     timer(2000).subscribe(() => {
-      let userRegister = new UserRegister();
+      let userRegister = new RegistrationRequest();
       userRegister.email = this.email.value;
       userRegister.firstName = this.firstName.value;
       userRegister.lastName = this.lastName.value;
@@ -106,11 +106,11 @@ export class RegisterComponent implements OnInit, AfterViewChecked {
       userRegister.dateOfBirth = this.dateOfBirth.value;
       userRegister.urlCallbackConfirmation = this.urlCallbackConfirmation;
 
-      this.register$ = this.authService.register(userRegister);
-      this.register$.subscribe(
-        (loginResult) => {
+      this.observable$ = this.apiSpentBookService.register(userRegister);
+      this.observable$.subscribe(
+        (response) => {
           this.loading = false;
-          this.finish.emit({ userRegister: userRegister, loginResult: loginResult });
+          this.finish.emit({ userRegister: userRegister, loginResult: response });
         },
         error => {
           this.loading = false;

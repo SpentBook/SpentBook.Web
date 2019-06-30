@@ -134,12 +134,12 @@ namespace SpentBook.Web
             var builder = services.AddIdentityCore<ApplicationUser>(o =>
             {
                 // configure identity options
-                o.Password.RequireDigit = true;
-                o.Password.RequireLowercase = true;
-                o.Password.RequireUppercase = true;
-                o.Password.RequireNonAlphanumeric = true;
-                o.Password.RequiredLength = 6;
-                o.Password.RequiredUniqueChars = 2;
+                o.Password.RequireDigit = false;
+                o.Password.RequireLowercase = false;
+                o.Password.RequireUppercase = false;
+                o.Password.RequireNonAlphanumeric = false;
+                o.Password.RequiredLength = 4;
+                o.Password.RequiredUniqueChars = 1;
 
                 // Quando true, os usuarios só vão logar quando aprovarem via e-mail
                 // a parte ruim é que se eu quiser ligar depois de já existir usuário na base, esses usuários não

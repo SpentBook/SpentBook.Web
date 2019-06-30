@@ -13,7 +13,7 @@
       <!-- </div> -->
 
       <app-input-date [formControlRef]="dateOfBirth"></app-input-date>
-      <app-input-button placeholder="Cadastrar" icon="person_add" [disabled]="form.invalid"></app-input-button>
+      <app-input-button placeholder="Cadastrar" icon="person_add" [disabled]="form.invalid && !isSubmitted"></app-input-button>
     </div>
 
     <app-loading class="box-loading" [hidden]="!loading"></app-loading>

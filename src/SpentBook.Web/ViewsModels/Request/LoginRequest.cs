@@ -5,16 +5,15 @@ using SpentBook.Web.Services.Error;
 
 namespace SpentBook.Web.ViewsModels
 {
-    // [Validator(typeof(CredentialsViewModelValidator))]
-    public class LoginViewModel
+    public class LoginRequest
     {
         public string UserName { get; set; }
         public string Password { get; set; }
     }
 
-    public class LoginViewModelValidator : AbstractValidator<LoginViewModel>
+    public class LoginRequestValidator : AbstractValidator<LoginRequest>
     {
-        public LoginViewModelValidator()
+        public LoginRequestValidator()
         {
              RuleFor(vm => vm.UserName)
                 .NotEmpty().WithMessage("E-mail cannot be empty").WithErrorCode(ProblemDetailsFieldType.Required.ToString())

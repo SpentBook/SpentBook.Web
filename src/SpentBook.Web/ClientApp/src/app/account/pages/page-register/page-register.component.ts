@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 // App
 import { ToolbarService, ToolbarMode } from '@app/shared';
-import { LoginResult, UserRegister, AuthService } from '@app/core';
+import { LoginResponse, RegistrationRequest, AuthService } from '@app/core';
 
 @Component({
   selector: 'app-page-register',
@@ -25,6 +25,7 @@ export class PageRegisterComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private authService: AuthService
+    
   ) {
     var baseUrl = (platformLocation as any).location.origin;
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
@@ -38,7 +39,7 @@ export class PageRegisterComponent implements OnInit {
     this.toolbarService.title = "Cadastrar novo usuário";
   }
 
-  registerFinish($event: { userRegister: UserRegister, loginResult: LoginResult }) {
+  registerFinish($event: { userRegister: RegistrationRequest, loginResult: LoginResponse }) {
     this.email = $event.userRegister.email;
 
     if ($event.loginResult.requireConfirmedEmail) {
@@ -49,7 +50,7 @@ export class PageRegisterComponent implements OnInit {
 
     }
     else {
-      this.authService.saveToken($event.loginResult);
+      this.authService.login($event.loginResult);
       this.router.navigateByUrl(this.returnUrl);
     }
   }

@@ -51,6 +51,21 @@ namespace SpentBook.Web.Services.Error
             return this;
         }
 
+         public ModelStateBuilder<T> SetIdentityErrorCode(Expression<Func<T, object>> expression)
+        {
+            foreach (var e in this._identityResult.Errors)
+            {
+                switch (e.Code)
+                {
+                    case "InvalidToken":
+                        this.SetFieldError(expression, ProblemDetailsFieldType.Invalid, e.Description);
+                        break;                    
+                }
+            }
+
+            return this;
+        }
+
         public ModelStateBuilder<T> SetIdentityErrorEmail(Expression<Func<T, object>> expression)
         {
             foreach (var e in this._identityResult.Errors)

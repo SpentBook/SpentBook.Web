@@ -1,4 +1,4 @@
-export class UserRegister {
+export class RegistrationRequest {
   email: string;
   firstName: string;
   lastName: string;

@@ -4,11 +4,11 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 
 // Module
-import { ApiService } from './services/api.service';
+import { ApiSpentBookService } from './webservices/spentbook/api-spentbook.service';
 import { AuthService } from './services/auth.service';
 
 @NgModule({
-  providers: [ApiService, AuthService],
+  providers: [ApiSpentBookService, AuthService],
   declarations: [
 
   ],

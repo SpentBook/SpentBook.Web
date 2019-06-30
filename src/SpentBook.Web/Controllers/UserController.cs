@@ -57,7 +57,7 @@ namespace SpentBook.Web.Controllers
         // PUT api/user
         [HttpPut]
         [Authorize]
-        public async Task<IActionResult> Put([FromBody]RegistrationViewModel model)
+        public async Task<IActionResult> Put([FromBody]RegistrationRequest model)
         {
             var user = await _userManager.FindByIdAsync(model.UserId);
             // if (user == null)

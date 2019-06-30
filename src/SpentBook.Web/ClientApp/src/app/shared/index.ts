@@ -18,6 +18,7 @@ export * from './components/sidenav/sidenav.component';
 export * from './services/server-side-validation.service';
 export * from './services/sidenav.service';
 export * from './services/toolbar.service';
+export * from './services/snack-bar.service';
 
 // Validations
 export * from './validations/custom-validations';

@@ -43,7 +43,7 @@ export class ServerSideValidationService {
       for (let fieldName in problemDetails.errors) {
         let field = componentInstance[this.toLowerCaseFirstLetter(fieldName)];
         let fieldErrors = problemDetails.errors[fieldName];
-        if (field == null) {
+        if (field == null || !field.setErrors) {
           unknownFields.push({
             name: fieldName,
             errors: fieldErrors
