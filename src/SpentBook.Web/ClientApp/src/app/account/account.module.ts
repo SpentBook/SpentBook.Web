@@ -22,6 +22,7 @@ import { RegisterFinishComponent } from './components/register-finish/register-f
 import { PageForgotPasswordComponent } from './pages/page-forgot-password/page-forgot-password.component';
 import { PageChangePasswordComponent } from "./pages/page-change-password/page-change-password.component";
 import { FacebookBtnLoginComponent } from './components/facebook-btn-login/facebook-btn-login.component';
+import { PageProfileComponent } from './pages/page-profile/page-profile.component';
 
 
 // Social Login
@@ -62,7 +63,8 @@ export function provideConfig() {
     RegisterFinishComponent,
     PageForgotPasswordComponent,
     PageChangePasswordComponent,
-    FacebookBtnLoginComponent
+    FacebookBtnLoginComponent,
+    PageProfileComponent
   ],
   imports: [
     // App modules - Routes
