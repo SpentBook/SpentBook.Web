@@ -1,4 +1,4 @@
-<form [formGroup]="form" (ngSubmit)="submitForm()">
+<form [formGroup]="form" (ngSubmit)="login()">
     <fieldset [disabled]="loading">
         <div class="profile-image">
             <img src="assets/icon-login.png" width="100%" alt="Profile image">
@@ -18,7 +18,7 @@
 
         <app-loading class="box-loading" [hidden]="!loading"></app-loading>
 
-        <div class="box-error" [hidden]="!boxError.show">
+        <div class="box-error" [hidden]="!boxError.show || loading">
             <app-box-error></app-box-error>
             <app-input-button placeholder="ok" (clicked)="hideBoxError()"></app-input-button>
         </div>

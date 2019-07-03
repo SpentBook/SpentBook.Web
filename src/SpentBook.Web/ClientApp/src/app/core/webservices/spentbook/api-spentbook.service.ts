@@ -16,6 +16,7 @@ import { User } from '../../models/user.model';
 import { LoginResponse } from './response/login-response.model';
 import { ConfirmEmailResendRequest } from './request/confirm-email-resend-request.model';
 import { ResetEmailRequest } from './request/reset-email-request.model';
+import { LoginFacebookRequest } from './request/login-facebook-request.model';
 
 @Injectable()
 export class ApiSpentBookService {
@@ -37,6 +38,10 @@ export class ApiSpentBookService {
 
   login(request: LoginRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${environment.apiUrl}/Auth/Login`, request);
+  }
+
+  loginFacebook(request: LoginFacebookRequest): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${environment.apiUrl}/Auth/LoginFacebook`, request);
   }
   
   resetPassword(request: ResetEmailRequest): Observable<Object> {

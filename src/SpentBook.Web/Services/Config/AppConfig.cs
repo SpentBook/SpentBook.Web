@@ -19,5 +19,6 @@ namespace SpentBook.Web.Services.Config
         public FacebookConfig Facebook { get; set; }
 
         public EmailConfig Email { get; set; }
+
     }
 }

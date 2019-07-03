@@ -1,7 +1,6 @@
 // Angular
 import { Component, OnInit } from '@angular/core';
 import { ToolbarService, ToolbarMode } from '@app/shared';
-import { SnackBarService } from '@src/app/shared/services/snack-bar.service';
 
 @Component({
   selector: 'app-page-login',
@@ -11,8 +10,7 @@ import { SnackBarService } from '@src/app/shared/services/snack-bar.service';
 export class PageLoginComponent implements OnInit {
 
   constructor(
-    private toolbarService: ToolbarService,
-    private snackBarService: SnackBarService
+    private toolbarService: ToolbarService
   ) { }
 
   ngOnInit() {

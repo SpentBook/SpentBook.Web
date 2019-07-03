@@ -1,11 +1,12 @@
 // Angular/Core
-import { Component, OnInit, ViewChild, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewChecked, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { timer, Observable } from 'rxjs';
+import { timer, Observable, Subscription } from 'rxjs';
+import { AuthService as AuthServiceSocial, SocialUser } from 'angularx-social-login';
 
 // App
-import { AuthService, LoginRequest, ApiSpentBookService, LoginResponse } from '@app/core';
+import { AuthService, LoginRequest, ApiSpentBookService, LoginResponse, LoginFacebookRequest } from '@app/core';
 import { BoxErrorComponent, ServerSideValidationService } from '@app/shared';
 
 /*
@@ -26,7 +27,7 @@ TODO:
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.styl']
 })
-export class LoginComponent implements OnInit, AfterViewChecked {
+export class LoginComponent implements OnInit, AfterViewChecked, OnDestroy {
 
   @ViewChild(BoxErrorComponent)
   boxError: BoxErrorComponent;
@@ -38,6 +39,7 @@ export class LoginComponent implements OnInit, AfterViewChecked {
   errorMessage: string;
   loading: boolean;
   observable$: Observable<LoginResponse>;
+  socialObservable$: Subscription;
 
   get userName(): any { return this.form.get('userName'); }
   get password(): any { return this.form.get('password'); }
@@ -50,6 +52,7 @@ export class LoginComponent implements OnInit, AfterViewChecked {
     private fb: FormBuilder,
     private serverSideValidate: ServerSideValidationService,
     private cdRef: ChangeDetectorRef,
+    private authServiceSocial: AuthServiceSocial
   ) {
     this.form = this.fb.group({
       userName: new FormControl(),
@@ -61,6 +64,15 @@ export class LoginComponent implements OnInit, AfterViewChecked {
   }
 
   ngOnInit() {
+    this.socialObservable$ = this.authServiceSocial.authState.subscribe((user) => {
+      if (user != null) {
+        this.loginFacebook(user);
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.socialObservable$.unsubscribe();
   }
 
   ngAfterViewChecked(): void {
@@ -69,19 +81,40 @@ export class LoginComponent implements OnInit, AfterViewChecked {
     this.cdRef.detectChanges();
   }
 
-  submitForm() {
+  login() {
     if (!this.form.valid && !this.isSubmitted) {
       return;
     }
 
-    this.loading = true;
     this.isSubmitted = true;
+    this.loading = true;
 
     timer(2000).subscribe(() => {
       var request = new LoginRequest();
       request.userName = this.userName.value;
       request.password = this.password.value;
       this.observable$ = this.apiSpentBookService.login(request);
+      this.observable$.subscribe(
+        (response) => {
+          this.loading = false;
+          this.authService.login(response);
+          this.router.navigateByUrl(this.returnUrl);
+        },
+        error => {
+          this.loading = false;
+          this.serverSideValidate.validateWithBoxError(this, error, this.boxError);
+        }
+      );
+    });
+  }
+
+  loginFacebook(user: SocialUser) {
+    this.loading = true;
+
+    timer(2000).subscribe(() => {
+      var request = new LoginFacebookRequest();
+      request.AccessToken = user.authToken;
+      this.observable$ = this.apiSpentBookService.loginFacebook(request);
       this.observable$.subscribe(
         (response) => {
           this.loading = false;

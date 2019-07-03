@@ -11,6 +11,9 @@ using SpentBook.Web.Services.Config;
 using SpentBook.Web.Services.Email;
 using SpentBook.Web.ViewsModels;
 using SpentBook.Web.Extensions;
+using Newtonsoft.Json;
+using System.Net.Http;
+using System;
 
 namespace SpentBook.Web
 {
@@ -238,6 +241,75 @@ namespace SpentBook.Web
             }
 
             return Ok();
+        }
+
+        // POST api/externalauth/facebook
+        [HttpPost("LoginFacebook")]
+        [ProducesResponseType(typeof(LoginResponse), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> LoginFacebook([FromBody]LoginFacebookRequest model)
+        {
+            var client = new HttpClient();
+
+            // 1. generate an app access token
+            var appAccessTokenResponse = await client.GetStringAsync($"https://graph.facebook.com/oauth/access_token?client_id={_appConfig.Facebook.AppId}&client_secret={_appConfig.Facebook.AppSecret}&grant_type=client_credentials");
+            var appAccessToken = JsonConvert.DeserializeObject<FacebookAppAccessToken>(appAccessTokenResponse);
+
+            // 2. validate the user access token
+            var userAccessTokenValidationResponse = await client.GetStringAsync($"https://graph.facebook.com/debug_token?input_token={model.AccessToken}&access_token={appAccessToken.AccessToken}");
+            var userAccessTokenValidation = JsonConvert.DeserializeObject<FacebookUserAccessTokenValidation>(userAccessTokenValidationResponse);
+
+            if (userAccessTokenValidation?.Data?.IsValid == false)
+            {
+                var pb = new ModelStateBuilder<LoginFacebookRequest>(this)
+                    .SetFieldError(e => e.AccessToken, ProblemDetailsFieldType.Invalid, "Invalid facebook token.");
+                return this.BadRequest();
+            }
+
+            // 3. we've got a valid token so we can request user data from fb
+            var userInfoResponse = await client.GetStringAsync($"https://graph.facebook.com/v2.8/me?fields=id,email,first_name,last_name,name,gender,locale,birthday,picture&access_token={model.AccessToken}");
+            var userInfo = JsonConvert.DeserializeObject<FacebookUserData>(userInfoResponse);
+
+            // 4. ready to create the local user account (if necessary) and jwt
+            var user = await _userManager.FindByEmailAsync(userInfo.Email);
+
+            if (user == null)
+            {
+                user = new ApplicationUser
+                {
+                    FirstName = userInfo.FirstName,
+                    LastName = userInfo.LastName,
+                    FacebookId = userInfo.Id,
+                    Email = userInfo.Email,
+                    UserName = userInfo.Email,
+                    PictureUrl = userInfo.Picture.Data.Url,
+                    // LockoutEnabled = false // verificar amanha
+                };
+
+                var result = await _userManager.CreateAsync(user, Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 8));
+
+                if (!result.Succeeded)
+                {
+                    var pb = new ModelStateBuilder<LoginFacebookRequest>(this)
+                        .SetFieldError(e => e.AccessToken, ProblemDetailsFieldType.Invalid, "Invalid facebook token.");
+                    return this.BadRequest();
+                }
+            }
+
+            // 5. generate the jwt for the local user...
+            var token = await LoginResponse.GenerateWithTokenAsync(_jwtFactory, _appConfig, user.Id, user.Email);
+            if (token == null)
+            {
+                var pb = new ModelStateBuilder<LoginRequest>(this);
+                pb.SetFieldError(f => f.UserName, ProblemDetailsFieldType.JwtError);
+                return this.BadRequest();
+            }
+            else
+            {
+                token.RequiresTwoFactor = false;
+                return this.Ok(token);
+            }
         }
     }
 }

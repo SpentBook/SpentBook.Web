@@ -22,11 +22,13 @@ import { InputButtonComponent } from './components/input-button/input-button.com
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { SidenavComponent } from "./components/sidenav/sidenav.component";
 import { RouterModule } from '@angular/router';
-import { ToolbarService } from './services/toolbar.service';
 import { SnackbarComponent } from './components/snackbar/snackbar.component';
 
+
 @NgModule({
-  providers: [AuthService, ToolbarService],
+  providers: [
+    AuthService
+  ],
   entryComponents: [SnackbarComponent],
   declarations: [
     TruncatePipe,
@@ -39,7 +41,7 @@ import { SnackbarComponent } from './components/snackbar/snackbar.component';
     InputButtonComponent,
     ToolbarComponent,
     SidenavComponent,
-    SnackbarComponent
+    SnackbarComponent,
   ],
   imports: [
     // App modules
@@ -86,7 +88,7 @@ import { SnackbarComponent } from './components/snackbar/snackbar.component';
     FlexLayoutModule,
 
     //Alerts
-    MatSnackBarModule
+    MatSnackBarModule,
   ],
   exports: [
     FormsModule,

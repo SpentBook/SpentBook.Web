@@ -89,7 +89,7 @@ export class RegisterComponent implements OnInit, AfterViewChecked {
   }
 
   submitForm() {
-    if (!this.form.valid) {
+    if (!this.form.valid && !this.isSubmitted) {
       return;
     }
 
