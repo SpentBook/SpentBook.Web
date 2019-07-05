@@ -1,3 +1,30 @@
-<p>
-  page-profile works!
-</p>
+<div class="content">
+  <h2>Meus dados</h2>
+  <form [formGroup]="form" (ngSubmit)="submitForm()">
+    <fieldset [disabled]="loading">
+      <div class="box-register" [hidden]="boxError.show || loading">
+        <app-input-email [formControlRef]="email" [disabled]="true"></app-input-email>
+        <app-input-name [formControlRef]="firstName"></app-input-name>
+        <app-input-name [formControlRef]="lastName" placeholder="Sobrenome"></app-input-name>
+
+        <!-- <div formGroupName="passwordGroup"> -->
+        <app-input-password [formControlRef]="password"></app-input-password>
+        <app-input-password [formControlRef]="passwordConfirm" placeholder="Confirme sua senha" [isConfirmation]="true">
+        </app-input-password>
+        <!-- </div> -->
+
+        <app-input-date [formControlRef]="dateOfBirth"></app-input-date>
+        <app-input-button placeholder="Atualizar" icon="refresh" [disabled]="form.invalid && !isSubmitted">
+        </app-input-button>
+      </div>
+
+      <app-loading class="box-loading" [hidden]="!loading"></app-loading>
+
+      <div class="box-error" [hidden]="!boxError.show">
+        <app-box-error></app-box-error>
+        <app-input-button placeholder="ok" (clicked)="hideBoxError()" icon="cancel"></app-input-button>
+      </div>
+
+    </fieldset>
+  </form>
+</div>

@@ -21,6 +21,5 @@ export class PageHomeComponent implements OnInit {
     this.toolbarService.toolbarMode = ToolbarMode.FULL;
     this.toolbarService.showLogo = true;
     this.toolbarService.showBackButton = false;
-    this.toolbarService.title = "Dashboard";
   }
 }

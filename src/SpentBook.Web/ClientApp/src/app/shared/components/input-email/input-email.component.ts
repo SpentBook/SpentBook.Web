@@ -19,10 +19,10 @@ import { ServerSideValidationService } from '../../services/server-side-validati
 export class InputEmailComponent implements OnInit {
   @ContentChildren(MatError, { read: ElementRef })
   private _matErrors: QueryList<ElementRef>;
-  
+
   @Input()
   required: boolean = true;
-  
+
   @Input()
   minLength: number = 5;
 
@@ -34,6 +34,11 @@ export class InputEmailComponent implements OnInit {
 
   @Input()
   formControlRef: FormControl;
+
+  @Input()
+  set disabled(value: boolean) {
+    this.formControlRef.disable({ onlySelf: value });
+  }
 
   constructor(private serverSideValidate: ServerSideValidationService) {
 

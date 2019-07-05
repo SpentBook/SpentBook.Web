@@ -17,21 +17,27 @@
       </button>
     </ng-template>
 
-    <span class="toolbar-title">{{toolbarService?.title}}</span>
+    <span class="toolbar-title" *ngIf="toolbarService?.title">{{toolbarService?.title}}</span>
 
   </mat-toolbar-row>
 
   <mat-toolbar-row *ngIf="toolbarService?.toolbarMode == ToolbarModeEnum.FULL">
+    <div class="menu-item" fxHide fxShow.xs>
+      <button mat-icon-button (click)="openMenu()">
+        <mat-icon>menu</mat-icon>
+      </button>
+    </div>
+
     <div class="menu-item">
       <ng-template [ngIf]="toolbarService?.showLogo">
         <button mat-flat-button class="logo" (click)="openHome()">
           <img src="assets/logo-toolbar-named.png" alt="Profile image">
         </button>
-        <mat-divider class="style-fix" [vertical]="true"></mat-divider>
+        <mat-divider class="style-fix" [vertical]="true" fxShow fxHide.xs></mat-divider>
       </ng-template>
     </div>
 
-    <div class="menu-item">
+    <div class="menu-item" *ngIf="toolbarService?.title">
       <span class="toolbar-title">{{toolbarService?.title}}</span>
     </div>
 
@@ -66,16 +72,16 @@
               <span>Perfil</span>
             </button>
 
+            <button mat-menu-item [routerLink]="['/profile']">
+              <mat-icon>lock</mat-icon>
+              <span>Trocar senha</span>
+            </button>
+
             <button mat-menu-item (click)="logout()">
               <mat-icon>exit_to_app</mat-icon>
               <span>Sair</span>
             </button>
           </mat-menu>
-        </li>
-        <li fxHide fxShow.xs>
-          <button mat-icon-button>
-            <mat-icon>menu</mat-icon>
-          </button>
         </li>
       </ul>
     </div>
