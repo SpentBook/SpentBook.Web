@@ -10,8 +10,9 @@ import 'hammerjs';
 import { timer, Observable } from 'rxjs';
 
 // Models
-import { LoginResponse, RegistrationRequest, ApiSpentBookService } from '@app/core';
+import { LoginResponse, RegistrationRequest, ApiSpentBookService, Sex } from '@app/core';
 import { BoxErrorComponent, ServerSideValidationService, CustomValidations, ToolbarService, ToolbarMode } from '@app/shared';
+import { RadioValue } from '@src/app/shared/components/input-radio/input-radio.component';
 
 @Component({
   selector: 'app-page-profile',
@@ -32,12 +33,12 @@ export class PageProfileComponent implements OnInit, AfterViewChecked {
   isSubmitted = false;
   loading: boolean = false;
   observable$: Observable<LoginResponse>;
+  sexValues: RadioValue[];
 
   get email(): any { return this.form.get('email'); }
   get firstName(): any { return this.form.get('firstName'); }
   get lastName(): any { return this.form.get('lastName'); }
-  get password(): any { return this.form.get('passwordGroup').get('password'); }
-  get passwordConfirm(): any { return this.form.get('passwordGroup').get('passwordConfirm'); }
+  get sex(): any { return this.form.get('sex'); }
   get dateOfBirth(): any { return this.form.get('dateOfBirth'); }
 
   constructor(
@@ -48,9 +49,20 @@ export class PageProfileComponent implements OnInit, AfterViewChecked {
     private toolbarService: ToolbarService
   ) {
     this.createForm();
+    this.sexValues = [
+      {
+        value: Sex.Male,
+        text: "Male"
+      },
+      {
+        value: Sex.Female,
+        text: "Female"
+      }
+    ];
   }
 
   ngOnInit() {
+    
     this.toolbarService.toolbarMode = ToolbarMode.FULL;
     this.toolbarService.showLogo = true;
     this.toolbarService.showBackButton = false;
@@ -68,12 +80,7 @@ export class PageProfileComponent implements OnInit, AfterViewChecked {
       firstName: new FormControl(),
       lastName: new FormControl(),
       dateOfBirth: new FormControl(),
-      passwordGroup: this.fb.group({
-        password: new FormControl(),
-        passwordConfirm: new FormControl()
-      }, {
-          validator: CustomValidations.passwordMatchValidator('passwordConfirm', 'password')
-        }),
+      sex: new FormControl()
     });
   }
 
@@ -90,8 +97,6 @@ export class PageProfileComponent implements OnInit, AfterViewChecked {
       userRegister.email = this.email.value;
       userRegister.firstName = this.firstName.value;
       userRegister.lastName = this.lastName.value;
-      userRegister.password = this.password.value;
-      userRegister.passwordConfirm = this.passwordConfirm.value;
       userRegister.dateOfBirth = this.dateOfBirth.value;
       userRegister.urlCallbackConfirmation = this.urlCallbackConfirmation;
 

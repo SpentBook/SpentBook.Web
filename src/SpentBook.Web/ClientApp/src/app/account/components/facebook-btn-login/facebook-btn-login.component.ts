@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService, FacebookLoginProvider } from 'angularx-social-login';
-import { AuthService as AuthServiceApp, LoginResponse } from '@app/core';
+import { AuthService as AuthServiceApp, LoginResponse, LOGIN_TYPE } from '@app/core';
 
 @Component({
   selector: 'app-facebook-btn-login',
@@ -16,6 +16,7 @@ export class FacebookBtnLoginComponent implements OnInit {
   }
 
   login(): void {
+    this.authServiceApp.loginType = LOGIN_TYPE.FACEBOOK;
     this.authService.signIn(FacebookLoginProvider.PROVIDER_ID);
   }
 

@@ -23,6 +23,7 @@ import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { SidenavComponent } from "./components/sidenav/sidenav.component";
 import { RouterModule } from '@angular/router';
 import { SnackbarComponent } from './components/snackbar/snackbar.component';
+import { InputRadioComponent } from './components/input-radio/input-radio.component';
 
 
 @NgModule({
@@ -42,6 +43,7 @@ import { SnackbarComponent } from './components/snackbar/snackbar.component';
     ToolbarComponent,
     SidenavComponent,
     SnackbarComponent,
+    InputRadioComponent,
   ],
   imports: [
     // App modules
@@ -103,6 +105,7 @@ import { SnackbarComponent } from './components/snackbar/snackbar.component';
     InputEmailComponent,
     InputDateComponent,
     InputNameComponent,
+    InputRadioComponent,
     InputPasswordComponent,
     InputButtonComponent,
     ToolbarComponent,

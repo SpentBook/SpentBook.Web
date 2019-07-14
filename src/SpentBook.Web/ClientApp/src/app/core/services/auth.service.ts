@@ -6,8 +6,15 @@ import { AuthService as AuthServiceSocial } from "angularx-social-login";
 import { ApiSpentBookService } from '../webservices/spentbook/api-spentbook.service';
 import { LoginResponse } from '../webservices/spentbook/response/login-response.model';
 
+export enum LOGIN_TYPE {
+  APP,
+  FACEBOOK
+}
+
 @Injectable()
 export class AuthService {
+  public loginType: LOGIN_TYPE;
+
   constructor(
     private apiService: ApiSpentBookService,
     private authServiceSocial: AuthServiceSocial

@@ -1,0 +1,41 @@
+@import 'classes.styl';
+
+:host {
+    text-align: left;
+    min-height: $fieldHeight;
+
+    .radio {
+        label {
+            @extend .default-label;
+            display: block;
+        }
+
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            margin: 5px 0;
+        }
+
+        .radio-button {
+            margin: 5px;
+        }
+
+        .error {
+            margin-top: 3px;
+            min-height: 20px;            
+        }
+    }
+
+    .radio.invalid {
+        color: $invalidColor;
+
+        label {
+            color: $invalidColor;
+        }
+
+        .mat-error {
+            color: $invalidColor;
+            font-size: 75%;
+        }
+    }
+}

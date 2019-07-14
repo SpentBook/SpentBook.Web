@@ -6,7 +6,7 @@ import { timer, Observable, Subscription } from 'rxjs';
 import { AuthService as AuthServiceSocial, SocialUser } from 'angularx-social-login';
 
 // App
-import { AuthService, LoginRequest, ApiSpentBookService, LoginResponse, LoginFacebookRequest } from '@app/core';
+import { AuthService, LoginRequest, ApiSpentBookService, LoginResponse, LoginFacebookRequest, LOGIN_TYPE } from '@app/core';
 import { BoxErrorComponent, ServerSideValidationService } from '@app/shared';
 
 /*
@@ -65,7 +65,7 @@ export class LoginComponent implements OnInit, AfterViewChecked, OnDestroy {
 
   ngOnInit() {
     this.socialObservable$ = this.authServiceSocial.authState.subscribe((user) => {
-      if (user != null) {
+      if (user != null && this.authService.loginType == LOGIN_TYPE.FACEBOOK) {
         this.loginFacebook(user);
       }
     });

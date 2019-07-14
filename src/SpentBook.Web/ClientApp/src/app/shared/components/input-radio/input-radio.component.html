@@ -1,0 +1,19 @@
+<div class="radio" [ngClass]="{'invalid': formControlRef.invalid && submitted}">
+
+  <label id="radio-group-label">{{placeholder}}</label>
+
+  <mat-radio-group [formControl]="formControlRef" aria-labelledby="radio-group-label" class="radio-group">
+    <mat-radio-button class="radio-button" *ngFor="let radio of values" [value]="radio.value">
+      {{radio.text}}
+    </mat-radio-button>
+    <div class="error">
+      <mat-error *ngIf="hasError('required')">{{placeholder}} é obrigatório</mat-error>
+      <mat-error *ngIf="hasError('invalid')">{{placeholder}} inválido</mat-error>
+      <mat-error *ngIf="hasError('unknown')">Ocorreu um erro desconhecido ao cadastrar</mat-error>
+
+      <ng-content select="mat-error" *ngIf="false"></ng-content>
+      <mat-error *ngFor="let _matError of _matErrors">{{_matError.nativeElement.innerText}}</mat-error>
+    </div>
+  </mat-radio-group>
+
+</div>

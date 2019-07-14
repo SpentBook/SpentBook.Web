@@ -9,6 +9,9 @@ import { PageRegisterConfirmationComponent } from './pages/page-register-confirm
 import { PageForgotPasswordComponent } from './pages/page-forgot-password/page-forgot-password.component';
 import { PageChangePasswordComponent } from "./pages/page-change-password/page-change-password.component";
 import { PageProfileComponent } from './pages/page-profile/page-profile.component';
+import { PageProfileChangePwdComponent } from './pages/page-profile-change-pwd/page-profile-change-pwd.component';
+
+// App
 import { AuthGuardService } from '@app/core';
 
 const appRoutes: Routes = [
@@ -18,6 +21,7 @@ const appRoutes: Routes = [
   { path: 'forgot-password', component: PageForgotPasswordComponent },
   { path: 'change-password', component: PageChangePasswordComponent },
   { path: 'profile', component: PageProfileComponent, canActivate: [AuthGuardService] },
+  { path: 'profile/change-password', component: PageProfileChangePwdComponent, canActivate: [AuthGuardService] },
 ];
 
 @NgModule({

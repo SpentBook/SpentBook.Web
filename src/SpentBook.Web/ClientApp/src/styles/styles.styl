@@ -1,31 +1,14 @@
-/*
- * Variables
- */
-$invalidColor = #F443F6;
-
-/*
- * Fonts
- */
 @import '~@angular/material/prebuilt-themes/purple-green.css';
-
-@font-face {
-    font-family: 'Roboto';
-    src: url('/assets/fonts/Roboto/Roboto-Regular.ttf') format('truetype');
-}
-
-@font-face {
-    font-family: 'RobotoBold';
-    src: url('/assets/fonts/Roboto/Roboto-Bold.ttf') format('truetype');
-}
+@import 'fonts.styl';
+@import 'variables.styl';
+@import 'classes.styl';
 
 /*
  * App General Style
  */
 body {
-    // font-family: "Segoe UI", "Arial"
     font-family: 'Roboto', 'Helvetica Neue', 'sans-serif';
     color: #ffffff;
-    // background-color: #00223B;
     font-size: 14px;
 }
 
@@ -44,23 +27,6 @@ router-outlet ~ * .content {
     padding: 20px;
 }
 
-/*
- * Fix [hidden] attribute error
- * https://www.talkingdotnet.com/dont-use-hidden-attribute-angularjs-2/
- */
-[hidden] {
-    display: none !important;
-}
-
-.noselect {
-    -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Safari */
-    -khtml-user-select: none; /* Konqueror HTML */
-    -moz-user-select: none; /* Firefox */
-    -ms-user-select: none; /* Internet Explorer/Edge */
-    user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
-}
-
 /* FIX Calendar Scroll */
 .mat-datepicker-content {
     overflow: hidden !important;
@@ -68,11 +34,11 @@ router-outlet ~ * .content {
 
 /* theme and fixes: mat-form-field */
 .mat-form-field {
-    min-height: 70px;
+    min-height: $fieldHeight;
 
     /* label */
     .mat-form-field-label-wrapper label {
-        font-family: 'RobotoBold', 'Helvetica Neue', 'sans-serif';
+        @extend .default-label;
     }
 
     /* icon */
@@ -125,15 +91,6 @@ router-outlet ~ * .content {
 .mat-snack-bar-container {
     background-color: transparent;
     padding: 0 !important;
-    // box-shadow: none;
 }
 
 /* Snackbar Container */
-
-/* Helpers */
-
-.bold {
-    font-family: 'RobotoBold';
-}
-
-/* Helpers */

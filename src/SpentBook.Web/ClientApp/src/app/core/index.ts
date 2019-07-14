@@ -18,3 +18,4 @@ export * from './webservices/spentbook/response/login-response.model';
 // Models
 export * from './models/problem-details.model';
 export * from './models/user.model';
+export * from './models/sex.model';

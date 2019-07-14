@@ -27,12 +27,17 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.styl",
+              "src/styles/styles.styl",
               "node_modules/normalize.css/normalize.css",
               "src/assets/css/material-icons.css",
               "src/assets/css/splash.css"
             ],
-            "scripts": []
+            "scripts": [],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "./src/styles"
+              ]
+            }
           },
           "configurations": {
             "production": {
@@ -86,7 +91,7 @@
             "tsConfig": "src/tsconfig.spec.json",
             "karmaConfig": "src/karma.conf.js",
             "styles": [
-              "src/styles.styl"
+              "src/styles/styles.styl"
             ],
             "scripts": [],
             "assets": [
