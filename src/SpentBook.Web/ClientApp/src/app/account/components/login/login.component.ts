@@ -6,7 +6,7 @@ import { timer, Observable, Subscription } from 'rxjs';
 import { AuthService as AuthServiceSocial, SocialUser } from 'angularx-social-login';
 
 // App
-import { AuthService, LoginRequest, ApiSpentBookService, LoginResponse, LoginFacebookRequest, LOGIN_TYPE } from '@app/core';
+import { AuthService, LoginRequest, ApiSpentBookAuthService, LoginResponse, LoginFacebookRequest, LOGIN_TYPE } from '@app/core';
 import { BoxErrorComponent, ServerSideValidationService } from '@app/shared';
 
 /*
@@ -47,7 +47,7 @@ export class LoginComponent implements OnInit, AfterViewChecked, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private apiSpentBookService: ApiSpentBookService,
+    private apiSpentBookService: ApiSpentBookAuthService,
     private authService: AuthService,
     private fb: FormBuilder,
     private serverSideValidate: ServerSideValidationService,

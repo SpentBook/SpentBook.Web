@@ -2,6 +2,7 @@
 
 using System;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +14,22 @@ namespace SpentBook.Web.Services.Error
     /// </summary>
     public class ErrorsController : ControllerBase
     {
+        [Route("api/Error/401")]
+        [HttpGet]
+        [Authorize]
+        public IActionResult Cause401()
+        {
+            return Ok();
+        }
+
+        [Route("api/Error/405")]
+        [HttpGet]
+        public IActionResult Cause405()
+        {
+            return Ok();
+        }
+
+
         [Route("api/Error/500")]
         public IActionResult Error500()
         {

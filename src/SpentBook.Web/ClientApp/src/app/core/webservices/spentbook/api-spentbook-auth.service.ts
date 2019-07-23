@@ -1,6 +1,6 @@
 // Angular/Core
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/internal/Observable';
 
 // App
@@ -17,11 +17,13 @@ import { LoginResponse } from './response/login-response.model';
 import { ConfirmEmailResendRequest } from './request/confirm-email-resend-request.model';
 import { ResetEmailRequest } from './request/reset-email-request.model';
 import { LoginFacebookRequest } from './request/login-facebook-request.model';
+import { AuthService } from '../../services/auth.service';
 
 @Injectable()
-export class ApiSpentBookService {
+export class ApiSpentBookAuthService {
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private authService: AuthService
   ) { }
 
   register(request: RegistrationRequest): Observable<LoginResponse> {
@@ -43,9 +45,9 @@ export class ApiSpentBookService {
   loginFacebook(request: LoginFacebookRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${environment.apiUrl}/Auth/LoginFacebook`, request);
   }
-  
+
   resetPassword(request: ResetEmailRequest): Observable<Object> {
-    return this.http.post(`${environment.apiUrl}/Auth/ResetPassword`, request );
+    return this.http.post(`${environment.apiUrl}/Auth/ResetPassword`, request);
   }
 
   changePassword(request: ChangePasswordRequest): Observable<Object> {
@@ -53,14 +55,21 @@ export class ApiSpentBookService {
   }
 
   getUser(id: string): Observable<User> {
-    return this.http.get<User>(`${environment.apiUrl}/User`, {});
+    return this.http.get<User>(`${environment.apiUrl}/User`, { headers: this.getHeaders() });
   }
 
   updateUser(request: User): Observable<Object> {
-    return this.http.put(`${environment.apiUrl}/User`, { request });
+    return this.http.put(`${environment.apiUrl}/User`, request, { headers: this.getHeaders() });
   }
 
   deleteUser(id: string): Observable<Object> {
-    return this.http.post(`${environment.apiUrl}/User`, { id });
+    return this.http.delete(`${environment.apiUrl}/User`, { headers: this.getHeaders() });
   }
+
+  private getHeaders() {
+    return new HttpHeaders({
+      'Authorization': `Bearer ${this.authService.getLoggedUser().token}`
+    });
+  }
+
 }

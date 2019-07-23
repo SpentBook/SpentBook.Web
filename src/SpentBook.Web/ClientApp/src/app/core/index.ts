@@ -1,7 +1,8 @@
 export * from './core.module';
 
 // Services
-export * from './webservices/spentbook/api-spentbook.service';
+export * from './webservices/spentbook/api-spentbook-auth.service';
+export * from './webservices/spentbook/api-spentbook-user.service';
 export * from './services/auth.service';
 export * from './services/auth-guard.service';
 
@@ -18,4 +19,4 @@ export * from './webservices/spentbook/response/login-response.model';
 // Models
 export * from './models/problem-details.model';
 export * from './models/user.model';
-export * from './models/sex.model';
+export * from './models/gender.model';

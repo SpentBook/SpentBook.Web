@@ -10,9 +10,8 @@ import 'hammerjs';
 import { timer, Observable } from 'rxjs';
 
 // Models
-import { LoginResponse, RegistrationRequest, ApiSpentBookService, Sex } from '@app/core';
-import { BoxErrorComponent, ServerSideValidationService, CustomValidations, ToolbarService, ToolbarMode } from '@app/shared';
-import { RadioValue } from '@src/app/shared/components/input-radio/input-radio.component';
+import { Gender, User, ApiSpentBookUserService } from '@app/core';
+import { RadioValue, BoxErrorComponent, ServerSideValidationService, ToolbarService, ToolbarMode } from '@app/shared';
 
 @Component({
   selector: 'app-page-profile',
@@ -23,27 +22,25 @@ export class PageProfileComponent implements OnInit, AfterViewChecked {
   @ViewChild(BoxErrorComponent)
   boxError: BoxErrorComponent;
 
-  @Output()
-  finish: EventEmitter<any> = new EventEmitter<any>();
-
-  @Input()
-  urlCallbackConfirmation: string;
+  // @Input()
+  // urlCallbackConfirmation: string;
 
   form: FormGroup;
   isSubmitted = false;
   loading: boolean = false;
-  observable$: Observable<LoginResponse>;
+  observableGet$: Observable<User>;
+  observable$: Observable<Object>;
   sexValues: RadioValue[];
 
   get email(): any { return this.form.get('email'); }
   get firstName(): any { return this.form.get('firstName'); }
   get lastName(): any { return this.form.get('lastName'); }
-  get sex(): any { return this.form.get('sex'); }
+  get gender(): any { return this.form.get('gender'); }
   get dateOfBirth(): any { return this.form.get('dateOfBirth'); }
 
   constructor(
     private fb: FormBuilder,
-    private apiSpentBookService: ApiSpentBookService,
+    private apiSpentBookUserService: ApiSpentBookUserService,
     private serverSideValidate: ServerSideValidationService,
     private cdRef: ChangeDetectorRef,
     private toolbarService: ToolbarService
@@ -51,21 +48,40 @@ export class PageProfileComponent implements OnInit, AfterViewChecked {
     this.createForm();
     this.sexValues = [
       {
-        value: Sex.Male,
-        text: "Male"
+        value: Gender.Male,
+        text: "Masculino"
       },
       {
-        value: Sex.Female,
-        text: "Female"
+        value: Gender.Female,
+        text: "Feminino"
       }
     ];
   }
 
   ngOnInit() {
-    
     this.toolbarService.toolbarMode = ToolbarMode.FULL;
     this.toolbarService.showLogo = true;
     this.toolbarService.showBackButton = false;
+
+    this.loading = true;
+    this.observableGet$ = this.apiSpentBookUserService.get();
+    this.observableGet$.subscribe(
+      (response) => {
+        this.loading = false;
+
+        this.email.setValue(response.email);
+        this.firstName.setValue(response.firstName);
+        this.lastName.setValue(response.lastName);
+        this.gender.setValue(response.gender);
+
+        // const date = response.dateOfBirth.toString().substring(0, 10);
+        this.dateOfBirth.setValue(response.dateOfBirth);
+      },
+      error => {
+        this.loading = false;
+        this.serverSideValidate.validateWithBoxError(this, error, this.boxError);
+      }
+    );
   }
 
   ngAfterViewChecked() {
@@ -80,7 +96,7 @@ export class PageProfileComponent implements OnInit, AfterViewChecked {
       firstName: new FormControl(),
       lastName: new FormControl(),
       dateOfBirth: new FormControl(),
-      sex: new FormControl()
+      gender: new FormControl()
     });
   }
 
@@ -93,18 +109,18 @@ export class PageProfileComponent implements OnInit, AfterViewChecked {
     this.loading = true;
 
     timer(2000).subscribe(() => {
-      let userRegister = new RegistrationRequest();
-      userRegister.email = this.email.value;
-      userRegister.firstName = this.firstName.value;
-      userRegister.lastName = this.lastName.value;
-      userRegister.dateOfBirth = this.dateOfBirth.value;
-      userRegister.urlCallbackConfirmation = this.urlCallbackConfirmation;
+      let request = new User();
+      request.id = null;
+      request.email = this.email.value;
+      request.firstName = this.firstName.value;
+      request.lastName = this.lastName.value;
+      request.dateOfBirth = this.dateOfBirth.value;
+      request.gender = this.gender.value;
 
-      this.observable$ = this.apiSpentBookService.register(userRegister);
+      this.observable$ = this.apiSpentBookUserService.update(request);
       this.observable$.subscribe(
         (response) => {
           this.loading = false;
-          this.finish.emit({ userRegister: userRegister, loginResult: response });
         },
         error => {
           this.loading = false;
@@ -117,12 +133,4 @@ export class PageProfileComponent implements OnInit, AfterViewChecked {
   hideBoxError() {
     this.boxError.show = false;
   }
-
-  // hasError(control: FormControl, errorName: string) {
-  //   return this.serverSideValidate.hasError(control, errorName);
-  // }
-
-  // hiddenError(control: FormControl, errorName: string) {
-  //   return this.serverSideValidate.hiddenError(control, errorName);
-  // }
 }

@@ -45,7 +45,7 @@ namespace SpentBook.Web.Services.Error
                 Detail = exception.Message
             };
 
-            this.SetProblemDetail(problemDetails, StatusCodes.Status500InternalServerError);
+            this.SetProblemDetails(problemDetails, StatusCodes.Status500InternalServerError);
             return problemDetails;
         }
 
@@ -56,11 +56,11 @@ namespace SpentBook.Web.Services.Error
                 Detail = modelState.Count > 0 ? CLIENT_VALIDATION_ERROR_DETAIL : null
             };
 
-            this.SetProblemDetail(problemDetails, statusCode);
+            this.SetProblemDetails(problemDetails, statusCode);
             return problemDetails;
         }
 
-        public void SetProblemDetail(ProblemDetails problemDetails, int statusCode)
+        public void SetProblemDetails(ProblemDetails problemDetails, int statusCode)
         {
             problemDetails.Instance = this._requestPath;
             problemDetails.Status = statusCode;

@@ -6,7 +6,7 @@ import { Observable, timer } from 'rxjs';
 
 // App
 import { SnackBarService, ToolbarService, ToolbarMode, BoxErrorComponent, ServerSideValidationService, CustomValidations } from '@app/shared';
-import { ApiSpentBookService, ResetEmailRequest, ChangePasswordRequest } from '@app/core';
+import { ApiSpentBookAuthService, ResetEmailRequest, ChangePasswordRequest } from '@app/core';
 import { PlatformLocation } from '@angular/common';
 
 @Component({
@@ -35,7 +35,7 @@ export class PageChangePasswordComponent implements OnInit, AfterViewChecked {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private apiService: ApiSpentBookService,
+    private apiService: ApiSpentBookAuthService,
     private fb: FormBuilder,
     private serverSideValidate: ServerSideValidationService,
     private cdRef: ChangeDetectorRef,

@@ -27,7 +27,7 @@ export class InputDateComponent implements OnInit {
   minLength: number = 10;
 
   @Input()
-  maxLength: number = 10;
+  maxLength: number = 19;
 
   @Input()
   placeholder: String = "Data de nascimento";

@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { AuthService as AuthServiceSocial } from "angularx-social-login";
 
 // Module
-import { ApiSpentBookService } from '../webservices/spentbook/api-spentbook.service';
 import { LoginResponse } from '../webservices/spentbook/response/login-response.model';
 
 export enum LOGIN_TYPE {
@@ -13,25 +12,34 @@ export enum LOGIN_TYPE {
 
 @Injectable()
 export class AuthService {
+  private static USER_KEY: string = 'user';
+
   public loginType: LOGIN_TYPE;
 
   constructor(
-    private apiService: ApiSpentBookService,
     private authServiceSocial: AuthServiceSocial
   ) { }
 
   public isLogged(): boolean {
-    return window.localStorage['token'] != null;
+    return window.localStorage[AuthService.USER_KEY] != null;
   }
 
-  public login(token: LoginResponse) {
-    window.localStorage['token'] = JSON.stringify(token);
+  public login(loginResponse: LoginResponse) {
+    window.localStorage[AuthService.USER_KEY] = JSON.stringify(loginResponse);
   }
 
   public logout() {
-    window.localStorage.removeItem('token');
+    window.localStorage.removeItem(AuthService.USER_KEY);
 
     // remove qualquer login em midias sociais    
     return this.authServiceSocial.signOut(true);
+  }
+
+  public getLoggedUser(): LoginResponse {
+    return JSON.parse(window.localStorage[AuthService.USER_KEY]);
+  }
+
+  public getTokenAsString() {
+    return JSON.stringify(this.getLoggedUser().token);
   }
 }

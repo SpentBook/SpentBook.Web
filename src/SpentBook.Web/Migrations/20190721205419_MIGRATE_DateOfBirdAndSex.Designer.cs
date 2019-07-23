@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SpentBook.Web;
 
 namespace SpentBook.Web.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class SpentBookContextModelSnapshot : ModelSnapshot
+    [Migration("20190721205419_MIGRATE_DateOfBirdAndSex")]
+    partial class MIGRATE_DateOfBirdAndSex
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -150,8 +152,6 @@ namespace SpentBook.Web.Migrations
 
                     b.Property<string>("FirstName");
 
-                    b.Property<int?>("Gender");
-
                     b.Property<string>("LastName");
 
                     b.Property<bool>("LockoutEnabled");
@@ -173,6 +173,8 @@ namespace SpentBook.Web.Migrations
                     b.Property<string>("PictureUrl");
 
                     b.Property<string>("SecurityStamp");
+
+                    b.Property<int>("Sex");
 
                     b.Property<bool>("TwoFactorEnabled");
 

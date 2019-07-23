@@ -10,7 +10,7 @@ import 'hammerjs';
 import { timer, Observable } from 'rxjs';
 
 // Models
-import { LoginResponse, RegistrationRequest, ApiSpentBookService } from '@app/core';
+import { LoginResponse, RegistrationRequest, ApiSpentBookAuthService } from '@app/core';
 import { BoxErrorComponent, ServerSideValidationService, CustomValidations } from '@app/shared';
 
 /*
@@ -56,7 +56,7 @@ export class RegisterComponent implements OnInit, AfterViewChecked {
 
   constructor(
     private fb: FormBuilder,
-    private apiSpentBookService: ApiSpentBookService,
+    private apiSpentBookService: ApiSpentBookAuthService,
     private serverSideValidate: ServerSideValidationService,
     private cdRef: ChangeDetectorRef
   ) {

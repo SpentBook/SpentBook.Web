@@ -1,17 +1,12 @@
-using System;
 using System.Linq;
 using System.Security.Claims;
-using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
-using SpentBook.Web.ViewsModels;
 
 using SpentBook.Web.Services.Config;
 using SpentBook.Web.Services.Email;
@@ -57,57 +52,91 @@ namespace SpentBook.Web.Controllers
         // PUT api/user
         [HttpPut]
         [Authorize]
-        public async Task<IActionResult> Put([FromBody]RegistrationRequest model)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Put([FromBody]ApplicationUser model)
         {
-            var user = await _userManager.FindByIdAsync(model.UserId);
-            // if (user == null)
-            //     return BadRequest(new ErrorModel(this, ErrorType.UserNotFound));
+            var user = await GetCurrentUser();
 
-            user.Email = model.Email;
+            if (user == null)
+            {
+                var pb = new ModelStateBuilder<ApplicationUser>(this);
+                pb.SetFieldError(f => f.Id, ProblemDetailsFieldType.UserNotFound);
+                return this.NotFound();
+            }
+
             user.FirstName = model.FirstName;
             user.LastName = model.LastName;
+            user.Gender = model.Gender;
+            user.DateOfBirth = model.DateOfBirth;
 
             var identityResult = await _signInManager.UserManager.UpdateAsync(user);
 
-            // if (!identityResult.Succeeded)
-            //     return BadRequest(new ErrorModel(this, identityResult, ErrorType.UserUpdateError));
+            if (!identityResult.Succeeded)
+            {
+                var pb = new ModelStateBuilder<ApplicationUser>(this, identityResult)
+                    .SetIdentityErrorEmail(e => e.Email);
+                return this.BadRequest();
+            }
 
-            return new EmptyResult();
+            return Ok();
         }
 
         // GET api/user
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> Get(string userId)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Get()
         {
-            // if (!ModelState.IsValid || string.IsNullOrWhiteSpace(userId))
-            //     return BadRequest(new ErrorModel(this));
+            var user = await GetCurrentUser();
 
-            var user = await _signInManager.UserManager.FindByIdAsync(userId);
-            // if (user == null)
-            //     return BadRequest(new ErrorModel(this, ErrorType.UserNotFound));
+            if (user == null)
+            {
+                var pb = new ModelStateBuilder<ApplicationUser>(this);
+                pb.SetFieldError(f => f.Id, ProblemDetailsFieldType.UserNotFound);
+                return this.NotFound();
+            }
 
-            return new OkObjectResult(user);
+            return Ok(user);
         }
 
         // DELETE api/user
         [HttpDelete]
         [Authorize]
-        public async Task<IActionResult> Delete(string userId)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Delete()
         {
-            // if (!ModelState.IsValid || string.IsNullOrWhiteSpace(userId))
-            //     return BadRequest(new ErrorModel(this));
-
-            var user = await _userManager.FindByIdAsync(userId);
-            // if (user == null)
-            //     return BadRequest(new ErrorModel(this, ErrorType.UserNotFound));
+            var user = await this.GetCurrentUser();
+            if (user == null)
+            {
+                var pb = new ModelStateBuilder<ApplicationUser>(this);
+                pb.SetFieldError(f => f.Id, ProblemDetailsFieldType.UserNotFound);
+                return this.NotFound();
+            }
 
             var identityResult = await _signInManager.UserManager.DeleteAsync(user);
 
-            // if (!identityResult.Succeeded)
-            //     return BadRequest(new ErrorModel(this, identityResult, ErrorType.UserDeleteError));
+            if (!identityResult.Succeeded)
+            {
+                var pb = new ModelStateBuilder<ApplicationUser>(this, identityResult)
+                    .SetIdentityErrorEmail(e => e.Email);
+                return this.BadRequest();
+            }
 
-            return new EmptyResult();
+            return Ok();
         }
+
+        private async Task<ApplicationUser> GetCurrentUser()
+        {
+            var identity = User.Identity as ClaimsIdentity;
+            var identityClaim = identity.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+            var user = await _userManager.FindByEmailAsync(identityClaim.Value);
+            return user;
+        }
+
     }
 }

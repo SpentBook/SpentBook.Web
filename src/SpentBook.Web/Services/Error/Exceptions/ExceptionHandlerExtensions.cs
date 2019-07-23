@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
@@ -53,9 +55,9 @@ namespace SpentBook.Web.Services.Error
                     break;
             }
 
-            UseProblemDetailsFor405(app);
+            UseProblemDetailsFor40X(app);
         }
-        
+
         /// <summary>
         /// UseExceptionHandlerWithProblemDetails
         /// </summary>
@@ -126,17 +128,22 @@ namespace SpentBook.Web.Services.Error
         /// </summary>
         /// <param name="app"></param>
         /// <returns></returns>
-        private static void UseProblemDetailsFor405(IApplicationBuilder app)
+        private static void UseProblemDetailsFor40X(IApplicationBuilder app)
         {
             app.Use(async (context, next) =>
             {
                 await next();
+                var listCustom = new List<int>()
+                {
+                    (int)HttpStatusCode.MethodNotAllowed,
+                    (int)HttpStatusCode.Unauthorized,
+                };
 
-                if (context.Response.StatusCode == (int)HttpStatusCode.MethodNotAllowed)
+                if (listCustom.Contains(context.Response.StatusCode))
                 {
                     var pd = new ProblemDetails();
                     var pdf = new ProblemDetailsFactory(context.Request.Path, context.TraceIdentifier);
-                    pdf.SetProblemDetail(pd, (int)HttpStatusCode.MethodNotAllowed);
+                    pdf.SetProblemDetails(pd, context.Response.StatusCode);
 
                     context.Response.ContentType = Constants.CONTENT_TYPE_JSON;
                     var json = JsonConvert.SerializeObject(pd);

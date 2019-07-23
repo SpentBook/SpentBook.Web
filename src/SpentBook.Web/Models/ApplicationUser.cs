@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Identity;
 
 namespace SpentBook.Web
@@ -8,5 +9,7 @@ namespace SpentBook.Web
         public string LastName { get; set; }
         public long FacebookId { get; set; }
         public string PictureUrl { get; set; }
+        public Gender? Gender { get; set; }
+        public DateTime DateOfBirth { get; set; }
     }
 }

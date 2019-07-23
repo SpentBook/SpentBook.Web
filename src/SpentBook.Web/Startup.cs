@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
@@ -10,19 +9,18 @@ using Microsoft.AspNetCore.Identity;
 using System;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using FluentValidation.AspNetCore;
 using AutoMapper;
 using Swashbuckle.AspNetCore.Swagger;
-using System.Linq;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Logging;
 using SpentBook.Web.Services.Jwt;
 using SpentBook.Web.Services.Config;
 using SpentBook.Web.Services.Email;
 using SpentBook.Web.Services.Error;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json;
 
 namespace SpentBook.Web
 {
@@ -44,6 +42,10 @@ namespace SpentBook.Web
 
             // Add MVC
             services.AddMvc()
+                .AddJsonOptions(options =>
+                {
+                    options.SerializerSettings.Converters.Add(new StringEnumConverter());
+                })
                 .AddFluentValidation(fv =>
                 {
                     fv.RegisterValidatorsFromAssemblyContaining<Startup>();
@@ -84,7 +86,7 @@ namespace SpentBook.Web
             // Get/Set JwtIssuerOptions from configuration
             var appConfig = new AppConfig();
             Configuration.GetSection(nameof(AppConfig)).Bind(appConfig);
-            appConfig.Jwt.ValidFor = TimeSpan.FromMinutes(appConfig.TimeoutTokenLogin);             
+            appConfig.Jwt.ValidFor = TimeSpan.FromMinutes(appConfig.TimeoutTokenLogin);
             services.AddSingleton(appConfig);
 
             // JWT

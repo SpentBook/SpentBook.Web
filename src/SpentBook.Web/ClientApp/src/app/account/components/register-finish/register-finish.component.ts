@@ -4,7 +4,7 @@ import { timer, Observable } from 'rxjs';
 
 // App
 import { BoxErrorComponent, ServerSideValidationService, ToolbarService, ToolbarMode } from '@app/shared';
-import { ApiSpentBookService, ConfirmEmailResendRequest } from '@app/core';
+import { ApiSpentBookAuthService, ConfirmEmailResendRequest } from '@app/core';
 
 @Component({
   selector: 'app-register-finish',
@@ -28,7 +28,7 @@ export class RegisterFinishComponent implements OnInit {
   observable$: Observable<Object>;
 
   constructor(
-    private apiService: ApiSpentBookService,
+    private apiService: ApiSpentBookAuthService,
     private serverSideValidate: ServerSideValidationService,
     private toolbarService: ToolbarService
   ) { }

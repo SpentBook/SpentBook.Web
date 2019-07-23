@@ -59,6 +59,7 @@ namespace SpentBook.Web
             user.Email = model.Email;
             user.FirstName = model.FirstName;
             user.LastName = model.LastName;
+            user.DateOfBirth = model.DateOfBirth;
 
             var identityResult = await _signInManager.UserManager.CreateAsync(user, model.Password);
 

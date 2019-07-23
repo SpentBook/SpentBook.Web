@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { timer, Observable } from 'rxjs';
 
 // App
-import { ApiSpentBookService, LoginResponse, CodeConfirmationRequest } from '@app/core';
+import { ApiSpentBookAuthService, LoginResponse, CodeConfirmationRequest } from '@app/core';
 import { ServerSideValidationService, BoxErrorComponent, ToolbarService, ToolbarMode } from '@app/shared';
 import { SnackBarService } from '@src/app/shared/services/snack-bar.service';
 
@@ -22,7 +22,7 @@ export class PageRegisterConfirmationComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private apiService: ApiSpentBookService,
+    private apiService: ApiSpentBookAuthService,
     private serverSideValidate: ServerSideValidationService,
     private toolbarService: ToolbarService,
     private snackBarService: SnackBarService
