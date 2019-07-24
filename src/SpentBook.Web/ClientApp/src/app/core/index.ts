@@ -8,6 +8,7 @@ export * from './services/auth-guard.service';
 
 // Webservices: SpentBook
 export * from './webservices/spentbook/request/change-password-request.model';
+export * from './webservices/spentbook/request/change-password-profile-request.model';
 export * from './webservices/spentbook/request/code-confirmation-request.model';
 export * from './webservices/spentbook/request/confirm-email-resend-request.model';
 export * from './webservices/spentbook/request/login-request.model';

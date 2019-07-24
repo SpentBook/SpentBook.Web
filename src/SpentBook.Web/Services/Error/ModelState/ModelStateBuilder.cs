@@ -26,24 +26,41 @@ namespace SpentBook.Web.Services.Error
         {
             this._controller = controller;
             this._identityResult = identityResult;
+            foreach (var e in identityResult.Errors)
+            {
+                this.SetFieldError("*", ProblemDetailsFieldType.Unknown, $"{e.Code}/{e.Description}");
+            }
         }
-        public ModelStateBuilder<T> SetIdentityErrorPassword(Expression<Func<T, object>> expression)
+
+        public ModelStateBuilder<T> SetIdentityErrorPassword(Expression<Func<T, object>> expression, Func<ProblemDetailsFieldType, bool> addOnly = null)
         {
+            void set(ProblemDetailsFieldType type, string desc)
+            {
+                if (addOnly == null || addOnly(type))
+                    this.SetFieldError(expression, type, desc);
+            }
+
             foreach (var e in this._identityResult.Errors)
             {
                 switch (e.Code)
                 {
+                    case "PasswordMismatch":
+                        set(ProblemDetailsFieldType.PasswordMismatch, e.Description);
+                        break;
+                    case "PasswordNotMatch":
+                        set(ProblemDetailsFieldType.PasswordNotMatch, e.Description);
+                        break;
                     case "PasswordTooShort":
-                        this.SetFieldError(expression, ProblemDetailsFieldType.PasswordTooShort, e.Description);
+                        set(ProblemDetailsFieldType.PasswordTooShort, e.Description);
                         break;
                     case "PasswordRequiresLower":
-                        this.SetFieldError(expression, ProblemDetailsFieldType.PasswordRequiresLower, e.Description);
+                        set(ProblemDetailsFieldType.PasswordRequiresLower, e.Description);
                         break;
                     case "PasswordRequiresUpper":
-                        this.SetFieldError(expression, ProblemDetailsFieldType.PasswordRequiresUpper, e.Description);
+                        set(ProblemDetailsFieldType.PasswordRequiresUpper, e.Description);
                         break;
                     case "PasswordRequiresNonAlphanumeric":
-                        this.SetFieldError(expression, ProblemDetailsFieldType.PasswordRequiresNonAlphanumeric, e.Description);
+                        set(ProblemDetailsFieldType.PasswordRequiresNonAlphanumeric, e.Description);
                         break;
                 }
             }
@@ -51,7 +68,7 @@ namespace SpentBook.Web.Services.Error
             return this;
         }
 
-         public ModelStateBuilder<T> SetIdentityErrorCode(Expression<Func<T, object>> expression)
+        public ModelStateBuilder<T> SetIdentityErrorCode(Expression<Func<T, object>> expression)
         {
             foreach (var e in this._identityResult.Errors)
             {
@@ -59,7 +76,7 @@ namespace SpentBook.Web.Services.Error
                 {
                     case "InvalidToken":
                         this.SetFieldError(expression, ProblemDetailsFieldType.Invalid, e.Description);
-                        break;                    
+                        break;
                 }
             }
 

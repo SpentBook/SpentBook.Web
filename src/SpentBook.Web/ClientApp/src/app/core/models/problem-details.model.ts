@@ -1,5 +1,22 @@
+type DictionaryItem = { [id: string]: ProblemDetailsItem };
+
 export class ProblemDetails {
-    errors: { [id: string]: ProblemDetailsItem; };
+    private _errorsAll: DictionaryItem;
+    private _errors: DictionaryItem;
+
+    get errors(): DictionaryItem {
+        return this._errors;
+    }
+
+    set errors(value: DictionaryItem) {
+        if (value == null)
+            return;
+
+        this._errorsAll = value;
+        this._errors = value;
+        delete this._errors['*'];
+    }
+
     type: ProblemDetailsFieldType;
     title: string;
     status: number;
@@ -13,23 +30,21 @@ export class ProblemDetailsItem {
 }
 
 export enum ProblemDetailsFieldType {
-    Unknown = "Unknown",
-    Invalid = "Invalid",
-    Required = "Required",
-    JwtError = "JwtError",
-    IsLockedOut = "IsLockedOut",
-    IsNotAllowed = "IsNotAllowed",
-    UserNotFound = "UserNotFound",
-    MinLength = "MinLength",
-    MaxLength = "MaxLength",
-    PasswordNotMatch = "PasswordNotMatch",
-    PasswordRequiresLower = "PasswordRequiresLower",
-    PasswordRequiresUpper = "PasswordRequiresUpper",
-    PasswordRequiresNonAlphanumeric = "PasswordRequiresNonAlphanumeric",
-    DuplicateUserName = "DuplicateUserName",
-    Email = "Email",
-    ConfirmEmailError = "ConfirmEmailError",
-    ChangePasswordError = "ChangePasswordError",
-    UserUpdateError = "UserUpdateError",
-    UserDeleteError = "UserDeleteError",
+    Unknown,
+    Invalid,
+    Required,
+    JwtError,
+    IsLockedOut,
+    IsNotAllowed,
+    UserNotFound,
+    MinLength,
+    MaxLength,
+    PasswordTooShort,
+    PasswordNotMatch,
+    PasswordRequiresLower,
+    PasswordRequiresUpper,
+    PasswordRequiresNonAlphanumeric,
+    DuplicateUserName,
+    Email,
+    PasswordMismatch,
 }

@@ -9,6 +9,7 @@ import { environment } from '@src/environments/environment';
 // Module
 import { User } from '../../models/user.model';
 import { AuthService } from '../../services/auth.service';
+import { ChangePasswordProfileRequest } from './request/change-password-profile-request.model';
 
 @Injectable()
 export class ApiSpentBookUserService {
@@ -27,6 +28,10 @@ export class ApiSpentBookUserService {
 
   delete(id: string): Observable<Object> {
     return this.http.delete(`${environment.apiUrl}/User`, { headers: this.getHeaders() });
+  }
+
+  changePassword(request: ChangePasswordProfileRequest): Observable<Object> {
+    return this.http.post(`${environment.apiUrl}/User/ChangePassword`, request, { headers: this.getHeaders() });
   }
 
   private getHeaders() {

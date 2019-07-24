@@ -140,7 +140,7 @@ namespace SpentBook.Web
                 o.Password.RequireLowercase = false;
                 o.Password.RequireUppercase = false;
                 o.Password.RequireNonAlphanumeric = false;
-                o.Password.RequiredLength = 4;
+                o.Password.RequiredLength = 3;
                 o.Password.RequiredUniqueChars = 1;
 
                 // Quando true, os usuarios só vão logar quando aprovarem via e-mail

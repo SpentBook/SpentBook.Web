@@ -37,7 +37,13 @@ export class ServerSideValidationService {
   ) {
     let knownFields = [];
     let unknownFields = [];
-    let problemDetails = <ProblemDetails>serverError.error;
+    let problemDetails = new ProblemDetails();
+    problemDetails.detail = serverError.error.detail;
+    problemDetails.errors = serverError.error.errors;
+    problemDetails.instance = serverError.error.instance;
+    problemDetails.status = serverError.error.status;
+    problemDetails.title = serverError.error.title;
+    problemDetails.type = serverError.error.type;
 
     if (problemDetails.errors != null) {
       for (let fieldName in problemDetails.errors) {

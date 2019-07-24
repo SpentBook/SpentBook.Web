@@ -11,7 +11,7 @@ import { timer, Observable } from 'rxjs';
 
 // Models
 import { Gender, User, ApiSpentBookUserService } from '@app/core';
-import { RadioValue, BoxErrorComponent, ServerSideValidationService, ToolbarService, ToolbarMode } from '@app/shared';
+import { RadioValue, BoxErrorComponent, ServerSideValidationService, ToolbarService, ToolbarMode, SnackBarService } from '@app/shared';
 
 @Component({
   selector: 'app-page-profile',
@@ -30,7 +30,7 @@ export class PageProfileComponent implements OnInit, AfterViewChecked {
   loading: boolean = false;
   observableGet$: Observable<User>;
   observable$: Observable<Object>;
-  sexValues: RadioValue[];
+  gendersValues: RadioValue[];
 
   get email(): any { return this.form.get('email'); }
   get firstName(): any { return this.form.get('firstName'); }
@@ -43,10 +43,11 @@ export class PageProfileComponent implements OnInit, AfterViewChecked {
     private apiSpentBookUserService: ApiSpentBookUserService,
     private serverSideValidate: ServerSideValidationService,
     private cdRef: ChangeDetectorRef,
-    private toolbarService: ToolbarService
+    private toolbarService: ToolbarService,
+    private snackBarService: SnackBarService
   ) {
     this.createForm();
-    this.sexValues = [
+    this.gendersValues = [
       {
         value: Gender.Male,
         text: "Masculino"
@@ -108,7 +109,7 @@ export class PageProfileComponent implements OnInit, AfterViewChecked {
     this.isSubmitted = true;
     this.loading = true;
 
-    timer(2000).subscribe(() => {
+    timer(500).subscribe(() => {
       let request = new User();
       request.id = null;
       request.email = this.email.value;
@@ -121,6 +122,7 @@ export class PageProfileComponent implements OnInit, AfterViewChecked {
       this.observable$.subscribe(
         (response) => {
           this.loading = false;
+          this.snackBarService.success("Perfil alterado com sucesso!");
         },
         error => {
           this.loading = false;

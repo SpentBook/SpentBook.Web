@@ -24,7 +24,7 @@ export class SnackBarData {
   providedIn: 'root'
 })
 export class SnackBarService {
-  private duration: number = 300000;
+  private duration: number = 5000;
 
   constructor(private _snackBar: MatSnackBar) { }
 

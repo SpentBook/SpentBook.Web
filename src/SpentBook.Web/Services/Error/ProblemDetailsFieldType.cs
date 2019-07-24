@@ -18,5 +18,6 @@
         PasswordRequiresNonAlphanumeric,
         DuplicateUserName,
         Email,
+        PasswordMismatch,
     }
 }
