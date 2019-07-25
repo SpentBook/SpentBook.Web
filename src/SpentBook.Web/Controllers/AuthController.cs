@@ -288,7 +288,7 @@ namespace SpentBook.Web
                     // LockoutEnabled = false // verificar amanha
                 };
 
-                var result = await _userManager.CreateAsync(user, Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 8));
+                var result = await _userManager.CreateAsync(user);
 
                 if (!result.Succeeded)
                 {

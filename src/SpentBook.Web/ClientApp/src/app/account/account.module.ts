@@ -11,20 +11,20 @@ import { CoreModule } from '@app/core';
 import { SharedModule } from '@app/shared';
 
 // Module
-import { PageLoginComponent } from './pages/page-login/page-login.component';
 import { LoginComponent } from './components/login/login.component';
-import { PageLogoutComponent } from './pages/page-logout/page-logout.component';
-import { PageRegisterComponent } from './pages/page-register/page-register.component';
 import { RegisterComponent } from './components/register/register.component';
 import { AccountRoutingModule } from './account-routing.module';
+import { FacebookBtnLoginComponent } from './components/facebook-btn-login/facebook-btn-login.component';
+import { PageLogoutComponent } from './pages/page-logout/page-logout.component';
+import { PageRegisterComponent } from './pages/page-register/page-register.component';
 import { PageRegisterConfirmationComponent } from './pages/page-register-confirmation/page-register-confirmation.component';
+import { PageLoginComponent } from './pages/page-login/page-login.component';
 import { RegisterFinishComponent } from './components/register-finish/register-finish.component';
 import { PageForgotPasswordComponent } from './pages/page-forgot-password/page-forgot-password.component';
 import { PageChangePasswordComponent } from "./pages/page-change-password/page-change-password.component";
-import { FacebookBtnLoginComponent } from './components/facebook-btn-login/facebook-btn-login.component';
 import { PageProfileComponent } from './pages/page-profile/page-profile.component';
 import { PageProfileChangePwdComponent } from './pages/page-profile-change-pwd/page-profile-change-pwd.component';
-
+import { PageUnregisterComponent } from './pages/page-unregister/page-unregister.component';
 
 // Social Login
 const fbLoginOptions: LoginOpt = {
@@ -55,18 +55,19 @@ export function provideConfig() {
 @NgModule({
   // schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
   declarations: [
-    PageLoginComponent,
+    RegisterFinishComponent,
     LoginComponent,
+    FacebookBtnLoginComponent,
+    RegisterComponent,
+    PageLoginComponent,
     PageLogoutComponent,
     PageRegisterComponent,
-    RegisterComponent,
     PageRegisterConfirmationComponent,
-    RegisterFinishComponent,
     PageForgotPasswordComponent,
     PageChangePasswordComponent,
-    FacebookBtnLoginComponent,
     PageProfileComponent,
-    PageProfileChangePwdComponent
+    PageProfileChangePwdComponent,
+    PageUnregisterComponent
   ],
   imports: [
     // App modules - Routes

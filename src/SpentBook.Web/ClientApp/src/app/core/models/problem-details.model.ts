@@ -1,7 +1,7 @@
 type DictionaryItem = { [id: string]: ProblemDetailsItem };
 
 export class ProblemDetails {
-    private _errorsAll: DictionaryItem;
+    private _errorsAll: ProblemDetailsItem;
     private _errors: DictionaryItem;
 
     get errors(): DictionaryItem {
@@ -12,8 +12,8 @@ export class ProblemDetails {
         if (value == null)
             return;
 
-        this._errorsAll = value;
         this._errors = value;
+        this._errorsAll = this._errors['*'];
         delete this._errors['*'];
     }
 

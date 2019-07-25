@@ -5,14 +5,15 @@ import { FormGroup, FormBuilder, FormControl, FormGroupDirective } from '@angula
 // App
 import { BoxErrorComponent, ServerSideValidationService, ToolbarService, SnackBarService, CustomValidations, ToolbarMode } from '@app/shared';
 import { Observable, timer } from 'rxjs';
-import { ApiSpentBookUserService, ChangePasswordProfileRequest } from '@app/core';
+import { ApiSpentBookUserService, UnregisterRequest, AuthService } from '@app/core';
+import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-page-profile-change-pwd',
-  templateUrl: './page-profile-change-pwd.component.html',
-  styleUrls: ['./page-profile-change-pwd.component.styl']
+  selector: 'app-page-unregister',
+  templateUrl: './page-unregister.component.html',
+  styleUrls: ['./page-unregister.component.styl']
 })
-export class PageProfileChangePwdComponent implements OnInit, AfterViewChecked {
+export class PageUnregisterComponent implements OnInit, AfterViewChecked {
 
   @ViewChild(BoxErrorComponent)
   boxError: BoxErrorComponent;
@@ -23,26 +24,22 @@ export class PageProfileChangePwdComponent implements OnInit, AfterViewChecked {
   loading: boolean;
   observable$: Observable<Object>;
 
-  get passwordCurrent(): any { return this.form.get('passwordCurrent'); }
-  get password(): any { return this.form.get('passwordGroup').get('password'); }
-  get passwordConfirm(): any { return this.form.get('passwordGroup').get('passwordConfirm'); }
+  get password(): any { return this.form.get('password'); }
 
   constructor(
     private apiService: ApiSpentBookUserService,
+    private authService: AuthService,
     private fb: FormBuilder,
     private serverSideValidate: ServerSideValidationService,
     private cdRef: ChangeDetectorRef,
     private toolbarService: ToolbarService,
     private snackBarService: SnackBarService,
+    private router: Router
   ) {
+    this.returnUrl = '/';
+
     this.form = this.fb.group({
-      passwordCurrent: new FormControl(),
-      passwordGroup: this.fb.group({
-        password: new FormControl(),
-        passwordConfirm: new FormControl()
-      }, {
-          validator: CustomValidations.passwordMatchValidator('passwordConfirm', 'password')
-        }),
+      password: new FormControl(),
     });
   }
 
@@ -57,7 +54,7 @@ export class PageProfileChangePwdComponent implements OnInit, AfterViewChecked {
     this.cdRef.detectChanges();
   }
 
-  submitForm(formDirective: FormGroupDirective) {
+  submitForm() {
     if (!this.form.valid && !this.isSubmitted) {
       return;
     }
@@ -65,19 +62,21 @@ export class PageProfileChangePwdComponent implements OnInit, AfterViewChecked {
     this.isSubmitted = true;
     this.loading = true;
 
-    var request = new ChangePasswordProfileRequest();
-    request.passwordCurrent = this.passwordCurrent.value;
+    var request = new UnregisterRequest();
     request.password = this.password.value;
-    request.passwordConfirm = this.passwordConfirm.value;
 
     timer(500).subscribe(() => {
-      this.observable$ = this.apiService.changePassword(request);
+      this.observable$ = this.apiService.unregister(request);
       this.observable$.subscribe(
         () => {
-          this.loading = false;
-          this.form.reset();
-          formDirective.resetForm();
-          this.snackBarService.success("Senha alterada com sucesso!");
+          this.authService.logout().then(
+            () => {
+              this.goLogin()
+            },
+            () => {
+              this.goLogin()
+            },
+          );
         },
         error => {
           this.loading = false;
@@ -85,6 +84,12 @@ export class PageProfileChangePwdComponent implements OnInit, AfterViewChecked {
         }
       );
     });
+  }
+
+  goLogin() {
+    this.router.navigateByUrl(this.returnUrl).then(() => {
+      this.snackBarService.success("Usuário excluído com sucesso!");
+    });;
   }
 
   hideBoxError() {

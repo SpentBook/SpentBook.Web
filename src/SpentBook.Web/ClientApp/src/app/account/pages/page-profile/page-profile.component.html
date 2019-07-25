@@ -8,8 +8,7 @@
         <app-input-name [formControlRef]="lastName" placeholder="Sobrenome"></app-input-name>
         <app-input-date [formControlRef]="dateOfBirth"></app-input-date>
         <app-input-radio [formControlRef]="gender" [values]="gendersValues" [submitted]="frm.submitted" placeholder="Sexo"></app-input-radio>
-        <!-- <app-input-button placeholder="Atualizar" icon="refresh" [disabled]="form.invalid && !isSubmitted"> -->
-        <app-input-button placeholder="Atualizar" icon="refresh">
+        <app-input-button placeholder="Atualizar" icon="refresh" [disabled]="form.invalid && !isSubmitted">
         </app-input-button>
       </div>
 

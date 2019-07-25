@@ -13,6 +13,7 @@ import { PageProfileChangePwdComponent } from './pages/page-profile-change-pwd/p
 
 // App
 import { AuthGuardService } from '@app/core';
+import { PageUnregisterComponent } from './pages/page-unregister/page-unregister.component';
 
 const appRoutes: Routes = [
   { path: 'login', component: PageLoginComponent },
@@ -22,6 +23,7 @@ const appRoutes: Routes = [
   { path: 'change-password', component: PageChangePasswordComponent },
   { path: 'profile', component: PageProfileComponent, canActivate: [AuthGuardService] },
   { path: 'profile/change-password', component: PageProfileChangePwdComponent, canActivate: [AuthGuardService] },
+  { path: 'profile/unregister', component: PageUnregisterComponent, canActivate: [AuthGuardService] },
 ];
 
 @NgModule({

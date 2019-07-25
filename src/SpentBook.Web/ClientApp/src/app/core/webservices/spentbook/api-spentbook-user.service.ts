@@ -10,6 +10,7 @@ import { environment } from '@src/environments/environment';
 import { User } from '../../models/user.model';
 import { AuthService } from '../../services/auth.service';
 import { ChangePasswordProfileRequest } from './request/change-password-profile-request.model';
+import { UnregisterRequest } from './request/unregister-request.model';
 
 @Injectable()
 export class ApiSpentBookUserService {
@@ -26,8 +27,8 @@ export class ApiSpentBookUserService {
     return this.http.put(`${environment.apiUrl}/User`, request, { headers: this.getHeaders() });
   }
 
-  delete(id: string): Observable<Object> {
-    return this.http.delete(`${environment.apiUrl}/User`, { headers: this.getHeaders() });
+  unregister(request: UnregisterRequest): Observable<Object> {
+    return this.http.post(`${environment.apiUrl}/User/Unregister`, request, { headers: this.getHeaders() });
   }
 
   changePassword(request: ChangePasswordProfileRequest): Observable<Object> {

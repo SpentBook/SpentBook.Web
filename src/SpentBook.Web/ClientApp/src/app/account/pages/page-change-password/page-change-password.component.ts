@@ -22,8 +22,6 @@ export class PageChangePasswordComponent implements OnInit, AfterViewChecked {
   form: FormGroup;
   isSubmitted = false;
   returnUrl: string;
-  showError: boolean;
-  errorMessage: string;
   loading: boolean;
   observable$: Observable<Object>;
   userId: string;

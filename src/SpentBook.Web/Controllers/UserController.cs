@@ -62,8 +62,7 @@ namespace SpentBook.Web.Controllers
 
             if (user == null)
             {
-                var pb = new ModelStateBuilder<ApplicationUser>(this);
-                pb.SetFieldError(f => f.Id, ProblemDetailsFieldType.UserNotFound);
+                this.SetUserNotFound();
                 return this.NotFound();
             }
 
@@ -95,40 +94,11 @@ namespace SpentBook.Web.Controllers
 
             if (user == null)
             {
-                var pb = new ModelStateBuilder<ApplicationUser>(this);
-                pb.SetFieldError(f => f.Id, ProblemDetailsFieldType.UserNotFound);
+                this.SetUserNotFound();
                 return this.NotFound();
             }
 
             return Ok(user);
-        }
-
-        // DELETE api/user
-        [HttpDelete]
-        [Authorize]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Delete()
-        {
-            var user = await this.GetCurrentUser();
-            if (user == null)
-            {
-                var pb = new ModelStateBuilder<ApplicationUser>(this);
-                pb.SetFieldError(f => f.Id, ProblemDetailsFieldType.UserNotFound);
-                return this.NotFound();
-            }
-
-            var identityResult = await _signInManager.UserManager.DeleteAsync(user);
-
-            if (!identityResult.Succeeded)
-            {
-                var pb = new ModelStateBuilder<ApplicationUser>(this, identityResult)
-                    .SetIdentityErrorEmail(e => e.Email);
-                return this.BadRequest();
-            }
-
-            return Ok();
         }
 
         // DELETE api/user
@@ -143,12 +113,28 @@ namespace SpentBook.Web.Controllers
             var user = await this.GetCurrentUser();
             if (user == null)
             {
-                var pb = new ModelStateBuilder<ApplicationUser>(this);
-                pb.SetFieldError(f => f.Id, ProblemDetailsFieldType.UserNotFound);
+                this.SetUserNotFound();
                 return this.NotFound();
             }
 
-            var identityResult = await _signInManager.UserManager.ChangePasswordAsync(user, request.PasswordCurrent, request.Password);
+            IdentityResult identityResult;
+            if (string.IsNullOrEmpty(request.PasswordCurrent) && !await _signInManager.UserManager.HasPasswordAsync(user))
+            {
+                // 1) Se não existir senha cadastrada: Cadastro proveniente de alguma rede social
+                identityResult = await _signInManager.UserManager.AddPasswordAsync(user, request.Password);
+            }
+            else if (string.IsNullOrWhiteSpace(request.PasswordCurrent))
+            {
+                // 2) Se o usuário tem senha, mas não preencheu o campo
+                new ModelStateBuilder<ChangePasswordProfileRequest>(this)
+                    .SetFieldError(e => e.PasswordCurrent, ProblemDetailsFieldType.Required);
+                return this.BadRequest();
+            }
+            else
+            {
+                // 3) Se existir senha cadastrada ou se ele digitou algo no campo "senha corrente"
+                identityResult = await _signInManager.UserManager.ChangePasswordAsync(user, request.PasswordCurrent, request.Password);
+            }
 
             if (!identityResult.Succeeded)
             {
@@ -164,12 +150,61 @@ namespace SpentBook.Web.Controllers
             return Ok();
         }
 
+        // DELETE api/user
+        [Route("Unregister")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Unregister(UnregisterRequest request)
+        {
+            // 1) Faz o login para garantir que a senha está correta
+            var email = GetCurrentEmail();
+            var signResult = await _signInManager.PasswordSignInAsync(email, request.Password, false, lockoutOnFailure: true);
+            if (!signResult.Succeeded)
+            {
+                new ModelStateBuilder<UnregisterRequest>(this)
+                    .SetFieldError(f => f.Password, ProblemDetailsFieldType.PasswordMismatch);
+
+                return this.BadRequest();
+            }
+
+            // 2) Recupera o usuário logado
+            var user = await this.GetCurrentUser();
+            if (user == null)
+            {
+                this.SetUserNotFound();
+                return this.NotFound();
+            }
+
+            // 3) Deleta o usuário
+            var identityResult = await _userManager.DeleteAsync(user);
+            if (!identityResult.Succeeded)
+            {
+                new ModelStateBuilder<UnregisterRequest>(this);
+                return this.BadRequest();
+            }
+
+            return Ok();
+        }
+
         private async Task<ApplicationUser> GetCurrentUser()
+        {
+            var email = GetCurrentEmail();
+            var user = await _userManager.FindByEmailAsync(email);
+            return user;
+        }
+
+        private string GetCurrentEmail()
         {
             var identity = User.Identity as ClaimsIdentity;
             var identityClaim = identity.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
-            var user = await _userManager.FindByEmailAsync(identityClaim.Value);
-            return user;
+            return identityClaim.Value;
+        }
+        private void SetUserNotFound()
+        {
+            new ModelStateBuilder<ApplicationUser>(this)
+                                .SetFieldError(nameof(ApplicationUser.UserName), ProblemDetailsFieldType.UserNotFound);
         }
 
     }

@@ -15,8 +15,8 @@ namespace SpentBook.Web.ViewsModels
         public ChangePasswordProfileRequestValidator()
         {
             RuleFor(vm => vm.PasswordCurrent)
-                .NotEmpty().WithMessage(ProblemDetailsFieldType.Required, "PasswordCurrent cannot be empty")
-                .MinimumLength(3).WithMessage(ProblemDetailsFieldType.MinLength, "PasswordCurrent is too short")
+                // .NotEmpty().WithMessage(ProblemDetailsFieldType.Required, "PasswordCurrent cannot be empty")
+                // .MinimumLength(3).WithMessage(ProblemDetailsFieldType.MinLength, "PasswordCurrent is too short")
                 .MaximumLength(20).WithMessage(ProblemDetailsFieldType.MaxLength, "PasswordCurrent is too long");
 
             RuleFor(vm => vm.Password)

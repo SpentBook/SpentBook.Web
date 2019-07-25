@@ -12,6 +12,7 @@ export * from './webservices/spentbook/request/change-password-profile-request.m
 export * from './webservices/spentbook/request/code-confirmation-request.model';
 export * from './webservices/spentbook/request/confirm-email-resend-request.model';
 export * from './webservices/spentbook/request/login-request.model';
+export * from './webservices/spentbook/request/unregister-request.model';
 export * from './webservices/spentbook/request/registration-request.model';
 export * from './webservices/spentbook/request/reset-email-request.model';
 export * from './webservices/spentbook/request/login-facebook-request.model';

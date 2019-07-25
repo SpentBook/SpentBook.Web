@@ -3,8 +3,8 @@
     <fieldset [disabled]="loading">
 
       <div class="box-register" [hidden]="boxError.show || loading">
-        <p>Entre com sua nova senha</p>
-        <app-input-password [formControlRef]="passwordCurrent" placeholder="Senha atual"></app-input-password>
+        <p>Entre com sua nova senha. Deixe o campo senha atual em branco caso você ainda não tenha uma senha cadastrada.</p>
+        <app-input-password [formControlRef]="passwordCurrent" placeholder="Senha atual" [required]="false"></app-input-password>
         <app-input-password [formControlRef]="password" placeholder="Nova senha"></app-input-password>
         <app-input-password [formControlRef]="passwordConfirm" placeholder="Confirme sua senha" [isConfirmation]="true"></app-input-password>
         <app-input-button placeholder="Atualizar senha" icon="autorenew" [disabled]="form.invalid && !isSubmitted"></app-input-button>

@@ -77,6 +77,11 @@
               <span>Trocar senha</span>
             </button>
 
+            <button mat-menu-item [routerLink]="['/profile/unregister']">
+              <mat-icon>lock</mat-icon>
+              <span>Cancelar minha conta</span>
+            </button>
+
             <button mat-menu-item (click)="logout()">
               <mat-icon>exit_to_app</mat-icon>
               <span>Sair</span>
