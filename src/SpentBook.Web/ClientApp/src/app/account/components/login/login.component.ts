@@ -54,8 +54,10 @@ export class LoginComponent implements OnInit, AfterViewChecked, OnDestroy {
     private cdRef: ChangeDetectorRef,
     private authServiceSocial: AuthServiceSocial
   ) {
+    let lastEmail = authService.getEmail();
+
     this.form = this.fb.group({
-      userName: new FormControl(),
+      userName: new FormControl(lastEmail),
       password: new FormControl(),
     });
 

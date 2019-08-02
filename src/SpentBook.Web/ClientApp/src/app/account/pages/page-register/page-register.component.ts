@@ -33,10 +33,7 @@ export class PageRegisterComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.toolbarService.toolbarMode = ToolbarMode.BACK_BAR;
-    this.toolbarService.showLogo = true;
-    this.toolbarService.showBackButton = false;
-    this.toolbarService.title = "Cadastrar novo usuário";
+    this.toolbarService.setToolbar(ToolbarMode.BACK_BAR, true, false, "Cadastrar novo usuário");
   }
 
   registerFinish($event: { userRegister: RegistrationRequest, loginResult: LoginResponse }) {

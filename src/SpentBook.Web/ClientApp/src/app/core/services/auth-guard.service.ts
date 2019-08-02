@@ -14,6 +14,9 @@ export class AuthGuardService implements CanActivate {
   
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     if (!this.authService.isLogged()) {
+      // Faz um logout parcial para manter o usuário pré-logado
+      this.authService.logout(false);
+
       if (state.url == null || state.url == '/')
         this.router.navigate(['login']);
       else

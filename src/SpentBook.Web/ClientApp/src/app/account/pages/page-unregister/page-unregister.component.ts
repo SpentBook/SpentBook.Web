@@ -44,10 +44,7 @@ export class PageUnregisterComponent implements OnInit, AfterViewChecked {
   }
 
   ngOnInit() {
-    this.toolbarService.toolbarMode = ToolbarMode.FULL;
-    this.toolbarService.showLogo = true;
-    this.toolbarService.showBackButton = false;
-    this.toolbarService.title = null;
+    this.toolbarService.setToolbar(ToolbarMode.FULL, true, false, null);
   }
 
   ngAfterViewChecked(): void {

@@ -1,9 +1,12 @@
 // Angular/Core
 import { Injectable } from '@angular/core';
 import { AuthService as AuthServiceSocial } from "angularx-social-login";
+import { JwtHelperService } from "@auth0/angular-jwt";
 
 // Module
 import { LoginResponse } from '../webservices/spentbook/response/login-response.model';
+import { JwtToken } from '..';
+import { Router } from '@angular/router';
 
 export enum LOGIN_TYPE {
   APP,
@@ -17,29 +20,84 @@ export class AuthService {
   public loginType: LOGIN_TYPE;
 
   constructor(
-    private authServiceSocial: AuthServiceSocial
+    private authServiceSocial: AuthServiceSocial,
+    private router: Router,
   ) { }
 
-  public isLogged(): boolean {
+  public hasLocalStorage(): boolean {
     return window.localStorage[AuthService.USER_KEY] != null;
+  }
+
+  public isLogged(): boolean {
+    if (this.hasLocalStorage() && !this.isTokenExpired()) {
+      return true;
+    }
+
+    return false;
   }
 
   public login(loginResponse: LoginResponse) {
     window.localStorage[AuthService.USER_KEY] = JSON.stringify(loginResponse);
   }
 
-  public logout() {
-    window.localStorage.removeItem(AuthService.USER_KEY);
+  public logout(removeAll: boolean = true) {
+    if (removeAll) {
+      window.localStorage.removeItem(AuthService.USER_KEY);
+      // remove qualquer login em midias sociais    
+      return this.authServiceSocial.signOut(false);
+    }
+    else {
+      // Quando o login for parcial, não devemos remover os dados do usuário
+      // devemos manter os dados no storege, porém o tempo do token já expirou, ou seja,
+      // ele nunca consegue logar. Mas precisamos limpar essa info para ele não fazer um 
+      // auto-login
+      this.loginType = null;
+    }
+  }
 
-    // remove qualquer login em midias sociais    
-    return this.authServiceSocial.signOut(true);
+  public autoLogout() {
+    this.logout().then(
+      () => {
+        this.goLogin()
+      },
+      () => {
+        this.goLogin()
+      },
+    );
+  }
+
+  public goLogin() {
+    this.router.navigate(['login']);
   }
 
   public getLoggedUser(): LoginResponse {
+    if (!this.hasLocalStorage())
+      return null;
+
     return JSON.parse(window.localStorage[AuthService.USER_KEY]);
   }
 
-  public getTokenAsString() {
-    return JSON.stringify(this.getLoggedUser().token);
+  public getToken(): JwtToken {
+    if (!this.hasLocalStorage())
+      return null;
+
+    const helper = new JwtHelperService();
+    return helper.decodeToken(this.getLoggedUser().token);
   }
+
+  public isTokenExpired(): boolean {
+    if (!this.hasLocalStorage())
+      return true;
+
+    const helper = new JwtHelperService();
+    return helper.isTokenExpired(this.getLoggedUser().token);
+  }
+
+  public getEmail(): string {
+    if (!this.hasLocalStorage())
+      return null;
+
+    return this.getToken().sub;
+  }
+
 }

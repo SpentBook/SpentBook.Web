@@ -49,10 +49,7 @@ export class PageForgotPasswordComponent implements OnInit, AfterViewChecked {
   }
 
   ngOnInit() {
-    this.toolbarService.toolbarMode = ToolbarMode.BACK_BAR;
-    this.toolbarService.showLogo = true;
-    this.toolbarService.showBackButton = false;
-    this.toolbarService.title = "Esqueceu sua senha?";
+    this.toolbarService.setToolbar(ToolbarMode.BACK_BAR, true, false, "Esqueceu sua senha?");
   }
 
   ngAfterViewChecked(): void {

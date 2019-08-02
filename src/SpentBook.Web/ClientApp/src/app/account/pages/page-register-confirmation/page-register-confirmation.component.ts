@@ -5,7 +5,7 @@ import { timer, Observable } from 'rxjs';
 // App
 import { ApiSpentBookAuthService, LoginResponse, CodeConfirmationRequest } from '@app/core';
 import { ServerSideValidationService, BoxErrorComponent, ToolbarService, ToolbarMode } from '@app/shared';
-import { SnackBarService } from '@src/app/shared/services/snack-bar.service';
+import { SnackBarService } from '@app/shared/services/snack-bar.service';
 
 @Component({
   selector: 'app-page-register-confirmation',
@@ -29,10 +29,7 @@ export class PageRegisterConfirmationComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.toolbarService.toolbarMode = ToolbarMode.BACK_BAR;
-    this.toolbarService.showLogo = true;
-    this.toolbarService.showBackButton = false;
-    this.toolbarService.title = "Validando usuário...";
+    this.toolbarService.setToolbar(ToolbarMode.BACK_BAR, true, false, "Validando usuário...");
 
     const userId: string = this.route.snapshot.queryParamMap.get('userId');
     const code: string = this.route.snapshot.queryParamMap.get('code');

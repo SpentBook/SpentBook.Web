@@ -55,10 +55,7 @@ export class PageChangePasswordComponent implements OnInit, AfterViewChecked {
   }
 
   ngOnInit() {
-    this.toolbarService.toolbarMode = ToolbarMode.BACK_BAR;
-    this.toolbarService.showLogo = true;
-    this.toolbarService.showBackButton = false;
-    this.toolbarService.title = "Criar uma nova senha";
+    this.toolbarService.setToolbar(ToolbarMode.BACK_BAR, true, false, "Criar uma nova senha");
   }
 
   ngAfterViewChecked(): void {
@@ -100,5 +97,5 @@ export class PageChangePasswordComponent implements OnInit, AfterViewChecked {
   hideBoxError() {
     this.boxError.show = false;
   }
-  
+
 }

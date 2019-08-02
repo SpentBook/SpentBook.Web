@@ -1,6 +1,6 @@
 // Angular
 import { Component, OnInit } from '@angular/core';
-import { ToolbarService, ToolbarMode } from '@src/app/shared';
+import { ToolbarService, ToolbarMode } from '@app/shared';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -18,9 +18,6 @@ export class PageHomeComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.toolbarService.toolbarMode = ToolbarMode.FULL;
-    this.toolbarService.showLogo = true;
-    this.toolbarService.showBackButton = false;
-    this.toolbarService.title = null;
+    this.toolbarService.setToolbar(ToolbarMode.FULL, true, false, null);
   }
 }
