@@ -67,7 +67,7 @@ export class AuthService {
   }
 
   public goLogin() {
-    this.router.navigate(['login']);
+    return this.router.navigate(['login']);
   }
 
   public getLoggedUser(): LoginResponse {
