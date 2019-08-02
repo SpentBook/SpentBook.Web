@@ -24,6 +24,7 @@ import { SidenavComponent } from "./components/sidenav/sidenav.component";
 import { RouterModule } from '@angular/router';
 import { SnackbarComponent } from './components/snackbar/snackbar.component';
 import { InputRadioComponent } from './components/input-radio/input-radio.component';
+import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
 
 
 @NgModule({
@@ -32,7 +33,13 @@ import { InputRadioComponent } from './components/input-radio/input-radio.compon
   ],
   entryComponents: [SnackbarComponent],
   declarations: [
+    // Pages
+    PageNotFoundComponent,
+    
+    // Pipes
     TruncatePipe,
+
+    // Components
     BoxErrorComponent,
     LoadingComponent,
     InputEmailComponent,

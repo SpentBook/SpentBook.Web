@@ -18,10 +18,6 @@ import { SharedModule } from './shared';
     AppComponent
   ],
   imports: [
-    // App modules - Routes
-    AppRoutingModule,
-    // AccountRoutingModule,
-
     // App modules    
     AccountModule,
     DashboardModule,
@@ -33,6 +29,7 @@ import { SharedModule } from './shared';
     // HttpClientModule,
     BrowserAnimationsModule,
     // CommonModule,
+    AppRoutingModule, // Deve sempre estar em último lugar para a rota curinga "**" não ganhar das demais
   ],
   exports: [
     

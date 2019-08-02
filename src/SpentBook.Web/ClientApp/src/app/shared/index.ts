@@ -15,6 +15,9 @@ export * from './components/input-radio/input-radio.component';
 export * from './components/toolbar/toolbar.component';
 export * from './components/sidenav/sidenav.component';
 
+// Pages
+export * from './pages/page-not-found/page-not-found.component';
+
 // Services
 export * from './services/server-side-validation.service';
 export * from './services/sidenav.service';
