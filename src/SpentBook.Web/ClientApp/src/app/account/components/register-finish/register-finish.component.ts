@@ -34,10 +34,7 @@ export class RegisterFinishComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.toolbarService.toolbarMode = ToolbarMode.BACK_BAR;
-    this.toolbarService.showLogo = true;
-    this.toolbarService.showBackButton = false;
-    this.toolbarService.title = "Quase lá! Confirme seu e-mail!";
+    this.toolbarService.setToolbar(ToolbarMode.BACK_BAR, true, false, "Quase lá! Confirme seu e-mail!");
   }
   
   resendEmail() {

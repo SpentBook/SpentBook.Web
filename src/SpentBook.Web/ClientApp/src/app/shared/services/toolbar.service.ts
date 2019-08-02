@@ -10,16 +10,23 @@ export enum ToolbarMode {
   providedIn: 'root'
 })
 export class ToolbarService {
-  public toolbarMode: ToolbarMode;
-  public showLogo: boolean;
-  public showBackButton: boolean;
-  public title: String;
-  
+  private toolbarMode: ToolbarMode;
+  private showLogo: boolean;
+  private showBackButton: boolean;
+  private title: String;
+
   constructor() {
     this.toolbarMode = ToolbarMode.NONE;
     this.showLogo = true;
     this.showBackButton = true;
     this.title = null;
+  }
+
+  public setToolbar(toolbarMode: ToolbarMode, showLogo: boolean, showBackButton: boolean, title: String) {
+    this.toolbarMode = toolbarMode;
+    this.showLogo = showBackButton;
+    this.showBackButton = showBackButton;
+    this.title = title;
   }
 
   // private _toolbarMode$: Subject<ToolbarMode>;

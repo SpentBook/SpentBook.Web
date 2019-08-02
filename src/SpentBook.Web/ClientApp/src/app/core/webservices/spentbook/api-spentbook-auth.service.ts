@@ -4,7 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/internal/Observable';
 
 // App
-import { environment } from '@src/environments/environment';
+import { environment } from '@env/environment';
 
 // Module
 import { LoginRequest } from './request/login-request.model';

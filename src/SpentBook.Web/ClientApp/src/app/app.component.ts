@@ -25,7 +25,9 @@ export class AppComponent {
   ) {
     http.get<boolean>(baseUrl + 'api/Post/Add').subscribe(result => {
       this.resultado = result;
-    }, error => console.error(error));
+    }, (error) => {
+      console.error(error)
+    });
   }
 
   prepareRoute(outlet: RouterOutlet) {

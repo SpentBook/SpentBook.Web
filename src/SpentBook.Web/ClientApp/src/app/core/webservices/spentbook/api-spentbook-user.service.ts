@@ -4,13 +4,14 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/internal/Observable';
 
 // App
-import { environment } from '@src/environments/environment';
+import { environment } from '@env/environment';
 
 // Module
 import { User } from '../../models/user.model';
 import { AuthService } from '../../services/auth.service';
 import { ChangePasswordProfileRequest } from './request/change-password-profile-request.model';
 import { UnregisterRequest } from './request/unregister-request.model';
+
 
 @Injectable()
 export class ApiSpentBookUserService {
