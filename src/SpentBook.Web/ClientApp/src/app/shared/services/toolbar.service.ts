@@ -24,7 +24,7 @@ export class ToolbarService {
 
   public setToolbar(toolbarMode: ToolbarMode, showLogo: boolean, showBackButton: boolean, title: String) {
     this.toolbarMode = toolbarMode;
-    this.showLogo = showBackButton;
+    this.showLogo = showLogo;
     this.showBackButton = showBackButton;
     this.title = title;
   }
