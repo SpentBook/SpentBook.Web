@@ -1,5 +1,6 @@
 // Angular
 import { OnInit, Component } from "@angular/core";
+import { Location } from '@angular/common';
 
 // Module
 import { SidenavService } from "../../services/sidenav.service";
@@ -19,7 +20,8 @@ export class ToolbarComponent implements OnInit {
     private sidenavService: SidenavService,
     private router: Router,
     private toolbarService: ToolbarService,
-    private authService: AuthService
+    private authService: AuthService,
+    private location: Location
   ) {
     // this.toolbarService.toolbarMode$.subscribe((mode: ToolbarMode) => {
     //   if (mode == this.ToolbarModeEnum.FULL) {
@@ -34,7 +36,7 @@ export class ToolbarComponent implements OnInit {
   }
 
   back() {
-    //this.backClick.emit();
+    this.location.back();
   }
 
   openHome() {
