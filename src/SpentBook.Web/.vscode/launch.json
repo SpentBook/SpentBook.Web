@@ -11,7 +11,7 @@
             "type": "chrome",
             "request": "launch",
             "name": "Debug (Typescript)",
-            "url": "https://localhost:5001/",
+            "url": "https://localhost:5002/",
             "webRoot": "${workspaceFolder}/ClientApp"
         },
         {

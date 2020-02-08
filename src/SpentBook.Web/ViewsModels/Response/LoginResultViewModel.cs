@@ -24,19 +24,15 @@ namespace SpentBook.Web.ViewsModels
             };
         }
 
-        public static async Task<LoginResponse> GenerateWithTokenAsync(IJwtFactory _jwtFactory, AppConfig _appConfig, string userId, string userName)
+        public static async Task<LoginResponse> GenerateWithTokenAsync(IJwtFactory _jwtFactory, AppConfig _appConfig, ApplicationUser user)
         {
-            var identity = _jwtFactory.GenerateClaimsIdentity(userName, userId);
+            var token = await _jwtFactory.GenerateEncodedToken(user);
 
-            if (identity == null)
-                return null;
-
-            var jwt = await _jwtFactory.GenerateJwt(identity, _jwtFactory, userName, _appConfig.Jwt, new JsonSerializerSettings { Formatting = Formatting.Indented });
             return new LoginResponse
             {
-                UserId = jwt.UserId,
-                Token = jwt.Token,
-                SecondsToExpires = jwt.SecondsToExpires
+                UserId = user.Id,
+                Token = token,
+                SecondsToExpires = (int)_appConfig.Jwt.ValidFor.TotalSeconds
             };
         }
     }

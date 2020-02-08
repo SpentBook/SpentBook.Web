@@ -18,7 +18,7 @@ import { ServerSideValidationService } from '../../services/server-side-validati
 })
 export class InputNameComponent implements OnInit {
   @ContentChildren(MatError, { read: ElementRef })
-  private _matErrors: QueryList<ElementRef>;
+  _matErrors: QueryList<ElementRef>;
   
   @Input()
   required: boolean = true;

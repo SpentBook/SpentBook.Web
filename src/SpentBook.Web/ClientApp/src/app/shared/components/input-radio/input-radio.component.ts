@@ -20,7 +20,7 @@ export class InputRadioComponent implements OnInit {
   seasons: string[] = ['Winter', 'Spring', 'Summer', 'Autumn'];
 
   @ContentChildren(MatError, { read: ElementRef })
-  private _matErrors: QueryList<ElementRef>;
+  _matErrors: QueryList<ElementRef>;
 
   @Input()
   required: boolean = true;

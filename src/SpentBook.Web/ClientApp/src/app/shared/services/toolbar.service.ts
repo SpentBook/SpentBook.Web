@@ -10,7 +10,7 @@ export enum ToolbarMode {
   providedIn: 'root'
 })
 export class ToolbarService {
-  private toolbarMode: ToolbarMode;
+  public toolbarMode: ToolbarMode;
   private showLogo: boolean;
   private showBackButton: boolean;
   private title: String;

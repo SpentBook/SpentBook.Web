@@ -13,9 +13,10 @@ import { LoginResponse, RegistrationRequest, AuthService } from '@app/core';
   styleUrls: ['./page-register.component.styl']
 })
 export class PageRegisterComponent implements OnInit {
+  showRegister: boolean = true;
+  showFinish: boolean = false;
+  
   private urlCallbackConfirmation: string;
-  private showRegister: boolean = true;
-  private showFinish: boolean = false;
   private email: string;
   private returnUrl: string;
 

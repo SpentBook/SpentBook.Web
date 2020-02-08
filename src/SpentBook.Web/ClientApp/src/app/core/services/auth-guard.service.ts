@@ -1,6 +1,6 @@
 // Angular
 import { Injectable } from '@angular/core';
-import { Router, CanActivate, RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
+import { Router, CanActivate, RouterStateSnapshot, ActivatedRouteSnapshot, ActivatedRoute } from '@angular/router';
 
 // Module
 import { AuthService } from './auth.service';
@@ -24,6 +24,10 @@ export class AuthGuardService implements CanActivate {
 
       return false;
     }
+    else if (!this.authService.isAuthorize(route.data['roles'])) {
+      return false;
+    }
+    
     return true;
   }
 }

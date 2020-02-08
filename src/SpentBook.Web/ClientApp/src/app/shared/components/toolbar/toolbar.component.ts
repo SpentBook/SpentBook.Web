@@ -19,7 +19,7 @@ export class ToolbarComponent implements OnInit {
   constructor(
     private sidenavService: SidenavService,
     private router: Router,
-    private toolbarService: ToolbarService,
+    public toolbarService: ToolbarService,
     private authService: AuthService,
     private location: Location
   ) {

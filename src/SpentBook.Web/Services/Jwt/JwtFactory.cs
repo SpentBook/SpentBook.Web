@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using SpentBook.Web.Services.Config;
@@ -14,41 +15,28 @@ namespace SpentBook.Web.Services.Jwt
     public class JwtFactory : IJwtFactory
     {
         private readonly JwtIssuerOptions _jwtOptions;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public JwtFactory(AppConfig appConfig)
+        public JwtFactory(AppConfig appConfig, UserManager<ApplicationUser> userManager)
         {
-            _jwtOptions = appConfig.Jwt;
+            this._jwtOptions = appConfig.Jwt;
+            this._userManager = userManager;
             ThrowIfInvalidOptions(_jwtOptions);
         }
-        
-        public ClaimsIdentity GenerateClaimsIdentity(string userName, string id)
-        {
-            return new ClaimsIdentity(new GenericIdentity(userName, "Token"), new[]
-                {
-                    new Claim(Constants.Id, id),
-                    new Claim(Constants.Rol, Constants.ApiAccess)
-                });
-        }
-        
-        public async Task<(string UserId, string Token, int SecondsToExpires)> GenerateJwt(ClaimsIdentity identity, IJwtFactory jwtFactory, string userName, JwtIssuerOptions jwtOptions, JsonSerializerSettings serializerSettings)
-        {
-            var userId = identity.Claims.Single(c => c.Type == "id").Value;
-            var token = await jwtFactory.GenerateEncodedToken(userName, identity);
-            var secondsToExpires = (int)jwtOptions.ValidFor.TotalSeconds;
 
-            return (userId, token, secondsToExpires);
-        }
-
-        public async Task<string> GenerateEncodedToken(string userName, ClaimsIdentity identity)
+        public async Task<string> GenerateEncodedToken(ApplicationUser user)
         {
+            var roles = await this._userManager.GetRolesAsync(user);
+            roles.Add(Constants.ApiAccess);
+
             var claims = new[]
             {
-                 new Claim(JwtRegisteredClaimNames.Sub, userName),
-                 new Claim(JwtRegisteredClaimNames.Jti, await _jwtOptions.JtiGenerator()),
-                 new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(_jwtOptions.IssuedAt).ToString(), ClaimValueTypes.Integer64),
-                 identity.FindFirst(Constants.Rol),
-                 identity.FindFirst(Constants.Id)
-             };
+                new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
+                new Claim(JwtRegisteredClaimNames.Jti, await _jwtOptions.JtiGenerator()),
+                new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(_jwtOptions.IssuedAt).ToString(), ClaimValueTypes.Integer64),
+                new Claim(Constants.Rol, string.Join(";", roles)),
+                new Claim(Constants.Id, user.Id),
+            };
 
             // Create the JWT security token and encode it.
             var jwt = new JwtSecurityToken(
@@ -88,6 +76,6 @@ namespace SpentBook.Web.Services.Jwt
             {
                 throw new ArgumentNullException(nameof(JwtIssuerOptions.JtiGenerator));
             }
-        }        
+        }
     }
 }

@@ -15,7 +15,7 @@ export class SidenavComponent implements OnInit {
 
   constructor(
     private sidenavService: SidenavService,
-    private menuService: MenuService
+    public menuService: MenuService
   ) {
 
   }

@@ -36,6 +36,23 @@ export class AuthService {
     return false;
   }
 
+  public isAuthorize(routeRoles: string[]): boolean {
+    if (routeRoles && this.hasLocalStorage()) {
+      let token = this.getToken();
+      let roles = token.rol.split(";");
+
+      for (var iUserRole in roles) {
+        if (routeRoles.includes(roles[iUserRole])) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+
+    return true;
+  }
+
   public login(loginResponse: LoginResponse) {
     window.localStorage[AuthService.USER_KEY] = JSON.stringify(loginResponse);
   }

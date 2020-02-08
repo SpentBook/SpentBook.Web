@@ -90,7 +90,7 @@ namespace SpentBook.Web
             }
             else
             {
-                var authModel = await LoginResponse.GenerateWithTokenAsync(_jwtFactory, _appConfig, user.Id, user.UserName);
+                var authModel = await LoginResponse.GenerateWithTokenAsync(_jwtFactory, _appConfig, user);
                 if (authModel == null)
                 {
                     var pb = new ModelStateBuilder<RegistrationRequest>(this);
@@ -142,7 +142,7 @@ namespace SpentBook.Web
             }
 
             var user = await _userManager.FindByNameAsync(loginModel.UserName);
-            var token = await LoginResponse.GenerateWithTokenAsync(_jwtFactory, _appConfig, user.Id, loginModel.UserName);
+            var token = await LoginResponse.GenerateWithTokenAsync(_jwtFactory, _appConfig, user);
             if (token == null)
             {
                 var pb = new ModelStateBuilder<LoginRequest>(this);
@@ -299,7 +299,7 @@ namespace SpentBook.Web
             }
 
             // 5. generate the jwt for the local user...
-            var token = await LoginResponse.GenerateWithTokenAsync(_jwtFactory, _appConfig, user.Id, user.Email);
+            var token = await LoginResponse.GenerateWithTokenAsync(_jwtFactory, _appConfig, user);
             if (token == null)
             {
                 var pb = new ModelStateBuilder<LoginRequest>(this);

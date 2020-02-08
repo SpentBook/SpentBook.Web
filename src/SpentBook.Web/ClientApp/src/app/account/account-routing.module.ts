@@ -23,7 +23,14 @@ const appRoutes: Routes = [
   { path: 'change-password', component: PageChangePasswordComponent },
   { path: 'profile', component: PageProfileComponent, canActivate: [AuthGuardService] },
   { path: 'profile/change-password', component: PageProfileChangePwdComponent, canActivate: [AuthGuardService] },
-  { path: 'profile/unregister', component: PageUnregisterComponent, canActivate: [AuthGuardService] },
+  {
+    path: 'profile/unregister',
+    component: PageUnregisterComponent,
+    canActivate: [AuthGuardService],
+    data: {
+      roles: ['delete']
+    }
+  },
 ];
 
 @NgModule({

@@ -82,6 +82,7 @@ namespace SpentBook.Web
 
             // Add DbContext
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connection));
+            // services.AddDbContext<ApplicationDbContext>(options => options.UseMySql(connection));
 
             // Get/Set JwtIssuerOptions from configuration
             var appConfig = new AppConfig();
@@ -89,8 +90,8 @@ namespace SpentBook.Web
             appConfig.Jwt.ValidFor = TimeSpan.FromMinutes(appConfig.TimeoutTokenLogin);
             services.AddSingleton(appConfig);
 
-            // JWT
-            services.AddSingleton<IJwtFactory, JwtFactory>();
+            // JWT (tem que ser scoped devido ao UserManager que é scoped)
+            services.AddScoped<IJwtFactory, JwtFactory>();
 
             // Add authentication
             services.AddAuthentication(options =>
@@ -165,10 +166,15 @@ namespace SpentBook.Web
                 options.TokenLifespan = TimeSpan.FromMinutes(appConfig.TimeoutTokenEmailConfirmation);
             });
 
-            //builder = new IdentityBuilder(builder.UserType, typeof(IdentityRole), builder.Services)
+            // Sem esse código, não é possível utilizar Roles na aplicação.
+            // Depois de varias pesquisas, essa é a única forma que fez funcionar. 
+            // A função "AddRoles<IdentityRole>()" não serve pra nada
+            builder = new IdentityBuilder(builder.UserType, typeof(IdentityRole), builder.Services);
+
             builder
                 .AddSignInManager()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
+                // .AddRoles<IdentityRole>()
                 .AddDefaultTokenProviders();
 
             // Email
@@ -228,7 +234,15 @@ namespace SpentBook.Web
                 }
             });
 
-            context.Database.Migrate();
+            try
+            {
+                context.Database.Migrate();
+            }
+            catch (Exception ex)
+            {
+                var logger = loggerFactory.CreateLogger("Startup");
+                logger.LogError($"Unexpected error: {ex}");
+            }
         }
     }
 }

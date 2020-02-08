@@ -25,6 +25,7 @@ import { RouterModule } from '@angular/router';
 import { SnackbarComponent } from './components/snackbar/snackbar.component';
 import { InputRadioComponent } from './components/input-radio/input-radio.component';
 import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
+import { FooterComponent } from './components/footer/footer.component';
 
 
 @NgModule({
@@ -51,6 +52,7 @@ import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.com
     SidenavComponent,
     SnackbarComponent,
     InputRadioComponent,
+    FooterComponent
   ],
   imports: [
     // App modules

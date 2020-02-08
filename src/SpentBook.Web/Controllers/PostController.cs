@@ -19,23 +19,40 @@ namespace SpentBook.Web.Controllers
         }
 
         [HttpGet("[action]")]
-        [Authorize("")]
+        // [Authorize("")]
         public bool Add()
         {
             // context.Database.EnsureDeleted();
             // context.Database.EnsureCreated();
 
-            context.Blogs.Add(new Blog
+            // context.Blogs.Add(new Blog
+            // {
+            //     Url = "http://sample.com",
+            //     Posts = new List<Post>
+            //     {
+            //         new Post {Title = "Saving Data with EF"},
+            //         new Post {Title = "Cascade Delete with EF"}
+            //     }
+            // });
+
+            // context.SaveChanges();
+
+            var b = context.Blogs.Where(f=>f.BlogId == 1117);
+
+            var a = new Blog
             {
-                Url = "http://sample.com",
+                BlogId = 1117,
+                Url = "22",
                 Posts = new List<Post>
                 {
                     new Post {Title = "Saving Data with EF"},
                     new Post {Title = "Cascade Delete with EF"}
                 }
-            });
+            };
 
+            context.Blogs.Update(a);
             context.SaveChanges();
+    
             return true;
         }
     }

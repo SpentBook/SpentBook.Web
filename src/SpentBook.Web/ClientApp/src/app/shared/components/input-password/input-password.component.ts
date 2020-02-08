@@ -17,8 +17,10 @@ import { ServerSideValidationService } from '../../services/server-side-validati
   styleUrls: ['./input-password.component.styl'],
 })
 export class InputPasswordComponent implements OnInit {
+  showPwd: boolean = false;
+  
   @ContentChildren(MatError, { read: ElementRef })
-  private _matErrors: QueryList<ElementRef>;
+  _matErrors: QueryList<ElementRef>;
 
   @Input()
   required: boolean = true;

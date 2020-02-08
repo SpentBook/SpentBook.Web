@@ -1,6 +1,6 @@
 <div class="form-field">
   <mat-form-field color="accent">
-    <input matInput [formControl]="formControlRef" [type]="text" [placeholder]="placeholder" autocomplete="off"
+    <input matInput [formControl]="formControlRef" type="text" [placeholder]="placeholder" autocomplete="off"
       [maxlength]="maxLength" />
 
     <mat-error *ngIf="hasError('required')">{{placeholder}} é obrigatório</mat-error>
