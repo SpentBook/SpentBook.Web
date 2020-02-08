@@ -152,6 +152,7 @@ namespace SpentBook.Web.Controllers
 
         // DELETE api/user
         [Route("Unregister")]
+        [HttpPost]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status404NotFound)]

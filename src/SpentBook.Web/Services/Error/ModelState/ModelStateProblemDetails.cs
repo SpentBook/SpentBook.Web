@@ -27,7 +27,10 @@ namespace SpentBook.Web.Services.Error
                     var items = new List<Item>();
                     foreach (var e in m.Value.Errors)
                         items.Add(GetItemFromError(e.ErrorMessage));
-                    this.Errors.Add(m.Key, items.ToArray());
+
+                    // Fix the fieldname in .netcore 3.1 (when not use newtonsoft): https://stackoverflow.com/questions/60104748/aspnet-core-3-1-validation-with-a-sign-in-the-name-of-fields-with-errors
+                    var fieldName = m.Key.Replace("$.", "");
+                    this.Errors.Add(fieldName, items.ToArray());
                 }
             }
         }

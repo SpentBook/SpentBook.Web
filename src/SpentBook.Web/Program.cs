@@ -1,7 +1,7 @@
 using System;
-using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 
 namespace SpentBook.Web
 {
@@ -9,22 +9,21 @@ namespace SpentBook.Web
     {
         public static void Main(string[] args)
         {
-            Console.WriteLine("VAR 'ASPNETCORE_URLS': {0}", Environment.GetEnvironmentVariable("ASPNETCORE_URLS"));
-            CreateWebHostBuilder(args).Build().Run();
+            CreateHostBuilder(args).Build().Run();
         }
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .ConfigureAppConfiguration((hostContext, config) =>
-                {
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((hostContext, config) => {
                     var environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
                     config.Sources.Clear();
-                    config.AddJsonFile("appsettings.json", optional: false);
-                    config.AddJsonFile($"appsettings.{environmentName?.ToLower()}.json", optional: true);
+                    config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+                    config.AddJsonFile($"appsettings.{environmentName?.ToLower()}.json", optional: true, reloadOnChange: true);
                     config.AddEnvironmentVariables();
                 })
-                // .UseUrls()
-                .UseKestrel()
-                .UseStartup<Startup>();
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                });
     }
 }

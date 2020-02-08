@@ -41,7 +41,7 @@ namespace SpentBook.Web.Services.Error
                 // Disable default aspnetcore validation AFTER action call
                 // Disable "options.InvalidModelStateResponseFactory" if set
                 options.SuppressModelStateInvalidFilter = true;
-
+                
                 // Disable default aspnetcore validation BEFORE action call
                 options.SuppressMapClientErrors = true;
 

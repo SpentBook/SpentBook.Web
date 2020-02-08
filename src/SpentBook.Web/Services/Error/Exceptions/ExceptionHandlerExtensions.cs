@@ -37,7 +37,7 @@ namespace SpentBook.Web.Services.Error
 
         public static ErrorMechanism ErrorMechanismSelected { get; set; } = ErrorMechanism.UseExceptionHandlerWithProblemDetails;
 
-        public static void UseProblemDetailsForExceptionsMiddleware(this IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public static void UseProblemDetailsForExceptionsMiddleware(this IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             switch (ErrorMechanismSelected)
             {

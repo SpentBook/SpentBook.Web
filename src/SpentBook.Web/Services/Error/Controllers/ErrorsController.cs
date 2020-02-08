@@ -31,6 +31,8 @@ namespace SpentBook.Web.Services.Error
 
 
         [Route("api/Error/500")]
+        [HttpGet]
+
         public IActionResult Error500()
         {
             var exceptionFeature = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
@@ -38,24 +40,28 @@ namespace SpentBook.Web.Services.Error
         }
 
         [Route("api/ErrorSamples/Exception")]
+        [HttpGet]
         public IActionResult Exception()
         {
             throw new Exception("ERRO");
         }
 
         [Route("api/ErrorSamples/InvalidModelBefore")]
+        [HttpGet]
         public IActionResult InvalidModelBefore([Required]DateTime notSet)
         {
             return new EmptyResult();
         }
 
         [Route("api/ErrorSamples/InvalidModelAfter")]
+        [HttpGet]
         public IActionResult InvalidModelAfter()
         {
             return NotFound();
         }
 
         [Route("api/ErrorSamples/InvalidModelAfterWithModelState")]
+        [HttpGet]
         public IActionResult InvalidModelAfterWithModelState()
         {
             ModelState.TryAddModelError("Email", "Invalid email");
@@ -63,6 +69,7 @@ namespace SpentBook.Web.Services.Error
         }
 
         [Route("api/ErrorSamples/InvalidModelAfterWithCustomError")]
+        [HttpGet]
         public IActionResult InvalidModelAfterWithCustomError()
         {
             return Conflict(new

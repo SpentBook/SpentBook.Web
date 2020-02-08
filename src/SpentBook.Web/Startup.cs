@@ -1,88 +1,62 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
-using System;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using FluentValidation.AspNetCore;
-using AutoMapper;
-using Swashbuckle.AspNetCore.Swagger;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.Extensions.Logging;
-using SpentBook.Web.Services.Jwt;
-using SpentBook.Web.Services.Config;
-using SpentBook.Web.Services.Email;
-using SpentBook.Web.Services.Error;
+using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
+
+// using FluentValidation.AspNetCore;
+
+using SpentBook.Web.Infra.DI;
+using SpentBook.Web.Services.Error;
+using SpentBook.Web.Services.Config;
+using System;
+using SpentBook.Web.Services.Jwt;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using SpentBook.Web;
+using AutoMapper;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using SpentBook.Web.Services.Email;
+using System.Collections.Generic;
+using Microsoft.OpenApi.Models;
+using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
 
 namespace SpentBook.Web
 {
     public class Startup
     {
-        // 1) Melhorar forma para limpar o startu, deixar modular
+        public IConfiguration Configuration { get; }
 
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
-
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var connection = Configuration.GetConnectionString("ApplicationDbContext");
-
-            // Add MVC
-            services.AddMvc()
-                .AddJsonOptions(options =>
+            services.AddControllers()
+                .AddMvcOptions(ops => {
+                    ops.SuppressOutputFormatterBuffering = true;
+                })
+                .AddNewtonsoftJson(options =>
                 {
                     options.SerializerSettings.Converters.Add(new StringEnumConverter());
-                })
-                .AddFluentValidation(fv =>
-                {
-                    fv.RegisterValidatorsFromAssemblyContaining<Startup>();
-                })
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
-            // Add problem details for model state
-            services.AddProblemDetailsForInvalidModelState();
-
-            // Register the Swagger generator, defining 1 or more Swagger documents
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new Info { Title = "Spentbook Api", Version = "v1" });
-                c.AddSecurityDefinition("Bearer", new ApiKeyScheme()
-                {
-                    Description = "Authorization header using the Bearer scheme",
-                    Name = "Authorization",
-                    In = "header"
                 });
+                // .AddFluentValidation(fv =>
+                // {
+                //     fv.RegisterValidatorsFromAssemblyContaining<Startup>();
+                // });
 
-                var security = new Dictionary<string, IEnumerable<string>>
-                {
-                    {"Bearer", new string[] { }},
-                };
-
-                c.AddSecurityRequirement(security);
-            });
-
-            // In production, the Angular files will be served from this directory
-            services.AddSpaStaticFiles(configuration =>
-            {
-                configuration.RootPath = "ClientApp/dist/ClientApp";
-            });
-
-            // Add DbContext
-            services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connection));
-            // services.AddDbContext<ApplicationDbContext>(options => options.UseMySql(connection));
+            services
+                .AddAndConfigureDatabase(Configuration)
+                .AddProblemDetailsForInvalidModelState();
 
             // Get/Set JwtIssuerOptions from configuration
             var appConfig = new AppConfig();
@@ -182,12 +156,38 @@ namespace SpentBook.Web
             services.AddScoped<EmailService>();
 
             // Add AutoMapper
-            services.AddAutoMapper();
+            services.AddAutoMapper(typeof(Startup));
+
+            // In production, the Angular files will be served from this directory
+            services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = "ClientApp/dist";
+            });
+
+            // Register the Swagger generator, defining 1 or more Swagger documents
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Spentbook Api", Version = "v1" });
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+                {
+                    Description = "Authorization header using the Bearer scheme",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header
+                });
+
+                // var security = new Dictionary<string, IEnumerable<string>>
+                // {
+                //     {"Bearer", new string[] { }},
+                // };
+
+                // c.AddSecurityRequirement(security);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ApplicationDbContext context, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, ApplicationDbContext context, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
+            // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
             if (!env.IsDevelopment())
                 app.UseHsts();
 
@@ -196,13 +196,8 @@ namespace SpentBook.Web
             // 5) Testar redirect
             app.UseProblemDetailsForExceptionsMiddleware(env, loggerFactory);
 
-            // Expose the members of the 'Microsoft.AspNetCore.Http' namespace 
-            // at the top of the file:
-            // using Microsoft.AspNetCore.Http;
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseSpaStaticFiles();
-            app.UseAuthentication();
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
@@ -214,11 +209,21 @@ namespace SpentBook.Web
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Spentbook Api");
             });
 
-            app.UseMvc(routes =>
+            if (!env.IsDevelopment())
             {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller}/{action=Index}/{id?}");
+                app.UseSpaStaticFiles();
+            }
+
+            app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+
+                // endpoints.MapControllerRoute(
+                //     name: "default",
+                //     pattern: "{controller}/{action=Index}/{id?}");
             });
 
             app.UseSpa(spa =>

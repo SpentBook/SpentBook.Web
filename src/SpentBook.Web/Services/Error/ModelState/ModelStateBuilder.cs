@@ -105,7 +105,7 @@ namespace SpentBook.Web.Services.Error
 
         public ModelStateBuilder<T> SetFieldError(string fieldName, ProblemDetailsFieldType errorType, string message = null, Func<ProblemDetailsFieldType, bool> addOnly = null)
         {
-            if (addOnly == null || addOnly(errorType))
+            if (addOnly == null || addOnly(errorType)) 
                 this._controller.ModelState.TryAddModelError(fieldName, ProblemDetailsFactory.GetComposeTypeAndErrorMessage(errorType, message));
 
             return this;
