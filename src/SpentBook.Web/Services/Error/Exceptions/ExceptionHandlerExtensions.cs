@@ -133,10 +133,13 @@ namespace SpentBook.Web.Services.Error
             app.Use(async (context, next) =>
             {
                 await next();
+
+                // Verificar no futuro: https://github.com/Homely/Homely.AspNetCore.Mvc.Helpers#problemdetails-for-all-4xx5xx-http-errors
                 var listCustom = new List<int>()
                 {
                     (int)HttpStatusCode.MethodNotAllowed,
                     (int)HttpStatusCode.Unauthorized,
+                    (int)HttpStatusCode.Forbidden,
                 };
 
                 if (listCustom.Contains(context.Response.StatusCode))

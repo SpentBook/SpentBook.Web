@@ -33,7 +33,8 @@ export class ServerSideValidationService {
     serverError: any,
     knownFieldsAction: (knownFields: FieldError[]) => void,
     unknownFieldsAction: (unknownFields: FieldError[]) => void,
-    genericErrorAction: (problemDetails: ProblemDetails) => void
+    genericErrorAction: (problemDetails: ProblemDetails) => void,
+    forceAsGeneric: boolean = false
   ) {
     let knownFields = [];
     let unknownFields = [];
@@ -49,7 +50,7 @@ export class ServerSideValidationService {
       for (let fieldName in problemDetails.errors) {
         let field = componentInstance[this.toLowerCaseFirstLetter(fieldName)];
         let fieldErrors = problemDetails.errors[fieldName];
-        if (field == null || !field.setErrors) {
+        if (field == null || !field.setErrors || forceAsGeneric) {
           unknownFields.push({
             name: fieldName,
             errors: fieldErrors
@@ -88,7 +89,8 @@ export class ServerSideValidationService {
   public validateWithBoxError(
     componentInstance: Object,
     serverError: any,
-    boxError: BoxErrorComponent
+    boxError: BoxErrorComponent,
+    forceAsGeneric?: boolean
   ) {
     this.validate(
       componentInstance,
@@ -103,7 +105,8 @@ export class ServerSideValidationService {
       (problemDetails) => {
         boxError.problemDetails = problemDetails;
         boxError.show = true;
-      });
+      },
+      forceAsGeneric);
   }
 
   public hasError(control: FormControl, errorName: string) {

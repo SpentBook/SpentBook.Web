@@ -2,7 +2,7 @@
   <form [formGroup]="form" (ngSubmit)="submitForm()">
     <fieldset [disabled]="loading">
 
-      <div class="box-register" [hidden]="boxError.show || loading">
+      <div class="box-register" [hidden]="boxError?.show || loading">
         <p>Confirme sua senha para continuar</p>
         <app-input-password [formControlRef]="password" placeholder="Senha"></app-input-password>
         <app-input-button placeholder="Cancelar conta" icon="cancel" [disabled]="form.invalid && !isSubmitted"></app-input-button>
@@ -10,7 +10,7 @@
 
       <app-loading class="box-loading" [hidden]="!loading"></app-loading>
 
-      <div class="box-error" [hidden]="!boxError.show">
+      <div class="box-error" [hidden]="!boxError?.show">
         <app-box-error></app-box-error>
         <app-input-button placeholder="ok" (clicked)="hideBoxError()" icon="cancel"></app-input-button>
       </div>

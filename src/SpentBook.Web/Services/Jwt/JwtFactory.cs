@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using SpentBook.Web.Services.Config;
 using SpentBook.Web.ViewsModels;
@@ -24,29 +27,63 @@ namespace SpentBook.Web.Services.Jwt
             ThrowIfInvalidOptions(_jwtOptions);
         }
 
+        // public string GenerateToken(ApplicationUser user)
+        // {
+        //     var tokenHandler = new JwtSecurityTokenHandler();
+        //     var key = Encoding.ASCII.GetBytes(this._jwtOptions.SecretKey);
+        //     var tokenDescriptor = new SecurityTokenDescriptor
+        //     {
+        //         Subject = new ClaimsIdentity(new Claim[]
+        //         {
+        //             new Claim(ClaimTypes.Name, user.Username.ToString()),
+        //             new Claim(ClaimTypes.Role, user.Role.ToString())
+        //         }),
+        //         Expires = _jwtOptions.Expiration,
+        //         SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+        //     };
+        //     var token = tokenHandler.CreateToken(tokenDescriptor);
+        //     return tokenHandler.WriteToken(token);
+        // }
+
         public async Task<string> GenerateEncodedToken(ApplicationUser user)
         {
             var roles = await this._userManager.GetRolesAsync(user);
-            roles.Add(Constants.ApiAccess);
 
-            var claims = new[]
+            // var claims = new List<Claim>
+            // {
+            //     new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
+            //     new Claim(JwtRegisteredClaimNames.Jti, await _jwtOptions.JtiGenerator()),
+            //     new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(_jwtOptions.IssuedAt).ToString(), ClaimValueTypes.Integer64),
+            //     new Claim(Constants.Id, user.Id),
+            // };
+
+            // // Roles property is string collection but you can modify Select code if it it's not
+            // claims.AddRange(roles.Select(role => new Claim("role", role)));
+            
+            // // Create the JWT security token and encode it.
+            // var jwt = new JwtSecurityToken(
+            //     issuer: _jwtOptions.Issuer,
+            //     audience: _jwtOptions.Audience,
+            //     claims: claims,
+            //     notBefore: _jwtOptions.NotBefore,
+            //     expires: _jwtOptions.Expiration,
+            //     signingCredentials: _jwtOptions.SigningCredentials);
+
+            var payload = new JwtPayload
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
-                new Claim(JwtRegisteredClaimNames.Jti, await _jwtOptions.JtiGenerator()),
-                new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(_jwtOptions.IssuedAt).ToString(), ClaimValueTypes.Integer64),
-                new Claim(Constants.Rol, string.Join(";", roles)),
-                new Claim(Constants.Id, user.Id),
+
+                { CustomHeaders.Id, user.Id },
+                { JwtRegisteredClaimNames.Iss, _jwtOptions.Issuer },
+                { JwtRegisteredClaimNames.Aud, _jwtOptions.Audience },
+                { JwtRegisteredClaimNames.Nbf, ToUnixEpochDate(_jwtOptions.NotBefore) },
+                { JwtRegisteredClaimNames.Exp, ToUnixEpochDate(_jwtOptions.Expiration) },
+                { JwtRegisteredClaimNames.Iat, ToUnixEpochDate(_jwtOptions.IssuedAt) },
+                { JwtRegisteredClaimNames.Sub, user.UserName },
+                { JwtRegisteredClaimNames.Jti, await _jwtOptions.JtiGenerator()},
+                { CustomHeaders.Roles, roles }
             };
 
-            // Create the JWT security token and encode it.
-            var jwt = new JwtSecurityToken(
-                issuer: _jwtOptions.Issuer,
-                audience: _jwtOptions.Audience,
-                claims: claims,
-                notBefore: _jwtOptions.NotBefore,
-                expires: _jwtOptions.Expiration,
-                signingCredentials: _jwtOptions.SigningCredentials);
-
+            var jwt = new JwtSecurityToken(new JwtHeader(_jwtOptions.SigningCredentials), payload);
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
 
             return encodedJwt;

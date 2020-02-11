@@ -14,6 +14,7 @@ using SpentBook.Web.Extensions;
 using Newtonsoft.Json;
 using System.Net.Http;
 using System;
+using SpentBook.Web.Services;
 
 namespace SpentBook.Web
 {
@@ -24,6 +25,7 @@ namespace SpentBook.Web
         private readonly IJwtFactory _jwtFactory;
         private readonly AppConfig _appConfig;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ILogger _logger;
         private readonly EmailService _emailService;
         private readonly IMapper _mapper;
@@ -33,6 +35,7 @@ namespace SpentBook.Web
             IJwtFactory jwtFactory,
             AppConfig appConfig,
             SignInManager<ApplicationUser> signInManager,
+            RoleManager<IdentityRole> roleManager,
             ILoggerFactory loggerFactory,
             EmailService emailService,
             IMapper mapper
@@ -42,6 +45,7 @@ namespace SpentBook.Web
             _jwtFactory = jwtFactory;
             _appConfig = appConfig;
             _signInManager = signInManager;
+            _roleManager = roleManager;
             _logger = loggerFactory.CreateLogger<ApplicationUser>();
             _emailService = emailService;
             _mapper = mapper;
@@ -61,19 +65,9 @@ namespace SpentBook.Web
             user.LastName = model.LastName;
             user.DateOfBirth = model.DateOfBirth;
 
-            var identityResult = await _signInManager.UserManager.CreateAsync(user, model.Password);
-
-            if (!identityResult.Succeeded)
-            {
-                var pb = new ModelStateBuilder<RegistrationRequest>(this, identityResult)
-                    .SetIdentityErrorEmail(e => e.Email)
-                    .SetIdentityErrorPassword(e => e.Password);
-
-                if (pb.HasProblem(e => e.Email, ProblemDetailsFieldType.DuplicateUserName))
-                    return this.Conflict();
-
-                return this.BadRequest();
-            }
+            var actionResultError = await CreateUserAsync(user, model.Password);
+            if (actionResultError != null)
+                return actionResultError;
 
             // Register as locked if enabled
             // if (_appConfig.NewUserAsLocked)
@@ -113,7 +107,7 @@ namespace SpentBook.Web
         {
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-            var identityResult = await _signInManager.PasswordSignInAsync(loginModel.UserName, loginModel.Password, false, lockoutOnFailure: true);
+            var identityResult = await _signInManager.PasswordSignInAsync(loginModel.Email, loginModel.Password, false, lockoutOnFailure: true);
 
             // if (result.RequiresTwoFactor)
             // {
@@ -126,27 +120,27 @@ namespace SpentBook.Web
 
                 if (identityResult.IsLockedOut)
                 {
-                    pb.SetFieldError(f => f.UserName, ProblemDetailsFieldType.IsLockedOut);
+                    pb.SetFieldError(f => f.Email, ProblemDetailsFieldType.IsLockedOut);
                     return this.Locked();
                 }
                 else if (identityResult.IsNotAllowed)
                 {
-                    pb.SetFieldError(f => f.UserName, ProblemDetailsFieldType.IsNotAllowed);
+                    pb.SetFieldError(f => f.Email, ProblemDetailsFieldType.IsNotAllowed);
                     return this.Unauthorized();
                 }
                 else
                 {
-                    pb.SetFieldError(f => f.UserName, ProblemDetailsFieldType.UserNotFound);
+                    pb.SetFieldError(f => f.Email, ProblemDetailsFieldType.UserNotFound);
                     return this.NotFound();
                 }
             }
 
-            var user = await _userManager.FindByNameAsync(loginModel.UserName);
+            var user = await _userManager.FindByNameAsync(loginModel.Email);
             var token = await LoginResponse.GenerateWithTokenAsync(_jwtFactory, _appConfig, user);
             if (token == null)
             {
                 var pb = new ModelStateBuilder<LoginRequest>(this);
-                pb.SetFieldError(f => f.UserName, ProblemDetailsFieldType.JwtError);
+                pb.SetFieldError(f => f.Email, ProblemDetailsFieldType.JwtError);
                 return this.BadRequest();
             }
             else
@@ -251,6 +245,7 @@ namespace SpentBook.Web
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> LoginFacebook([FromBody]LoginFacebookRequest model)
         {
+            const string provider = "Facebook";
             var client = new HttpClient();
 
             // 1. generate an app access token
@@ -272,38 +267,44 @@ namespace SpentBook.Web
             var userInfoResponse = await client.GetStringAsync($"https://graph.facebook.com/v2.8/me?fields=id,email,first_name,last_name,name,gender,locale,birthday,picture&access_token={model.AccessToken}");
             var userInfo = JsonConvert.DeserializeObject<FacebookUserData>(userInfoResponse);
 
-            // 4. ready to create the local user account (if necessary) and jwt
-            var user = await _userManager.FindByEmailAsync(userInfo.Email);
-
+            // 4. check if login with facebook already exists
+            var user = await _userManager.FindByLoginAsync(provider, userInfo.Id.ToString());
+            
             if (user == null)
             {
                 user = new ApplicationUser
                 {
                     FirstName = userInfo.FirstName,
                     LastName = userInfo.LastName,
-                    FacebookId = userInfo.Id,
                     Email = userInfo.Email,
                     UserName = userInfo.Email,
                     PictureUrl = userInfo.Picture.Data.Url,
-                    // LockoutEnabled = false // verificar amanha
+                    // LockoutEnabled = false // verificar
                 };
 
-                var result = await _userManager.CreateAsync(user);
+                // 5. if user not exists, create the user
+                var actionResultError = await CreateUserAsync(user);
+                if (actionResultError != null)
+                    return actionResultError;
 
-                if (!result.Succeeded)
+                // 6. create the login for the user
+                var login = new UserLoginInfo(provider, userInfo.Id.ToString(), provider);
+                var resultAddLogin = await _userManager.AddLoginAsync(user, login);
+
+                if (!resultAddLogin.Succeeded)
                 {
                     var pb = new ModelStateBuilder<LoginFacebookRequest>(this)
-                        .SetFieldError(e => e.AccessToken, ProblemDetailsFieldType.Invalid, "Invalid facebook token.");
+                        .SetFieldError(e => e.AccessToken, ProblemDetailsFieldType.Invalid, "Invalid associate facebook user");
                     return this.BadRequest();
                 }
             }
 
-            // 5. generate the jwt for the local user...
+            // 7. generate the jwt for the local user...
             var token = await LoginResponse.GenerateWithTokenAsync(_jwtFactory, _appConfig, user);
             if (token == null)
             {
                 var pb = new ModelStateBuilder<LoginRequest>(this);
-                pb.SetFieldError(f => f.UserName, ProblemDetailsFieldType.JwtError);
+                pb.SetFieldError(f => f.Email, ProblemDetailsFieldType.JwtError);
                 return this.BadRequest();
             }
             else
@@ -311,6 +312,47 @@ namespace SpentBook.Web
                 token.RequiresTwoFactor = false;
                 return this.Ok(token);
             }
+        }
+
+        private async Task<ActionResult> CreateUserAsync(ApplicationUser user, string pwd = null) 
+        {
+            IdentityResult identityResult;
+
+            if (pwd == null)
+                identityResult = await _signInManager.UserManager.CreateAsync(user);
+            else
+                identityResult = await _signInManager.UserManager.CreateAsync(user, pwd);
+
+            if (!identityResult.Succeeded)
+            {
+                var pb = new ModelStateBuilder<RegistrationRequest>(this, identityResult)
+                    .SetIdentityErrorEmail(e => e.Email)
+                    .SetIdentityErrorPassword(e => e.Password);
+
+                if (pb.HasProblem(e => e.Email, ProblemDetailsFieldType.DuplicateUserName))
+                    return this.Conflict();
+
+                return this.BadRequest();
+            }
+            
+            await AddDefaultRolesAsync(user);
+            return null;
+        }
+
+        private async Task AddDefaultRolesAsync(ApplicationUser user)
+        {
+            var roleNames = new string[] { Roles.USER };
+            foreach (var roleName in roleNames)
+            {
+                //creating the roles and seeding them to the database
+                var roleExist = await _roleManager.RoleExistsAsync(roleName);
+                if (!roleExist)
+                {
+                    var roleResult = await _roleManager.CreateAsync(new IdentityRole(roleName));
+                }
+            }
+
+            var resultCreateDefaultRoles = await _userManager.AddToRolesAsync(user, roleNames);
         }
     }
 }

@@ -39,10 +39,9 @@ export class AuthService {
   public isAuthorize(routeRoles: string[]): boolean {
     if (routeRoles && this.hasLocalStorage()) {
       let token = this.getToken();
-      let roles = token.rol.split(";");
 
-      for (var iUserRole in roles) {
-        if (routeRoles.includes(roles[iUserRole])) {
+      for (var iUserRole in token.roles) {
+        if (routeRoles.includes(token.roles[iUserRole])) {
           return true;
         }
       }

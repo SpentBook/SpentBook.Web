@@ -11,9 +11,9 @@ export enum ToolbarMode {
 })
 export class ToolbarService {
   public toolbarMode: ToolbarMode;
-  private showLogo: boolean;
-  private showBackButton: boolean;
-  private title: String;
+  public showLogo: boolean;
+  public showBackButton: boolean;
+  public title: String;
 
   constructor() {
     this.toolbarMode = ToolbarMode.NONE;

@@ -7,7 +7,7 @@ namespace SpentBook.Web
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public long FacebookId { get; set; }
+        // public long FacebookId { get; set; }
         public string PictureUrl { get; set; }
         public Gender? Gender { get; set; }
         public DateTime? DateOfBirth { get; set; }

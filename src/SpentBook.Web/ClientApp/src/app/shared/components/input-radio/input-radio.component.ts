@@ -1,7 +1,7 @@
 // Angular
 import { Component, OnInit, Input, ContentChildren, QueryList, ElementRef } from '@angular/core';
 import { FormControl, ValidatorFn, Validators } from '@angular/forms';
-import { MatError } from '@angular/material';
+import { MatError } from '@angular/material/form-field';
 
 // Module
 import { ServerSideValidationService } from '../../services/server-side-validation.service';

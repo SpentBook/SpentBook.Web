@@ -23,3 +23,6 @@ export * from './models/problem-details.model';
 export * from './models/user.model';
 export * from './models/gender.model';
 export * from './models/jwt-token.model';
+
+// Constants
+export * from './roles';

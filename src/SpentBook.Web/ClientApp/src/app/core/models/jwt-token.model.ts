@@ -2,7 +2,7 @@ export class JwtToken {
   sub: string;
   jti: string;
   iat: number;
-  rol: string;  
+  roles: string[];  
   id: string;
   nbf: number;
   exp: number;

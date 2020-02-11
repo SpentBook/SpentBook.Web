@@ -16,8 +16,8 @@ export class PageRegisterComponent implements OnInit {
   showRegister: boolean = true;
   showFinish: boolean = false;
   
-  private urlCallbackConfirmation: string;
-  private email: string;
+  public urlCallbackConfirmation: string;
+  public email: string;
   private returnUrl: string;
 
   constructor(

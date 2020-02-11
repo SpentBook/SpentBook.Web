@@ -9,6 +9,7 @@ namespace SpentBook.Web.ViewsModels
     public class LoginResponse
     {
         public string UserId { get; set; }
+        public string Email { get; set; }
         public string Token { get; set; }
         public int SecondsToExpires { get; set; }
         public bool RequireConfirmedEmail { get; set; }
@@ -31,6 +32,7 @@ namespace SpentBook.Web.ViewsModels
             return new LoginResponse
             {
                 UserId = user.Id,
+                Email = user.Email,
                 Token = token,
                 SecondsToExpires = (int)_appConfig.Jwt.ValidFor.TotalSeconds
             };

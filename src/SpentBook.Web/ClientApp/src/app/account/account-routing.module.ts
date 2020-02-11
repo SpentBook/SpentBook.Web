@@ -10,10 +10,10 @@ import { PageForgotPasswordComponent } from './pages/page-forgot-password/page-f
 import { PageChangePasswordComponent } from "./pages/page-change-password/page-change-password.component";
 import { PageProfileComponent } from './pages/page-profile/page-profile.component';
 import { PageProfileChangePwdComponent } from './pages/page-profile-change-pwd/page-profile-change-pwd.component';
+import { PageUnregisterComponent } from './pages/page-unregister/page-unregister.component';
 
 // App
-import { AuthGuardService } from '@app/core';
-import { PageUnregisterComponent } from './pages/page-unregister/page-unregister.component';
+import { AuthGuardService, Roles } from '@app/core';
 
 const appRoutes: Routes = [
   { path: 'login', component: PageLoginComponent },
@@ -28,7 +28,7 @@ const appRoutes: Routes = [
     component: PageUnregisterComponent,
     canActivate: [AuthGuardService],
     data: {
-      roles: ['delete']
+      roles: [Roles.USER]
     }
   },
 ];

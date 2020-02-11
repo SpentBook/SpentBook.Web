@@ -7,18 +7,18 @@
         <div></div>
 
         <div class="profile-welcome">
-            <span>{{userName?.value | truncate : 12 : true}}</span>
+            <span>{{email?.value | truncate : 12 : true}}</span>
         </div>
 
-        <div class="box-login" [hidden]="boxError.show || loading">
-            <app-input-email [formControlRef]="userName"></app-input-email>
+        <div class="box-login" [hidden]="boxError?.show || loading">
+            <app-input-email [formControlRef]="email"></app-input-email>
             <app-input-password [formControlRef]="password"></app-input-password>
             <app-input-button placeholder="Entrar" icon="launch" [disabled]="form.invalid && !this.isSubmitted"></app-input-button>
         </div>
 
         <app-loading class="box-loading" [hidden]="!loading"></app-loading>
 
-        <div class="box-error" [hidden]="!boxError.show || loading">
+        <div class="box-error" [hidden]="!boxError?.show || loading">
             <app-box-error></app-box-error>
             <app-input-button placeholder="ok" (clicked)="hideBoxError()"></app-input-button>
         </div>

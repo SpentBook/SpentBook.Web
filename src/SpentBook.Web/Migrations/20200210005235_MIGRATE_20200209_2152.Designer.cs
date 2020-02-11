@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SpentBook.Web;
 
 namespace SpentBook.Web.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class SpentBookContextModelSnapshot : ModelSnapshot
+    [Migration("20200210005235_MIGRATE_20200209_2152")]
+    partial class MIGRATE_20200209_2152
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -5,11 +5,12 @@
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,
-    "module": "es2015",
-    "moduleResolution": "node",
-    "emitDecoratorMetadata": true,
+    "downlevelIteration": true,
     "experimentalDecorators": true,
-    "target": "es5",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "target": "es2015",
     "typeRoots": [
       "node_modules/@types"
     ],
@@ -19,7 +20,11 @@
     ],
     "paths": {
       "@env/*": ["src/environments/*"],
-      "@app/*": ["src/app/*"],
+      "@app/*": ["src/app/*"]
     }
+  },
+  "angularCompilerOptions": {
+    "fullTemplateTypeCheck": true,
+    "strictInjectionParameters": true
   }
 }

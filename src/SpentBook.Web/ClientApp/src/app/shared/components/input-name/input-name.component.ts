@@ -3,7 +3,7 @@ import { Component, Input, OnInit, ContentChildren, ElementRef, QueryList } from
 import { FormControl, ValidatorFn, Validators } from '@angular/forms';
 
 // Material
-import { MatError } from '@angular/material';
+import { MatError } from '@angular/material/form-field';
 
 // Touch
 import 'hammerjs';

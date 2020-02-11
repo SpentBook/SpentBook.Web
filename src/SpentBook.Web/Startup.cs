@@ -42,17 +42,18 @@ namespace SpentBook.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers()
-                .AddMvcOptions(ops => {
+                .AddMvcOptions(ops =>
+                {
                     ops.SuppressOutputFormatterBuffering = true;
                 })
                 .AddNewtonsoftJson(options =>
                 {
                     options.SerializerSettings.Converters.Add(new StringEnumConverter());
                 });
-                // .AddFluentValidation(fv =>
-                // {
-                //     fv.RegisterValidatorsFromAssemblyContaining<Startup>();
-                // });
+            // .AddFluentValidation(fv =>
+            // {
+            //     fv.RegisterValidatorsFromAssemblyContaining<Startup>();
+            // });
 
             services
                 .AddAndConfigureDatabase(Configuration)
@@ -93,7 +94,7 @@ namespace SpentBook.Web
 
                     RequireExpirationTime = false,
                     ValidateLifetime = true,
-                    ClockSkew = TimeSpan.Zero
+                    ClockSkew = TimeSpan.Zero,
                 };
 
                 configureOptions.ClaimsIssuer = appConfig.Jwt.Issuer;
@@ -102,54 +103,50 @@ namespace SpentBook.Web
             });
 
             // api user claim policy
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy(Constants.PolicyName, policy => policy.RequireClaim(Constants.Rol, Constants.ApiAccess));
-            });
+            //services.AddAuthorization(options =>
+            //{
+            // options.AddPolicy(Constants.PolicyName, policy =>
+            // {
+            //     policy.RequireClaim(Constants.Rol);
+            // });
+            //});
 
             // add identity
             var builder = services.AddIdentityCore<ApplicationUser>(o =>
-            {
-                // configure identity options
-                o.Password.RequireDigit = false;
-                o.Password.RequireLowercase = false;
-                o.Password.RequireUppercase = false;
-                o.Password.RequireNonAlphanumeric = false;
-                o.Password.RequiredLength = 3;
-                o.Password.RequiredUniqueChars = 1;
-
-                // Quando true, os usuarios só vão logar quando aprovarem via e-mail
-                // a parte ruim é que se eu quiser ligar depois de já existir usuário na base, esses usuários não
-                // vão mais conseguir logar até aprovarem
-                o.SignIn.RequireConfirmedEmail = appConfig.RequireConfirmedEmail;
-                o.Lockout = new LockoutOptions()
                 {
-                    MaxFailedAccessAttempts = appConfig.MaxFailedAccessAttempts,
+                    // configure identity options
+                    o.Password.RequireDigit = false;
+                    o.Password.RequireLowercase = false;
+                    o.Password.RequireUppercase = false;
+                    o.Password.RequireNonAlphanumeric = false;
+                    o.Password.RequiredLength = 3;
+                    o.Password.RequiredUniqueChars = 1;
 
-                    // Sempre TRUE, quando false, os novos usuários nunca serão bloqueados por 
-                    // limite de erros de senha
-                    AllowedForNewUsers = true,
+                    // Quando true, os usuarios só vão logar quando aprovarem via e-mail
+                    // a parte ruim é que se eu quiser ligar depois de já existir usuário na base, esses usuários não
+                    // vão mais conseguir logar até aprovarem
+                    o.SignIn.RequireConfirmedEmail = appConfig.RequireConfirmedEmail;
+                    o.Lockout = new LockoutOptions()
+                    {
+                        MaxFailedAccessAttempts = appConfig.MaxFailedAccessAttempts,
 
-                    DefaultLockoutTimeSpan = TimeSpan.FromMinutes(appConfig.TimeoutUserBlocked),
-                };
-            });
+                        // Sempre TRUE, quando false, os novos usuários nunca serão bloqueados por 
+                        // limite de erros de senha
+                        AllowedForNewUsers = true,
+
+                        DefaultLockoutTimeSpan = TimeSpan.FromMinutes(appConfig.TimeoutUserBlocked),
+                    };
+                })
+                .AddSignInManager()
+                .AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
 
             // Tempo dos tokens de confirmação de email e etc
             services.Configure<DataProtectionTokenProviderOptions>(options =>
             {
                 options.TokenLifespan = TimeSpan.FromMinutes(appConfig.TimeoutTokenEmailConfirmation);
             });
-
-            // Sem esse código, não é possível utilizar Roles na aplicação.
-            // Depois de varias pesquisas, essa é a única forma que fez funcionar. 
-            // A função "AddRoles<IdentityRole>()" não serve pra nada
-            builder = new IdentityBuilder(builder.UserType, typeof(IdentityRole), builder.Services);
-
-            builder
-                .AddSignInManager()
-                .AddEntityFrameworkStores<ApplicationDbContext>()
-                // .AddRoles<IdentityRole>()
-                .AddDefaultTokenProviders();
 
             // Email
             services.AddScoped<IEmailSender, SendGridService>();
@@ -168,19 +165,29 @@ namespace SpentBook.Web
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Spentbook Api", Version = "v1" });
-                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+                
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
-                    Description = "Authorization header using the Bearer scheme",
+                    In = ParameterLocation.Header,
+                    Description = "Please insert JWT with Bearer into field",
                     Name = "Authorization",
-                    In = ParameterLocation.Header
+                    Type = SecuritySchemeType.ApiKey
                 });
 
-                // var security = new Dictionary<string, IEnumerable<string>>
-                // {
-                //     {"Bearer", new string[] { }},
-                // };
-
-                // c.AddSecurityRequirement(security);
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                                        {
+                                            Type = ReferenceType.SecurityScheme,
+                                            Id = "Bearer"
+                                        }
+                        },
+                        new string[] { }
+                    }
+                });
             });
         }
 
@@ -220,10 +227,6 @@ namespace SpentBook.Web
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-
-                // endpoints.MapControllerRoute(
-                //     name: "default",
-                //     pattern: "{controller}/{action=Index}/{id?}");
             });
 
             app.UseSpa(spa =>
@@ -232,11 +235,13 @@ namespace SpentBook.Web
                 // see https://go.microsoft.com/fwlink/?linkid=864501
 
                 spa.Options.SourcePath = "ClientApp";
+                spa.Options.StartupTimeout = new TimeSpan(1, 0, 0);
+                spa.UseProxyToSpaDevelopmentServer("http://localhost:4200/");
 
-                if (env.IsDevelopment())
-                {
-                    spa.UseAngularCliServer(npmScript: "start");
-                }
+                // if (env.IsDevelopment())
+                // {
+                //     spa.UseAngularCliServer(npmScript: "start");
+                // }
             });
 
             try

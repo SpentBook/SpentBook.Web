@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-
+using SpentBook.Web.Services;
 using SpentBook.Web.Services.Config;
 using SpentBook.Web.Services.Email;
 using SpentBook.Web.Services.Error;
@@ -101,7 +101,7 @@ namespace SpentBook.Web.Controllers
             return Ok(user);
         }
 
-        // DELETE api/user
+        // POST api/user
         [Route("ChangePassword")]
         [HttpPost]
         [Authorize]
@@ -150,10 +150,10 @@ namespace SpentBook.Web.Controllers
             return Ok();
         }
 
-        // DELETE api/user
+        // POST api/user
         [Route("Unregister")]
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = Roles.USER)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
@@ -161,7 +161,7 @@ namespace SpentBook.Web.Controllers
         {
             // 1) Faz o login para garantir que a senha está correta
             var email = GetCurrentEmail();
-            var signResult = await _signInManager.PasswordSignInAsync(email, request.Password, false, lockoutOnFailure: true);
+            var signResult = await _signInManager.PasswordSignInAsync(email, request.Password, false, lockoutOnFailure: false);
             if (!signResult.Succeeded)
             {
                 new ModelStateBuilder<UnregisterRequest>(this)
@@ -202,6 +202,7 @@ namespace SpentBook.Web.Controllers
             var identityClaim = identity.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
             return identityClaim.Value;
         }
+
         private void SetUserNotFound()
         {
             new ModelStateBuilder<ApplicationUser>(this)

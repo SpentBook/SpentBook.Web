@@ -1,5 +1,5 @@
 <div class="content">
-  <div class="box-message" [hidden]="boxError.show || loading">
+  <div class="box-message" [hidden]="boxError?.show || loading">
     <p>Cadastro concluído com sucesso! Para finalizar, confirme o e-mail que enviamos para {{email}}.</p>
     <p class="bold">Caso não tenha recebido, clique no botão abaixo para uma nova tentativa.</p>
 
@@ -9,7 +9,7 @@
 
   <app-loading class="box-loading" [hidden]="!loading"></app-loading>
 
-  <div class="box-error" [hidden]="!boxError.show">
+  <div class="box-error" [hidden]="!boxError?.show">
     <app-box-error></app-box-error>
     <app-input-button placeholder="ok" (clicked)="hideBoxError()" icon="cancel"></app-input-button>
   </div>

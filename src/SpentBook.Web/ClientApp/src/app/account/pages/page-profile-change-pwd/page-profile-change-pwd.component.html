@@ -2,7 +2,7 @@
   <form [formGroup]="form" (ngSubmit)="submitForm(formDirective)" #formDirective="ngForm">
     <fieldset [disabled]="loading">
 
-      <div class="box-register" [hidden]="boxError.show || loading">
+      <div class="box-register" [hidden]="boxError?.show || loading">
         <p>Entre com sua nova senha. Deixe o campo senha atual em branco caso você ainda não tenha uma senha cadastrada.</p>
         <app-input-password [formControlRef]="passwordCurrent" placeholder="Senha atual" [required]="false"></app-input-password>
         <app-input-password [formControlRef]="password" placeholder="Nova senha"></app-input-password>
@@ -12,7 +12,7 @@
 
       <app-loading class="box-loading" [hidden]="!loading"></app-loading>
 
-      <div class="box-error" [hidden]="!boxError.show">
+      <div class="box-error" [hidden]="!boxError?.show">
         <app-box-error></app-box-error>
         <app-input-button placeholder="ok" (clicked)="hideBoxError()" icon="cancel"></app-input-button>
       </div>

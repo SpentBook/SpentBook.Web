@@ -1,7 +1,7 @@
 <form [formGroup]="form" (ngSubmit)="submitForm()">
   <fieldset [disabled]="loading">
 
-    <div class="box-register" [hidden]="boxError.show || loading">
+    <div class="box-register" [hidden]="boxError?.show || loading">
       <app-input-email [formControlRef]="email"></app-input-email>
       <app-input-name [formControlRef]="firstName"></app-input-name>
       <app-input-name [formControlRef]="lastName" placeholder="Sobrenome"></app-input-name>
@@ -18,7 +18,7 @@
 
     <app-loading class="box-loading" [hidden]="!loading"></app-loading>
 
-    <div class="box-error" [hidden]="!boxError.show">
+    <div class="box-error" [hidden]="!boxError?.show">
       <app-box-error></app-box-error>
       <app-input-button placeholder="ok" (clicked)="hideBoxError()" icon="cancel"></app-input-button>
     </div>

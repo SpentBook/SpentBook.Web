@@ -1,7 +1,7 @@
 // Angular/Core
 import { Component, OnInit, Input } from '@angular/core';
 import { SidenavService } from '../../services/sidenav.service';
-import { MatSidenav } from '@angular/material';
+import { MatSidenav } from '@angular/material/sidenav';
 import { MenuService } from '../../services/menu.service';
 
 @Component({
@@ -14,7 +14,7 @@ export class SidenavComponent implements OnInit {
   sidenavComponent: MatSidenav;
 
   constructor(
-    private sidenavService: SidenavService,
+    public sidenavService: SidenavService,
     public menuService: MenuService
   ) {
 

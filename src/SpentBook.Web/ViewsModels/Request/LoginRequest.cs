@@ -7,7 +7,7 @@ namespace SpentBook.Web.ViewsModels
 {
     public class LoginRequest
     {
-        public string UserName { get; set; }
+        public string Email { get; set; }
         public string Password { get; set; }
     }
 
@@ -15,7 +15,7 @@ namespace SpentBook.Web.ViewsModels
     {
         public LoginRequestValidator()
         {
-             RuleFor(vm => vm.UserName)
+             RuleFor(vm => vm.Email)
                 .NotEmpty().WithMessage("E-mail cannot be empty").WithErrorCode(ProblemDetailsFieldType.Required.ToString())
                 .EmailAddress().WithMessage("Invalid e-mail").WithErrorCode(ProblemDetailsFieldType.Email.ToString())
                 .MinimumLength(3).WithMessage("E-mail is too short").WithErrorCode(ProblemDetailsFieldType.MaxLength.ToString())

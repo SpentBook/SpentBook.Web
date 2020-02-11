@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject, ChangeDetectorRef, AfterViewChecked } from '@angular/core';
-import { MAT_SNACK_BAR_DATA, MatSnackBarRef } from '@angular/material';
+import { MAT_SNACK_BAR_DATA, MatSnackBarRef } from '@angular/material/snack-bar';
 import { SnackBarData, SnackBarType } from '../../services/snack-bar.service';
 
 @Component({

@@ -1,6 +1,6 @@
 // Angular
 import { NgModule, LOCALE_ID } from '@angular/core';
-import { MAT_DATE_FORMATS, DateAdapter } from '@angular/material';
+import { MAT_DATE_FORMATS, DateAdapter } from '@angular/material/core';
 
 // Module
 import { CustomMomentDateAdapter } from './custom-moment-date-adapter';

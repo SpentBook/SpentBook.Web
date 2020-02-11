@@ -41,7 +41,7 @@ export class LoginComponent implements OnInit, AfterViewChecked, OnDestroy {
   observable$: Observable<LoginResponse>;
   socialObservable$: Subscription;
 
-  get userName(): any { return this.form.get('userName'); }
+  get email(): any { return this.form.get('email'); }
   get password(): any { return this.form.get('password'); }
 
   constructor(
@@ -57,7 +57,7 @@ export class LoginComponent implements OnInit, AfterViewChecked, OnDestroy {
     let lastEmail = authService.getEmail();
 
     this.form = this.fb.group({
-      userName: new FormControl(lastEmail),
+      email: new FormControl(lastEmail),
       password: new FormControl(),
     });
 
@@ -93,7 +93,7 @@ export class LoginComponent implements OnInit, AfterViewChecked, OnDestroy {
 
     timer(2000).subscribe(() => {
       var request = new LoginRequest();
-      request.userName = this.userName.value;
+      request.email = this.email.value;
       request.password = this.password.value;
       this.observable$ = this.apiSpentBookService.login(request);
       this.observable$.subscribe(
@@ -125,6 +125,12 @@ export class LoginComponent implements OnInit, AfterViewChecked, OnDestroy {
         },
         error => {
           this.loading = false;
+          this.email.setValue(null);
+          this.email.markAsTouched();
+          this.password.setValue(null);
+          this.password.markAsPristine();
+          this.password.markAsUntouched();
+
           this.serverSideValidate.validateWithBoxError(this, error, this.boxError);
         }
       );

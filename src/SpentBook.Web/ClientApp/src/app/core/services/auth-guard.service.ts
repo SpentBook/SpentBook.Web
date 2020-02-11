@@ -4,12 +4,14 @@ import { Router, CanActivate, RouterStateSnapshot, ActivatedRouteSnapshot, Activ
 
 // Module
 import { AuthService } from './auth.service';
+import { SnackBarService } from '@app/shared';
 
 @Injectable()
 export class AuthGuardService implements CanActivate {
   constructor(
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private snackBarService: SnackBarService
   ) { }
   
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
@@ -25,6 +27,8 @@ export class AuthGuardService implements CanActivate {
       return false;
     }
     else if (!this.authService.isAuthorize(route.data['roles'])) {
+      this.snackBarService.error("Você não tem permissão para acessar esse recurso");
+      this.router.navigate(['/']);
       return false;
     }
     
