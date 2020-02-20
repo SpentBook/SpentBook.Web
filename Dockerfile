@@ -33,7 +33,7 @@ RUN dotnet build "SpentBook.Web.csproj" -c Release -o /app/build
 FROM build AS publish
 RUN dotnet publish "SpentBook.Web.csproj" -c Release -o /app/publish
 
-FROM base AS teste
+FROM base AS AAAAA
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "SpentBook.Web.dll"]
