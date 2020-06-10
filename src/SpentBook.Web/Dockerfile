@@ -18,12 +18,12 @@ RUN apt-get install -y nodejs
 
 # Copia apenas o csproj pra gerar cache (ele não muda toda hora)
 WORKDIR /src
-COPY ["SpentBook.Web.csproj", "./"]
+COPY ["src/SpentBook.Web/SpentBook.Web.csproj", "./"]
 RUN dotnet restore "./SpentBook.Web.csproj"
 
 # Baixa os modulos para gerar cache (ele não muda toda hora)
 WORKDIR /src/ClientApp
-COPY ["ClientApp/package.json", "./"]
+COPY ["src/SpentBook.Web/ClientApp/package.json", "./"]
 RUN npm install 
 
 WORKDIR /src
